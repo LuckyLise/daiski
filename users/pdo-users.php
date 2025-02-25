@@ -10,14 +10,33 @@ $userCount = $stmtALL->rowCount();
 if (isset($_GET["q"])) {
     $q = $_GET["q"];
     $sql = "SELECT * FROM users WHERE name LIKE '%$q%'";
-} else if (isset($_GET["p"])) {
+} else if (isset($_GET["p"]) && isset($_GET["order"])) {
     $p = $_GET["p"];
+    $order = $_GET["order"];
+    $orderClause = "";
+    switch ($order) {
+        case 1;
+            $orderClause = "ORDER BY id ASC";
+            break;
+        case 2;
+            $orderClause = "ORDER BY id DESC";
+            break;
+        case 3;
+            $orderClause = "ORDER BY account ASC";
+            break;
+        case 4;
+            $orderClause = "ORDER BY account DESC";
+            break;
+    }
+
     $perPage = 25;
     $startItem = ($p - 1) * $perPage;
     $totalPage = ceil($userCount / $perPage);
-    $sql = "SELECT * FROM users WHERE valid=1 LIMIT $startItem,$perPage";
+    $sql = "SELECT * FROM users WHERE valid=1
+     $orderClause
+     LIMIT $startItem,$perPage";
 } else {
-    header("location:pdo-users.php?p=1");
+    header("location:pdo-users.php?p=1&order=1");
     // $sql = "SELECT * FROM users WHERE valid=1";
 }
 
@@ -65,15 +84,14 @@ $db_host = NULL;
         <div class="py-2 row g-3 align-items-center">
             <div class="col-md-6">
                 <div class="hstack gap-2 align-items-center">
-                <?php if(isset($_GET["q"])):?>    
-                <a href="pdo-users.php" class="btn btn-primary"><i class="fa-solid fa-left-long fa-fw"></i></a>
-                <?php endif;?>
+                    <?php if (isset($_GET["q"])): ?>
+                        <a href="pdo-users.php" class="btn btn-primary"><i class="fa-solid fa-left-long fa-fw"></i></a>
+                    <?php endif; ?>
                     <div>共 <?= $userCount ?> 位使用者
                     </div>
                 </div>
             </div>
             <div class="col-md-6">
-
                 <form action="" method="get">
                     <div class="input-group">
                         <input type="search" class="form-control" name="q"
@@ -91,6 +109,14 @@ $db_host = NULL;
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="py-2 text-end">
+            <div class="btn-group">
+                <a class="btn btn-primary <?php if ($order == 1) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=1"><i class="fa-solid fa-arrow-down-1-9 fa-fw"></i></a>
+                <a class="btn btn-primary <?php if ($order == 2) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=2"><i class="fa-solid fa-arrow-down-9-1 fa-fw"></i></a>
+                <a class="btn btn-primary <?php if ($order == 3) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=3"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
+                <a class="btn btn-primary <?php if ($order == 4) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=4"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
             </div>
         </div>
         <?php if ($userCount > 0): ?>
@@ -131,11 +157,11 @@ $db_host = NULL;
                     <nav aria-label="">
                         <ul class="pagination">
                             <?php for ($i = 1; $i <= $totalPage; $i++): ?>
-                                <?php 
-                                    $active=($i==$_GET["p"])?
-                                    "active":"";
-                                    ?>
-                                <li class="page-item <?=$active?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>"><?= $i ?></a></li>
+                                <?php
+                                $active = ($i == $_GET["p"]) ?
+                                    "active" : "";
+                                ?>
+                                <li class="page-item <?= $active ?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?>"><?= $i ?></a></li>
                             <?php endfor; ?>
                         </ul>
                     </nav>

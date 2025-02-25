@@ -1,0 +1,18 @@
+:root {
+    --transition: .4s;
+}
+
+.product-list {
+    .ratio {
+        img {
+            transition: var(--transition);
+        }
+
+        &:hover {
+            img {
+                scale: 1.1;
+                opacity: .8;
+            }
+        }
+    }
+}

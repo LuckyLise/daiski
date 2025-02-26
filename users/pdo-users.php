@@ -145,7 +145,7 @@ $db_host = NULL;
                             <td><?= $row["createdtime"] ?></td>
                             <td><?= $row["isCoach"] ?></td>
                             <td>
-                                <a class="btn btn-primary" href="user.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-eye fa-fw"></i></a>
+                                <a class="btn btn-primary" href="pdo-user.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-eye fa-fw"></i></a>
                                 <a class="btn btn-primary" href="user-edit.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
                             </td>
                         </tr>

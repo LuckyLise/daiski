@@ -9,3 +9,4 @@
 
 <link rel="stylesheet" href="./css/style.css?time=<?= time() ?>">
 <!-- <link rel="stylesheet" href="/css/style.css"> -->
+<link rel="stylesheet" href="./css/sb-admin-2.css?time=<?= time() ?>">

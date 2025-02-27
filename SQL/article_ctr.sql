@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2025-02-27 19:36:15
+-- 產生時間： 2025-02-27 19:36:10
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -24,32 +24,31 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- 資料表結構 `article_images`
+-- 資料表結構 `article_ctr`
 --
 
-CREATE TABLE `article_images` (
+CREATE TABLE `article_ctr` (
   `id` int(11) NOT NULL,
-  `name` varchar(30) NOT NULL,
-  `sort` int(10) UNSIGNED NOT NULL,
+  `time` datetime NOT NULL,
   `article_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- 傾印資料表的資料 `article_images`
+-- 傾印資料表的資料 `article_ctr`
 --
 
-INSERT INTO `article_images` (`id`, `name`, `sort`, `article_id`) VALUES
-(1, 'img001001.jpg', 1, 1),
-(2, 'img001002.jpg', 2, 1);
+INSERT INTO `article_ctr` (`id`, `time`, `article_id`) VALUES
+(1, '2025-02-22 11:34:41', 1),
+(2, '2025-02-22 13:04:02', 1);
 
 --
 -- 已傾印資料表的索引
 --
 
 --
--- 資料表索引 `article_images`
+-- 資料表索引 `article_ctr`
 --
-ALTER TABLE `article_images`
+ALTER TABLE `article_ctr`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -57,10 +56,10 @@ ALTER TABLE `article_images`
 --
 
 --
--- 使用資料表自動遞增(AUTO_INCREMENT) `article_images`
+-- 使用資料表自動遞增(AUTO_INCREMENT) `article_ctr`
 --
-ALTER TABLE `article_images`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `article_ctr`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

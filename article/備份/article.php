@@ -85,14 +85,11 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>article</title>
+    <title>User</title>
     <? include("../css.php") ?>
-
 </head>
 
 <body>
-
-
     <div class="container">
         <div class="py-2 ">
             <a class="btn btn-primary" href="articles.php"><i class="fa-solid fa-list fa-fw"></i>文章列表</a>

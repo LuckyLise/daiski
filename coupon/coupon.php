@@ -37,6 +37,7 @@ $host_db = NULL;
     </head>
 
     <body>
+        <?php include("head_mod.php") ?>
         <div class="container">
             <div class="py-2">
                 <a href="coupons.php" class="btn btn-primary" ><i class="fa-solid fa-arrow-left fa-fw"></i></a>

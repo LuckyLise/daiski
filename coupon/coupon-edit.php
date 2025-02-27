@@ -18,6 +18,8 @@ $stmt = $host_db->prepare($sql);
 $stmt->execute();
 $coupon = $stmt->fetch(PDO::FETCH_ASSOC);
 
+// print_r($coupon["id"]);
+
 $host_db = NULL;
 
 ?>
@@ -37,6 +39,23 @@ $host_db = NULL;
 </head>
 
 <body>
+    <div class="modal fade" tabindex="-1" id="infoModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>確認刪除優惠卷?</p>
+                </div>
+                <div class="modal-footer">
+                    <a type="button" class="btn btn-danger" id="deleteButton" href="delete_coupon.php?id=<?=$coupon["id"]."&header=1"?>">確認</a>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="container">
         <div class="py-2">
             <a href="coupons.php" class="btn btn-primary"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
@@ -44,7 +63,7 @@ $host_db = NULL;
         <div class="row g-3">
             <div class="col-lg-4 col-md-9">
                 <form action="doUpdataCoupon.php" method="POST">
-                    <input type="hidden" name="id" value="<?= $coupon["id"] ?>">
+                <input type="hidden" name="id" value=<?= $coupon["id"]?> >
                     <table class="table table-bordered">
                         <tr>
                             <th>ID</th>
@@ -90,13 +109,13 @@ $host_db = NULL;
                         <tr>
                             <th>開始日期</th>
                             <td>
-                                <input type="text" class="form-control" name="startAt" value="<?= $coupon["startAt"] ?>">
+                                <input type="date" class="form-control" name="startAt" value="<?= $coupon["startAt"] ?>">
                             </td>
                         </tr>
                         <tr>
                             <th>結束日期</th>
                             <td>
-                                <input type="text" class="form-control" name="endAt" value="<?= $coupon["endAt"] ?>">
+                                <input type="date" class="form-control" name="endAt" value="<?= $coupon["endAt"] ?>">
                             </td>
                         </tr>
                         <tr>
@@ -122,13 +141,18 @@ $host_db = NULL;
                             <td></td>
                         </tr> -->
                     </table>
+                    <div class="text-end">
+                    <a role="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#infoModal"><i class="fa-solid fa-trash"></i></a>
+                    
                     <button class="btn btn-primary" type="submit">送出</button>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
 
     <?php include("../js.php"); ?>
+   
 </body>
 
 </html>

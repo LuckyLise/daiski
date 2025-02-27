@@ -40,57 +40,63 @@ try {
 </head>
 
 <body>
-	<div class="container">
-		<div class="py-2">
-			<a class="btn btn-primary" href="pdo-users.php"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
-		</div>
-		<?php if (isset($_GET["id"])): ?>
-			<div class="row">
-				<div class="col-lg-4 col-md-9">
-					<table class="table table-bordered">
-						<tr>
-							<th>id</th>
-							<td><?= $row["id"] ?></td>
-						</tr>
-						<tr>
-							<th>name</th>
-							<td><?= $row["name"] ?></td>
-						</tr>
-						<tr>
-							<th>account</th>
-							<td><?= $row["account"] ?></td>
-						</tr>
-						<tr>
-							<th>phone</th>
-							<td><?= $row["phone"] ?></td>
-						</tr>
-						<tr>
-							<th>birthday</th>
-							<td><?= $row["birthday"] ?></td>
-						</tr>
-						<tr>
-							<th>createdtime</th>
-							<td><?= $row["createdtime"] ?></td>
-						</tr>
-						<tr>
-							<th>isCoach</th>
-							<td>
-								<?php if ($row["isCoach"] == 0): ?>
-									否
-								<?php else: ?>
-									是
-								<?php endif; ?>
-							</td>
-						</tr>
-					</table>
-					<div class="">
-						<a class="btn btn-primary" href="user-edit.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
-					</div>
+	<div class="d-flex flex-column">
+		<?php include("./new_head_mod.php"); ?>
+		<div class="d-flex flex-row w-100 ">
+			<?php include("./new_side_mod.php"); ?>
+			<div class="container">
+				<div class="py-2">
+					<a class="btn btn-primary" href="pdo-users.php"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
 				</div>
+				<?php if (isset($_GET["id"])): ?>
+					<div class="row">
+						<div class="col-lg-4 col-md-9">
+							<table class="table table-bordered">
+								<tr>
+									<th>id</th>
+									<td><?= $row["id"] ?></td>
+								</tr>
+								<tr>
+									<th>name</th>
+									<td><?= $row["name"] ?></td>
+								</tr>
+								<tr>
+									<th>account</th>
+									<td><?= $row["account"] ?></td>
+								</tr>
+								<tr>
+									<th>phone</th>
+									<td><?= $row["phone"] ?></td>
+								</tr>
+								<tr>
+									<th>birthday</th>
+									<td><?= $row["birthday"] ?></td>
+								</tr>
+								<tr>
+									<th>createdtime</th>
+									<td><?= $row["createdtime"] ?></td>
+								</tr>
+								<tr>
+									<th>isCoach</th>
+									<td>
+										<?php if ($row["isCoach"] == 0): ?>
+											否
+										<?php else: ?>
+											是
+										<?php endif; ?>
+									</td>
+								</tr>
+							</table>
+							<div class="">
+								<a class="btn btn-primary" href="user-edit.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
+							</div>
+						</div>
+					</div>
+				<?php else: ?>
+					<h2>使用者不存在</h2>
+				<?php endif; ?>
 			</div>
-		<?php else: ?>
-			<h2>使用者不存在</h2>
-		<?php endif; ?>
+		</div>
 	</div>
 </body>
 

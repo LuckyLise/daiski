@@ -1,4 +1,4 @@
-<?
+<?php
 // 系統注重防呆，要給使用者好的體驗
 if (!isset($_GET["id"])) {
     header("location: articles.php");
@@ -9,7 +9,7 @@ if (!isset($_GET["id"])) {
 $id = $_GET["id"];
 
 
-require_once("../pdo_connect.php");
+require_once("./pdo_connect.php");
 
 // 主表接受各方單一選項。例如文章當主表，至多一個的"點閱率"、"類別"可以JOIN進來(如必有可以用JOIN，不一定有要用LEFT JOIN)，
 // 但可能有很多的如"影片"、"圖片"則要另外SQL，不然表會用倍數成長(主表*圖片數，因為一個列只能填一張圖片，所以一列只能JOIN一張圖片)
@@ -86,7 +86,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>article</title>
-    <? include("../css.php") ?>
+    <?php include("./css.php") ?>
 
 </head>
 
@@ -99,7 +99,7 @@ try {
         </div>
         <div class="row g-3">
             <div class="clo-lg-4 col-md-9">
-                <? if ($userCount > 0): ?>
+                <?php if ($userCount > 0): ?>
                     <table class="table table-bordered">
                         <!-- (tr>th+td)*5 -->
                         <tr>
@@ -108,7 +108,7 @@ try {
                         </tr>
                         <tr>
                             <th>類別</th>
-                            <? $category = ($article["category"]) ?  $article["category"] : "未分類" ?>
+                            <?php $category = ($article["category"]) ?  $article["category"] : "未分類" ?>
                             <td><?= $category ?></td>
                         </tr>
                         <tr>
@@ -123,9 +123,9 @@ try {
                             <th>圖片</th>
                             <td>
                                 <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3">
-                                    <? foreach ($article_imgs as $img): ?>
+                                    <?php foreach ($article_imgs as $img): ?>
                                         <div class="col">
-                                            <?
+                                            <?php
                                             // 檢查路徑是否有檔案
                                             $img_PATH = "article_imgs/" . $img["name"];
                                             if (file_exists($img_PATH)):
@@ -134,18 +134,18 @@ try {
                                                     <img class="object-fit-cover" src="article_imgs/<?= $img["name"] ?>" alt="">
                                                 </div>
                                                 <h3 class="h4"><?= $img["name"] ?></h3>
-                                            <? endif; ?>
+                                            <?php endif; ?>
                                         </div>
-                                    <? endforeach; ?>
+                                    <?php endforeach; ?>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <th>影片</th>
                             <td>
-                                <? foreach ($article_videos as $video): ?>
+                                <?php foreach ($article_videos as $video): ?>
                                     <div class="col">
-                                        <?
+                                        <?php
                                         // 檢查路徑是否有檔案
                                         $video_PATH = "article_videos/" . $video["name"];
                                         if (file_exists($video_PATH)):
@@ -154,9 +154,9 @@ try {
                                                 <img class="object-fit-cover" src="article_videos/<?= $video["name"] ?>" alt="">
                                             </div>
                                             <h3 class="h4"><?= $video["name"] ?></h3>
-                                        <? endif; ?>
+                                        <?php endif; ?>
                                     </div>
-                                <? endforeach; ?>
+                                <?php endforeach; ?>
                             </td>
                         </tr>
                         <tr>
@@ -180,22 +180,22 @@ try {
 
             <!-- <div class="col-lg-8 col-md-12">
                 <h2>收藏商品</h2>
-                <? if ($favoriteProductCount > 0): ?>
-                    <? foreach ($products as $product): ?>
+                <?php if ($favoriteProductCount > 0): ?>
+                    <?php foreach ($products as $product): ?>
                         <li>
                             <a href="/product/product.php?id=<?= $product["product_id"] ?>">
                                 <?= $product["product_name"] ?>
                             </a>
                         </li>
-                    <? endforeach; ?>
-                <? else: ?>
+                    <?php endforeach; ?>
+                <?php else: ?>
                     尚未收藏商品
-                <? endif; ?>
+                <?php endif; ?>
             </div> -->
         </div>
-    <? else: ?>
+    <?php else: ?>
         <h2>使用者不存在</h2>
-    <? endif; ?>
+    <?php endif; ?>
     </div>
 
 </body>

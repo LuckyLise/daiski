@@ -1,0 +1,16 @@
+.description-full {
+    display: block;
+    white-space: normal;
+    word-break: break-word;
+}
+.read-more-btn {
+    color: blue;
+    cursor: pointer;
+    text-decoration: underline;
+    background: none;
+    border: none;
+    padding: 0;
+}
+.read-more-btn:hover {
+    text-decoration: none;
+}

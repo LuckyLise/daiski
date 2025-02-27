@@ -10,3 +10,11 @@
 
 <link rel="stylesheet" href="./css/style.css?time=<?=time()?>">
 <!-- 後面加? time是因為有可能會遇到快取的關係，style.css裡面就算改了但還是沒有及時反映出來，但記得改完之後把它弄掉比較省頻寬。引入的css比較容易發生這個狀況> -->
+
+
+
+
+<link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="./css/new_styles.css?time=<?=time()?>">

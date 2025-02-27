@@ -1,4 +1,4 @@
-<?
+<?php
 // 系統注重防呆，要給使用者好的體驗
 if (!isset($_GET["id"])) {
     header("location: articles.php");
@@ -7,7 +7,7 @@ if (!isset($_GET["id"])) {
 $id = $_GET["id"];
 
 
-require_once("../pdo_connect.php");
+require_once("./pdo_connect.php");
 $sql = "SELECT * FROM article WHERE id = $id";
 $stmt = $db_host->prepare($sql);
 
@@ -68,7 +68,7 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User</title>
-    <? include("../css.php") ?>
+    <?php include("./css.php") ?>
     <style>
         .article_content {
             height: 30vh;
@@ -105,7 +105,7 @@ try {
         </div>
         <div class="row">
             <div class="clo-lg-4 col-md-9">
-                <? if ($userCount > 0): ?>
+                <?php if ($userCount > 0): ?>
                     <form action="doUpdateArticle.php" method="post">
                         <input type="hidden" name="id" value="<?= $row["id"] ?>">
                         <table class="table table-bordered">
@@ -135,9 +135,9 @@ try {
                                 <th>圖片</th>
                                 <td>
                                     <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3">
-                                        <? foreach ($article_imgs as $img): ?>
+                                        <?php foreach ($article_imgs as $img): ?>
                                             <div class="col">
-                                                <?
+                                                <?php
                                                 // 檢查路徑是否有檔案
                                                 $img_PATH = "article_imgs/" . $img["name"];
                                                 if (file_exists($img_PATH)):
@@ -146,9 +146,9 @@ try {
                                                         <img class="object-fit-cover" src="article_imgs/<?= $img["name"] ?>" alt="">
                                                     </div>
                                                     <h3 class="h4"><?= $img["name"] ?></h3>
-                                                <? endif; ?>
+                                                <?php endif; ?>
                                             </div>
-                                        <? endforeach; ?>
+                                        <?php endforeach; ?>
                                     </div>
                                     <input type="file" class="form-control" name="images" accept=".jpg, .jpeg, .png">
                                 </td>
@@ -159,9 +159,9 @@ try {
 
                                 <td>
                                     <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3">
-                                        <? foreach ($article_videos as $video): ?>
+                                        <?php foreach ($article_videos as $video): ?>
                                             <div class="col">
-                                                <?
+                                                <?php
                                                 // 檢查路徑是否有檔案
                                                 $video_PATH = "article_videos/" . $video["name"];
                                                 if (file_exists($video_PATH)):
@@ -170,9 +170,9 @@ try {
                                                         <img class="object-fit-cover" src="article_videos/<?= $video["name"] ?>" alt="">
                                                     </div>
                                                     <h3 class="h4"><?= $video["name"] ?></h3>
-                                                <? endif; ?>
+                                                <?php endif; ?>
                                             </div>
-                                        <? endforeach; ?>
+                                        <?php endforeach; ?>
                                     </div>
                                     <input type="file" class="form-control" name="videos" accept=".mp4 .mkv .wmv">
                                 </td>
@@ -202,12 +202,12 @@ try {
                         </div>
                     </form>
 
-                <? else: ?>
+                <?php else: ?>
                     <h2>使用者不存在</h2>
-                <? endif; ?>
+                <?php endif; ?>
             </div>
         </div>
-        <? include("../js.php") ?>
+        <?php include("./js.php") ?>
     </div>
 
 </body>

@@ -1,5 +1,5 @@
-<?
-require_once("../pdo_connect.php");
+<?php
+require_once("./pdo_connect.php");
 $sql = "SELECT category FROM article_categories GROUP BY category";
 $stmt = $db_host->prepare($sql);
 
@@ -31,7 +31,7 @@ try {
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <? include("../css.php") ?>
+    <?php include("./css.php") ?>
 </head>
 
 <body>
@@ -53,9 +53,9 @@ try {
                             </button>
 
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <? foreach ($categories as $category): ?>
+                                <?php foreach ($categories as $category): ?>
                                     <li><a class="btn_category_choose dropdown-item" href="#"><?= $category["category"] ?></a></li>
-                                <? endforeach; ?>
+                                <?php endforeach; ?>
 
                             </ul>
                         </div>
@@ -115,7 +115,7 @@ try {
 
 
 
-    <? include("../js.php") ?>
+    <?php include("./js.php") ?>
     <script>
         const btn_category_choose = document.querySelectorAll(".btn_category_choose");
 

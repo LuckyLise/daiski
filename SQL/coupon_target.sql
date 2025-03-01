@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2025-02-21 04:56:52
+-- 產生時間： 2025-02-27 18:56:38
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -37,8 +37,8 @@ CREATE TABLE `coupon_target` (
 --
 
 INSERT INTO `coupon_target` (`id`, `target`) VALUES
-(1, '商品'),
-(2, '課程'),
+(1, '課程'),
+(2, '商品'),
 (3, '全站');
 
 --

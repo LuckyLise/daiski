@@ -1,0 +1,80 @@
+:root {
+    --transition: .4s;
+}
+
+.product-list {
+    .ratio {
+        img {
+            transition: var(--transition);
+        }
+
+        &:hover {
+            img {
+                scale: 1.1;
+                opacity: .8;
+            }
+        }
+    }
+}
+
+
+/* 以下的css只有在背景是深色時要用到 最後定案不是深色的話就會全部註解起來 */
+body {
+    background-color: #07192F !important;
+
+    a {
+        color: white;
+
+    }
+
+    .nav-link {
+        color: white !important;
+
+        &.active {
+            color: coral !important;
+        }
+
+        &:hover {
+            border-color: coral !important;
+            color: coral !important;
+        }
+    }
+
+    .btn {
+        color: white;
+        border-color: white;
+        &:hover {
+            border-color: coral !important;
+            color: coral !important;
+            background-color: #07192F;
+        }
+    }
+
+    .page-link {
+        background-color: black !important;
+        color: white;
+        
+    }
+
+    .pagination {
+        .page-item {
+            &.active {
+                .page-link {
+                    border-color: coral !important;
+                    color: coral !important; 
+                }
+            }
+    
+            .page-link {
+                &:hover {
+                    border-color: coral !important;
+                    color: coral !important;
+                }
+            }
+        }
+    }
+
+
+    
+
+}

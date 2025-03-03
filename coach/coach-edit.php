@@ -8,7 +8,7 @@ require_once("../pdo_connect.php");
 
 $sql = "SELECT coach .*
 FROM coach
-WHERE coach.id = $id
+WHERE coach.id = $id AND valid=1
 ";
 
 try {
@@ -80,6 +80,19 @@ $selectedLanguages = array_map(function ($lan) {
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous" />
     <style>
+        body{
+            color: white !important;
+            th{
+                color: white !important;
+            }
+            td{
+                color: white !important;
+            }
+            .modal-content{
+            color: black;
+        }
+        }
+        
     </style>
     <?php include("./css.php") ?>
 </head>
@@ -95,7 +108,7 @@ $selectedLanguages = array_map(function ($lan) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="message">刪除教練</div>
+                    <div id="message">刪除教練資訊</div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
@@ -223,7 +236,7 @@ $selectedLanguages = array_map(function ($lan) {
                                     <td><?= $row["createdat"] ?></td>
                                 </tr>
                             </table>
-                            <div class="d-flex">
+                            <div class="d-flex gap-2">
                                 <button class="btn btn-primary" type="submit"><i class="fa-regular fa-floppy-disk fa-fw"></i>儲存</button>
                                 <a data-bs-toggle="modal" data-bs-target="#infoModal" class="btn btn-danger">刪除</a>
                             </div>

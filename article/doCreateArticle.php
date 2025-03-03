@@ -1,7 +1,7 @@
 <?php
 // 將收到的表單資料新增至資料庫
 
-require_once("./pdo_connect.php");
+require_once("../pdo_connect.php");
 
 if (!isset($_POST["title"])) {
     die("請輸入標題");

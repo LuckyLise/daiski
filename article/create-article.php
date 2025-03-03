@@ -32,18 +32,23 @@ try {
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
     <?php include("./css.php") ?>
+
+
 </head>
 
 <body>
-
-    <div class="d-flex flex-column">
+    <!-- Loading 畫面 -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+    <div class="d-flex flex-column ">
         <?php include("./new_head_mod.php"); ?>
 
-        <div class="d-flex flex-row w-100 ">
+        <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php"); ?>
 
 
-            <div class="container myPage">
+            <div class="container ">
                 <div class="py-2">
                     <a class="btn btn-primary" href="articles.php"><i class="fa-solid fa-list fa-fw"></i>文章列表</a>
                 </div>
@@ -55,7 +60,7 @@ try {
                             <td>
 
                                 <div class="dropdown">
-                                    <button class="btn_category btn btn-light dropdown-toggle" href="#" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn_category btn btn-primary dropdown-toggle" href="#" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                         選擇分類
 
                                     </button>
@@ -104,9 +109,10 @@ try {
                             <td>
                                 <label for="startDate">發布時間</label>
                                 <input type="datetime-local" class="form-control" name="startDate"
-                                    value="">
+                                    min="<?= date("Y-m-d") ?>T00:00:00" value="">
 
                             </td>
+
                             <td>
                                 <label for="endDate">結束時間</label>
                                 <input type="datetime-local" class="form-control" name="endDate"

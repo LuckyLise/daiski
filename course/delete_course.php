@@ -8,16 +8,17 @@ if ($_SERVER["REQUEST_METHOD"] === "GET" && isset($_GET['id'])) {
         $db_host->beginTransaction();
 
         // **1️⃣ 刪除課程圖片**
-        $stmt = $db_host->prepare("DELETE FROM courseimages WHERE course_id = :course_id");
-        $stmt->execute(['course_id' => $course_id]);
+        // $stmt = $db_host->prepare("DELETE FROM courseimages WHERE course_id = :course_id");
+        // $stmt->execute(['course_id' => $course_id]);
 
         // **2️⃣ 刪除課程變體**
-        $stmt = $db_host->prepare("DELETE FROM coursevariants WHERE course_id = :course_id");
+        $stmt = $db_host->prepare("UPDATE coursevariants SET valid = 0 WHERE course_id = :course_id");
+
         $stmt->execute(['course_id' => $course_id]);
 
         // **3️⃣ 刪除課程**
-        $stmt = $db_host->prepare("DELETE FROM course WHERE id = :course_id");
-        $stmt->execute(['course_id' => $course_id]);
+        // $stmt = $db_host->prepare("DELETE FROM course WHERE id = :course_id");
+        // $stmt->execute(['course_id' => $course_id]);
 
         $db_host->commit();
 

@@ -1,6 +1,6 @@
 <?php
 require_once("../pdo_connect.php");
-$sqlAll = "SELECT * FROM coach";
+$sqlAll = "SELECT * FROM coach WHERE valid=1";
 try {
     $stmt = $db_host->prepare($sqlAll);
     $stmt->execute();
@@ -36,7 +36,7 @@ if (isset($_GET["q"])) {
             $orderClause = "ORDER BY name DESC";
             break;
     }
-    $sql = "SELECT * FROM coach 
+    $sql = "SELECT * FROM coach WHERE valid=1
         $orderClause
         LIMIT $startItem, $perPage";
 } else {
@@ -88,11 +88,14 @@ $db_host = NULL;
 
     <?php include("./css.php") ?>
     <style>
-        .content {
-            /* /* overflow: auto; */
-            /* height: 15vh; */
-            /* max-width: 20vw; */
-            /* display: block;  */
+        body{
+            color: white !important;
+            th{
+                color: white !important;
+            }
+            td{
+                color: white !important;
+            }
         }
     </style>
 </head>
@@ -155,7 +158,13 @@ $db_host = NULL;
                                 <td><?= $row["id"] ?></td>
                                 <td><?= $row["name"] ?></td>
                                 <td><?= $row["email"] ?></td>
-                                <td><?= $row["profilephoto"] ?></td>
+                                <td><div class="row row-cols-lg-4 rol-cols-mb-3 row-cols-sm-2 row-cols-lg-3">
+                                        <div class="col">
+                                            <div class="ratio ratio-1x1">
+                                                <img src="../coach/images/<?= $row["profilephoto"] ?>" alt="<?= $row["name"] ?>" class="object-fit-cover">
+                                            </div>
+                                        </div>
+                                    </div></td>
                                 <td><a href="coach.php?id=<?= $row["id"] ?>" class="btn btn-primary"><i class="fa-solid fa-eye"></i></a>
                                     <a href="coach-edit.php?id=<?= $row["id"] ?>" class="btn btn-primary"><i class="fa-regular fa-pen-to-square"></i></a>
                                 </td>

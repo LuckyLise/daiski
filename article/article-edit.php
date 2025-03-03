@@ -77,6 +77,10 @@ try {
 </head>
 
 <body>
+    <!-- Loading 畫面 -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
     <!-- modal -->
     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="" aria-hidden="true">
         <div class="modal-dialog modal-sm">
@@ -101,18 +105,18 @@ try {
     <div class="d-flex flex-column">
         <?php include("./new_head_mod.php"); ?>
 
-        <div class="d-flex flex-row w-100 ">
+        <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php"); ?>
 
 
-            <div class="container myPage">
+            <div class="container ">
                 <div class="py-2">
                     <a class="btn btn-primary" href="article.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-list fa-fw"></i>上一步</a>
                 </div>
                 <div class="row">
                     <div class="clo-lg-4 col-md-9">
                         <?php if ($userCount > 0): ?>
-                            <form action="doUpdateArticle.php" method="post">
+                            <form action="doUpdateArticle.php" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="id" value="<?= $row["id"] ?>">
                                 <table class="table table-bordered">
                                     <!-- (tr>th+td)*5 -->
@@ -132,9 +136,7 @@ try {
                                     <tr>
                                         <th>內容</th>
                                         <td>
-                                            <textarea type="text" class="form-control article_content" name="content">
-                                    <?= $row["content"] ?>
-                                    </textarea>
+                                            <textarea type="text" class="form-control article_content" name="content"><?= trim($row["content"], " ") ?></textarea>
                                         </td>
                                     </tr>
                                     <tr>
@@ -151,12 +153,11 @@ try {
                                                             <div class="ratio ratio-1x1">
                                                                 <img class="object-fit-cover" src="article_imgs/<?= $img["name"] ?>" alt="">
                                                             </div>
-                                                            <h3 class="h4"><?= $img["name"] ?></h3>
                                                         <?php endif; ?>
                                                     </div>
                                                 <?php endforeach; ?>
                                             </div>
-                                            <input type="file" class="form-control" name="images" accept=".jpg, .jpeg, .png">
+                                            <input type="file" multiple class="form-control" name="images" accept=".jpg, .jpeg, .png">
                                         </td>
 
                                     </tr>

@@ -1,7 +1,7 @@
 <?php
 $servername = "localhost";
 $username = "admin";
-$password = "12345";
+$password = "22274192";
 $dbname = "daiski_db";
 
 try {

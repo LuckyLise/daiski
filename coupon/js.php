@@ -148,11 +148,11 @@
             // });
             //不怎麼好看但很炫
 
-            gsap.from("#mainContent", {
-                rotateY: -90,
-                duration: 1,
-                ease: "back.out(1.7)"
-            });
+            // gsap.from("#mainContent", {
+            //     rotateY: -90,
+            //     duration: 1,
+            //     ease: "back.out(1.7)"
+            // });
             //還不錯
 
         });

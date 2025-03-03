@@ -121,13 +121,13 @@ $db_host = NULL;
                                 <tr>
                                     <th>開始日期</th>
                                     <td>
-                                        <input type="date" class="form-control" name="startAt" value="<?= $coupon["startAt"] ?>">
+                                        <input type="date" class="form-control" name="startAt" value="<?= $coupon["startAt"] ?>" min="<?= date('Y-m-d') ?>" id="startAt">
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>結束日期</th>
                                     <td>
-                                        <input type="date" class="form-control" name="endAt" value="<?= $coupon["endAt"] ?>">
+                                        <input type="date" class="form-control" name="endAt" value="<?= $coupon["endAt"] ?>" id="endAt">
                                     </td>
                                 </tr>
                                 <tr>
@@ -166,6 +166,14 @@ $db_host = NULL;
         </div>
     </div>
     <?php include("./js.php"); ?>
+    <script>
+        const startAtInput = document.getElementById('startAt');
+        startAtInput.addEventListener('change', function(){
+            let selectedAt = this.value;
+            let endAtInput = document.getElementById('endAt');
+            endAtInput.setAttribute('min', selectedAt);
+        })
+    </script>
 
 </body>
 

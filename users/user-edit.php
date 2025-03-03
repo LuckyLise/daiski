@@ -28,6 +28,7 @@ try {
 <html lang="zh-TW">
 
 <head>
+
     <title>User</title>
     <!-- Required meta tags -->
     <meta charset="utf-8" />
@@ -48,7 +49,11 @@ try {
 </head>
 
 <body>
-    <div class="d-flex flex-column">
+    <!-- Loading 畫面 -->
+ <div id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+    <div class="d-flex flex-column" id="mainContent">
         <?php include("./new_head_mod.php"); ?>
         <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php"); ?>

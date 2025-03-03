@@ -43,10 +43,10 @@ $db_host = NULL;
     </div>
     <div class="d-flex flex-column" id="mainContent">
         <?php include("./new_head_mod.php") ?>
-        <div class="d-flex flex-row w-100 ">
+        <div class="d-flex flex-row w-100 myPage ">
             <?php include("./new_side_mod.php") ?>
 
-            <div class="container-fluid myPage">
+            <div class="container">
                 <div class="py-2">
                     <a href="coupons.php" class="btn btn-primary"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
                 </div>

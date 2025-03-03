@@ -75,6 +75,10 @@
             color: yellow !important;
 
         }
+
+        .modal{
+            color: #07192F !important;
+        }
 </style>
 
 

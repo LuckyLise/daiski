@@ -190,7 +190,7 @@ $db_host = NULL;
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title">刪除優惠卷</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -204,7 +204,7 @@ $db_host = NULL;
         </div>
     </div>
 
-    <div class="d-flex flex-column" id="mainContent">
+    <div class="d-flex flex-column myPage" id="mainContent">
         <?php include("./new_head_mod.php"); ?>
 
         <div class="d-flex flex-row w-100 myPage">
@@ -296,7 +296,7 @@ $db_host = NULL;
 
                             <div class="col-auto">
                                 <?php $startAt = $_GET["startAt"] ?? ""; ?>
-                                <input type="date" class="form-control" name="startAt" value="<?= $startAt ?>" min="<?= date('Y-m-d') ?>">
+                                <input type="date" class="form-control" name="startAt" value="<?= $startAt ?>" min="<?= date('Y-m-d') ?>" id="startAt">
 
                             </div>
 
@@ -306,7 +306,7 @@ $db_host = NULL;
 
                             <div class="col-auto">
                                 <?php $endAt = $_GET["endAt"] ?? ""; ?>
-                                <input type="date" class="form-control" name="endAt" value="<?= $endAt ?>">
+                                <input type="date" class="form-control" name="endAt" value="<?= $endAt ?>" id="endAt">
 
                             </div>
 
@@ -472,9 +472,9 @@ $db_host = NULL;
             })
         })
 
-        // 時間
+        // 時間限制
         const startAtInput = document.getElementById('startAt');
-        startAtInput.addEventListener('change', function() {
+        startAtInput.addEventListener('change', function(){
             let selectedAt = this.value;
             let endAtInput = document.getElementById('endAt');
             endAtInput.setAttribute('min', selectedAt);

@@ -47,7 +47,7 @@ $db_host = NULL;
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title">刪除優惠卷</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -65,10 +65,10 @@ $db_host = NULL;
     <div class="d-flex flex-column" id="mainContent">
         <?php include("./new_head_mod.php"); ?>
 
-        <div class="d-flex flex-row w-100 ">
+        <div class="d-flex flex-row w-100  myPage">
             <?php include("./new_side_mod.php"); ?>
 
-            <div class="container myPage">
+            <div class="container">
                 <div class="py-2">
                     <a href="coupons.php" class="btn btn-primary"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
                 </div>
@@ -121,7 +121,7 @@ $db_host = NULL;
                                 <tr>
                                     <th>開始日期</th>
                                     <td>
-                                        <input type="date" class="form-control" name="startAt" value="<?= $coupon["startAt"] ?>" min="<?= date('Y-m-d') ?>" id="startAt">
+                                        <input type="date" class="form-control" name="startAt" value="<?= $coupon["startAt"] ?>" id="startAt">
                                     </td>
                                 </tr>
                                 <tr>
@@ -167,12 +167,39 @@ $db_host = NULL;
     </div>
     <?php include("./js.php"); ?>
     <script>
+        // 時間限制
         const startAtInput = document.getElementById('startAt');
         startAtInput.addEventListener('change', function(){
             let selectedAt = this.value;
             let endAtInput = document.getElementById('endAt');
             endAtInput.setAttribute('min', selectedAt);
         })
+
+        //百分比輸入限制
+        const couponTypeSelect = document.getElementById("coupon_type");
+        const couponAmountInput = document.getElementById("coupon_amount");
+        function updateCouponAmountInput() {
+            if (couponTypeSelect.value === "百分比折扣") {
+                couponAmountInput.setAttribute("max", "99");
+                couponAmountInput.setAttribute("type", "number");
+            } else {
+                couponAmountInput.removeAttribute("max");
+                couponAmountInput.setAttribute("type", "text");
+            }
+        };
+        updateCouponAmountInput();
+
+        couponTypeSelect.addEventListener("change", updateCouponAmountInput);
+
+        document.querySelector("form").addEventListener("submit", function(e) {
+            if (couponTypeSelect.value === "百分比折扣") {
+                const value = parseFloat(couponAmountInput.value);
+                if (value > 99) {
+                    alert("百分比折扣不能超過 99");
+                    e.preventDefault();
+                }
+            }
+        });
     </script>
 
 </body>

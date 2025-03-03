@@ -77,7 +77,6 @@
                         <input type="text" class="form-control" name="minPurchase" id="minPurchase" required>
                     </div>
                     <button class="btn btn-primary" type="submit" id="submit">送出</button>
-
                 </form>
             </div>
         </div>

@@ -22,21 +22,21 @@
                             <label for="" class="form-label">帳號</label>
                             <input type="text" class="form-control" name="account"
                             required
-                            minlength="4" maxlength="20"
+                            minlength="4" maxlength="10"
                             >
-                            <div class="form-text">請輸入4~20字元的帳號</div>
+                            <div class="form-text">請輸入4~10字元的帳號</div>
                         </div>
                         <div class="mb-2">
                             <label for="" class="form-label">密碼</label>
                             <input type="password" class="form-control" name="password" required
-                            minlength="4" maxlength="20"
+                            minlength="4" maxlength="10"
                             >
-                            <div class="form-text">請輸入4~20字元的密碼</div>
+                            <div class="form-text">請輸入4~10字元的密碼</div>
                         </div>
                         <div class="mb-2">
                             <label for="" class="form-label">確認密碼</label>
                             <input type="password" class="form-control" name="repassword" required
-                            minlength="4" maxlength="20"
+                            minlength="4" maxlength="10"
                             >
                         </div>
                         <button class="btn btn-primary" type="submit">送出</button>

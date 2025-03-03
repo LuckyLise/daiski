@@ -182,11 +182,11 @@ $courses = $stmt->fetchAll();
                         <!-- 篩選表單 (保留排序參數) -->
                         <form method="GET" class="row g-3">
                             <div class="col-md-3">
-                                <label for="">關鍵字搜尋</label>
+                                <label for="" class="text-white">關鍵字搜尋</label>
                                 <input type="text" name="search" class="form-control" placeholder="輸入課程名稱或描述" value="<?= isset($_GET['search']) ? htmlspecialchars($_GET['search']) : '' ?>">
                             </div>
                             <div class="col-md-3">
-                                <label for="">類型</label>
+                                <label for="" class="text-white">類型</label>
                                 <select name="type" class="form-control">
                                     <option value="all" <?= (isset($_GET['type']) && $_GET['type'] === 'all') ? 'selected' : '' ?>>全部</option>
                                     <option value="雙板" <?= (isset($_GET['type']) && $_GET['type'] === '雙板') ? 'selected' : '' ?>>雙板</option>
@@ -194,7 +194,7 @@ $courses = $stmt->fetchAll();
                                 </select>
                             </div>
                             <div class="col-md-3 ">
-                                <label for="">難度</label>
+                                <label for="" class="text-white">難度</label>
                                 <select name="difficulty" class="form-control">
                                     <option value="" <?= empty($_GET['difficulty']) ? 'selected' : '' ?>>全部</option>
                                     <option value="初級" <?= (isset($_GET['difficulty']) && $_GET['difficulty'] === '初級') ? 'selected' : '' ?>>初級</option>
@@ -228,10 +228,10 @@ $courses = $stmt->fetchAll();
                             $queryParams['sort'] = 'created_at';
                             $sortCreatedLink = "?" . http_build_query($queryParams);
                             ?>
-                            <a href="<?= $sortAscLink ?>" class="btn btn-outline-primary me-2">價格：低 → 高</a>
-                            <a href="<?= $sortDescLink ?>" class="btn btn-outline-primary me-2">價格：高 → 低</a>
-                            <a href="<?= $sortCreatedLink ?>" class="btn btn-outline-primary me-2">最新課程</a>
-                            <a href="courses.php" class="btn btn-outline-secondary me-2">取消排序</a>
+                            <a href="<?= $sortAscLink ?>" class="btn btn-outline-primary me-2 text-white">價格：低 → 高</a>
+                            <a href="<?= $sortDescLink ?>" class="btn btn-outline-primary me-2 text-white">價格：高 → 低</a>
+                            <a href="<?= $sortCreatedLink ?>" class="btn btn-outline-primary me-2 text-white">最新課程</a>
+                            <a href="courses.php" class="btn btn-outline-secondary me-2 text-white">取消排序</a>
                         </div>
                         <!-- Bootstrap Modal（新增課程視窗） -->
                         <div class="modal fade" id="addCourseModal" tabindex="-1" aria-labelledby="addCourseModalLabel" aria-hidden="true">
@@ -540,7 +540,11 @@ $courses = $stmt->fetchAll();
 
 
     <?php include("./js.php") ?>
-
+    <script>
+        $(document).on("show.bs.modal", ".modal", function () {
+  $("body").append($(this));
+});
+    </script>
 </body>
 
 </html>

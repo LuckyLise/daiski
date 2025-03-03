@@ -46,7 +46,7 @@ $db_host = NULL;
         <div class="d-flex flex-row w-100 ">
             <?php include("./new_side_mod.php") ?>
 
-            <div class="container myPage">
+            <div class="container-fluid myPage">
                 <div class="py-2">
                     <a href="coupons.php" class="btn btn-primary"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
                 </div>

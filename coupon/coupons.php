@@ -207,10 +207,10 @@ $db_host = NULL;
     <div class="d-flex flex-column myPage" id="mainContent">
         <?php include("./new_head_mod.php"); ?>
 
-        <div class="d-flex flex-row w-100 ">
+        <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php"); ?>
 
-            <div class="container myPage">
+            <div class="container ">
                 <!-- 標題 -->
                 <div class="text-center py-3">
                     <h1>優惠卷清單</h1>

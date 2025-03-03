@@ -91,14 +91,17 @@ try {
 </head>
 
 <body>
-
+    <!-- Loading 畫面 -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
     <div class="d-flex flex-column">
         <?php include("./new_head_mod.php"); ?>
 
-        <div class="d-flex flex-row w-100 ">
+        <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php"); ?>
 
-            <div class="container myPage">
+            <div class="container ">
                 <div class="py-2 ">
                     <a class="btn btn-primary" href="articles.php"><i class="fa-solid fa-list fa-fw"></i>文章列表</a>
                 </div>
@@ -138,7 +141,7 @@ try {
                                                         <div class="ratio ratio-1x1">
                                                             <img class="object-fit-cover" src="article_imgs/<?= $img["name"] ?>" alt="">
                                                         </div>
-                                                        <h3 class="h4"><?= $img["name"] ?></h3>
+                                                        <!-- <h3 class="h4"><?= $img["name"] ?></h3> -->
                                                     <?php endif; ?>
                                                 </div>
                                             <?php endforeach; ?>

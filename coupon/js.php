@@ -27,6 +27,8 @@
 <!-- <script src="./js/chart-pie-demo.js"></script> -->
 <!-- <script src="./js/datatables-demo.js"></script> -->
 
+<!-- GSAP -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>
 
 
 <!-- 引入最新版本的 Three.js（Vanta.js 依賴 Three.js） -->
@@ -97,3 +99,61 @@
         quantity: 5.00,
     });
 </script>
+
+<script>
+        window.addEventListener('load', function() {
+            // 出場動畫：loading 畫面淡出
+            gsap.to("#loadingOverlay", {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: function() {
+                    document.getElementById("loadingOverlay").style.display = "none";
+                }
+            });
+
+            //以下是自己網頁的入場動畫
+
+            //       gsap.fromTo("#mainContent", 
+            //   { rotation: -10, opacity: 0 }, 
+            //   { rotation: 0, opacity: 1, duration: 0.8, ease: "back.out(1.5)" }
+            // );
+            //還不錯
+
+            // gsap.fromTo("#mainContent", 
+            //   { scale: 0.8, opacity: 0 }, 
+            //   { scale: 1, opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+            //普通
+
+            // gsap.fromTo("#mainContent", 
+            //   { filter: "blur(5px)", opacity: 0 }, 
+            //   { filter: "blur(0px)", opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+
+
+            // gsap.from("#mainContent", {
+            //   y: 100,
+            //   duration: 0.8,
+            //   ease: "elastic.out(1, 0.5)"
+            // });
+
+            // let elements = document.querySelectorAll("#mainContent div");
+            // elements.forEach(el => {
+            //     gsap.from(el, {
+            //         x: gsap.utils.random(-50, 50),
+            //         y: gsap.utils.random(-50, 50),
+            //         duration: 1,
+            //         ease: "back.out(1.5)"
+            //     });
+            // });
+            //不怎麼好看但很炫
+
+            // gsap.from("#mainContent", {
+            //     rotateY: -90,
+            //     duration: 1,
+            //     ease: "back.out(1.7)"
+            // });
+            //還不錯
+
+        });
+    </script> 

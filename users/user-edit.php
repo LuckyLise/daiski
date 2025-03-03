@@ -5,7 +5,7 @@ if (!isset($_GET["id"])) {
 
 $id = $_GET["id"];
 
-require_once('../daiski/pdo_connect.php');
+require_once('../pdo_connect.php');
 
 $sql = "SELECT * FROM users WHERE id = $id";
 $stmt = $db_host->prepare($sql);
@@ -35,7 +35,7 @@ try {
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <?php include("../daiski/css.php") ?>
+    <?php include("./css.php") ?>
     <style>
         body {
 			color: white !important;
@@ -145,7 +145,7 @@ try {
 
             </div>
         </div>
-        <?php include("../daiski/js.php") ?>
+        <?php include("./js.php") ?>
         <script>
             VANTA.BIRDS({
 			el: ".sidebar", // 指定作用的 HTML 元素 ID

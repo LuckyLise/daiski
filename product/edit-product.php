@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once("./PDO_connect.php");
+require_once("../pdo_connect.php");
 
 // 檢查是否有商品 ID，並從 GET 參數中獲取商品 ID
 if (!isset($_GET['id'])) {
@@ -82,6 +82,9 @@ try {
     <title>商品編輯頁面</title>
     <?php include("./css.php"); ?>
     <style>
+        body{
+            color: white;
+        }
         .small-img {
             max-width: 60px;
             aspect-ratio: 3/4;
@@ -101,118 +104,125 @@ try {
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <!-- 單一大表單 (更新商品資料與圖片設定) -->
-            <form class="col-12 row" method="POST" action="edit-product.php?id=<?= $product_id ?>">
-                <input type="hidden" name="action" value="edit">
-                <!-- 左半邊：商品資料與新增圖片上傳區 -->
-                <div class="col-md-6">
-                    <h4>商品資料</h4>
-                    <div class="form-group">
-                        <label for="name">商品名稱</label>
-                        <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($product['name']) ?>" required>
+    <div class="d-flex flex-column">
+        <?php include("./new_head_mod.php"); ?>
+    </div>
+    <div class="d-flex flex-row w-100 myPage">
+        <?php include("./new_side_mod.php"); ?>
+        <div class="container ">
+            <div class="row">
+                <!-- 單一大表單 (更新商品資料與圖片設定) -->
+                <form class="col-12 row" method="POST" action="edit-product.php?id=<?= $product_id ?>">
+                    <input type="hidden" name="action" value="edit">
+                    <!-- 左半邊：商品資料與新增圖片上傳區 -->
+                    <div class="col-md-6">
+                        <h4>商品資料</h4>
+                        <div class="form-group">
+                            <label for="name">商品名稱</label>
+                            <input type="text" class="form-control" id="name" name="name" value="<?= htmlspecialchars($product['name']) ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="price">價格</label>
+                            <input type="number" class="form-control" id="price" name="price" value="<?= htmlspecialchars($product['price']) ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category_id">分類</label>
+                            <select class="form-control" id="category_id" name="category_id" required>
+                                <?php foreach ($categories as $category): ?>
+                                    <option value="<?= $category['id'] ?>" <?= ($product['category_id'] == $category['id']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($category['name']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="introduction">商品介紹</label>
+                            <textarea class="form-control" id="introduction" name="introduction" required rows="3"><?= htmlspecialchars($product['introduction']) ?></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="specIntroduction">規格介紹</label>
+                            <textarea class="form-control" id="specIntroduction" name="specIntroduction" required rows="3"><?= htmlspecialchars($product['specIntroduction']) ?></textarea>
+                        </div>
+                        <!-- 新增圖片上傳區：選取圖片 + 確定新增 -->
+                        <div class="form-group">
+                            <label for="product_images">新增圖片</label>
+                            <input type="file" class="form-control" id="product_images" name="product_images[]" multiple>
+                            <button type="button" id="confirmUploadBtn" class="btn btn-success mt-2">確定新增圖片</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="price">價格</label>
-                        <input type="number" class="form-control" id="price" name="price" value="<?= htmlspecialchars($product['price']) ?>" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="category_id">分類</label>
-                        <select class="form-control" id="category_id" name="category_id" required>
-                            <?php foreach ($categories as $category): ?>
-                                <option value="<?= $category['id'] ?>" <?= ($product['category_id'] == $category['id']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($category['name']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="introduction">商品介紹</label>
-                        <textarea class="form-control" id="introduction" name="introduction" required rows="3"><?= htmlspecialchars($product['introduction']) ?></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="specIntroduction">規格介紹</label>
-                        <textarea class="form-control" id="specIntroduction" name="specIntroduction" required rows="3"><?= htmlspecialchars($product['specIntroduction']) ?></textarea>
-                    </div>
-                    <!-- 新增圖片上傳區：選取圖片 + 確定新增 -->
-                    <div class="form-group">
-                        <label for="product_images">新增圖片</label>
-                        <input type="file" class="form-control" id="product_images" name="product_images[]" multiple>
-                        <button type="button" id="confirmUploadBtn" class="btn btn-success mt-2">確定新增圖片</button>
-                    </div>
-                </div>
-                <!-- 右半邊：圖片管理區 -->
-                <div class="col-md-6">
-                    <h4>圖片管理</h4>
-                    <!-- 主圖預覽 -->
-                    <div class="mb-3">
-                        <?php
-                        $default_main_url = "";
-                        foreach ($images as $img) {
-                            if ($img['sortOrder'] == 0) {
-                                $default_main_url = $img['url'];
-                                break;
+                    <!-- 右半邊：圖片管理區 -->
+                    <div class="col-md-6">
+                        <h4>圖片管理</h4>
+                        <!-- 主圖預覽 -->
+                        <div class="mb-3">
+                            <?php
+                            $default_main_url = "";
+                            foreach ($images as $img) {
+                                if ($img['sortOrder'] == 0) {
+                                    $default_main_url = $img['url'];
+                                    break;
+                                }
                             }
-                        }
-                        ?>
-                        <img id="mainPreview" class="main-preview" src="<?= htmlspecialchars($default_main_url) ?>" alt="主圖預覽">
-                    </div>
-                    <h4>排序順序，數值越小越優先，0為主圖片，點選小圖可更改主圖片</h4>
-                    <!-- 小圖列表，並加入 id="imageList" 以便新增圖片時動態追加 -->
-                    <div id="imageList" class="image-list row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3">
-                        <?php
-                        // 目前總數
-                        $total = count($images);
-                        ?>
-                        <?php foreach ($images as $img): ?>
-                            <?php $is_main = ($img['sortOrder'] == 0); ?>
-                            <div class="image-item">
-                                <div class="d-flex align-items-center mb-2">
-                                    <img class="small-img mr-2" src="<?= htmlspecialchars($img['url']) ?>" alt="小圖" data-img-id="<?= $img['id'] ?>">
-                                    <div class="mx-2">
-                                        <input type="radio" name="main_image_id" value="<?= $img['id'] ?>" <?= $is_main ? 'checked' : '' ?>>
+                            ?>
+                            <img id="mainPreview" class="main-preview" src="<?= htmlspecialchars($default_main_url) ?>" alt="主圖預覽">
+                        </div>
+                        <h4>排序順序，數值越小越優先，0為主圖片，點選小圖可更改主圖片</h4>
+                        <!-- 小圖列表，並加入 id="imageList" 以便新增圖片時動態追加 -->
+                        <div id="imageList" class="image-list row row-cols-sm-2 row-cols-1">
+                            <?php
+                            // 目前總數
+                            $total = count($images);
+                            ?>
+                            <?php foreach ($images as $img): ?>
+                                <?php $is_main = ($img['sortOrder'] == 0); ?>
+                                <div class="image-item">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <img class="small-img " src="<?= htmlspecialchars($img['url']) ?>" alt="小圖" data-img-id="<?= $img['id'] ?>">
+                                        <div>
+                                            <input type="radio" name="main_image_id" value="<?= $img['id'] ?>" <?= $is_main ? 'checked' : '' ?>>
+                                        </div>
+                                        <!-- 這裡下拉選單以 $total 為選項數，但後續會由 JS 更新 -->
+                                        <select name="sort_order[<?= $img['id'] ?>]" class="form-control sort-select" style="width:80px;" data-current="<?= ($is_main ? 0 : (int)$img['sortOrder']) ?>">
+                                            <?php for ($i = 0; $i < $total; $i++): ?>
+                                                <option value="<?= $i ?>" <?= ((int)$img['sortOrder'] === $i ? 'selected' : '') ?>><?= $i ?></option>
+                                            <?php endfor; ?>
+                                        </select>
+                                        <button type="button" class="btn btn-danger delete-image-btn" data-img-id="<?= $img['id'] ?>">刪除</button>
                                     </div>
-                                    <!-- 這裡下拉選單以 $total 為選項數，但後續會由 JS 更新 -->
-                                    <select name="sort_order[<?= $img['id'] ?>]" class="form-control sort-select" style="width:80px;" data-current="<?= ($is_main ? 0 : (int)$img['sortOrder']) ?>">
-                                        <?php for ($i = 0; $i < $total; $i++): ?>
-                                            <option value="<?= $i ?>" <?= ((int)$img['sortOrder'] === $i ? 'selected' : '') ?>><?= $i ?></option>
-                                        <?php endfor; ?>
-                                    </select>
-                                    <button type="button" class="btn btn-danger delete-image-btn" data-img-id="<?= $img['id'] ?>">刪除</button>
                                 </div>
-                            </div>
-                        <?php endforeach; ?>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
-                </div>
-                <!-- 表單送出：更新商品 -->
-                <div class="col-12 mt-3">
-                    <button type="submit" class="btn btn-primary">更新商品資料並回到列表</button>
-                </div>
-            </form>
-        </div>
-
-        <!-- 規格管理區，放在表單之外，以 AJAX 處理新增與刪除 -->
-        <div class="specContainer mt-4">
-            <h4>商品規格</h4>
-            <div id="specList" class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3">
-                <?php foreach ($product_specs as $spec): ?>
-                    <div class="spec-item" data-spec-id="<?= $spec['id'] ?>">
-                        <span class="spec-name"><?= htmlspecialchars($spec['specName']) ?></span>
-                        :
-                        <span class="spec-value"><?= htmlspecialchars($spec['specValue']) ?></span>
-                        (排序: <?= $spec['sortOrder'] ?>)
-                        <button type="button" class="btn btn-danger btn-sm delete-spec-btn" data-spec-id="<?= $spec['id'] ?>">刪除</button>
+                    <!-- 表單送出：更新商品 -->
+                    <div class="col-12 mt-3">
+                        <button type="submit" class="btn btn-primary">更新商品資料並回到列表</button>
                     </div>
-                <?php endforeach; ?>
+                </form>
             </div>
-            <div id="addSpecSection" class="d-flex flex-row gap-3 mt-3">
-                <input type="text" id="newSpecName" placeholder="規格名稱" value="尺寸">
-                <input type="text" id="newSpecValue" placeholder="規格內容">
-                <button type="button" id="addSpecBtn" class="btn btn-success btn-sm">新增規格</button>
+
+            <!-- 規格管理區，放在表單之外，以 AJAX 處理新增與刪除 -->
+            <div class="specContainer mt-4">
+                <h4>商品規格</h4>
+                <div id="specList" class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3">
+                    <?php foreach ($product_specs as $spec): ?>
+                        <div class="spec-item" data-spec-id="<?= $spec['id'] ?>">
+                            <span class="spec-name"><?= htmlspecialchars($spec['specName']) ?></span>
+                            :
+                            <span class="spec-value"><?= htmlspecialchars($spec['specValue']) ?></span>
+                            (排序: <?= $spec['sortOrder'] ?>)
+                            <button type="button" class="btn btn-danger btn-sm delete-spec-btn" data-spec-id="<?= $spec['id'] ?>">刪除</button>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <div id="addSpecSection" class="d-flex flex-row gap-3 mt-3">
+                    <input type="text" id="newSpecName" placeholder="規格名稱" value="尺寸">
+                    <input type="text" id="newSpecValue" placeholder="規格內容">
+                    <button type="button" id="addSpecBtn" class="btn btn-success btn-sm">新增規格</button>
+                </div>
             </div>
         </div>
     </div>
+
 
     <?php include("./js.php"); ?>
 
@@ -417,72 +427,76 @@ try {
 
 
         // --- 規格管理功能 ---
-    document.addEventListener("DOMContentLoaded", function() {
-      // 新增規格
-      document.getElementById("addSpecBtn").addEventListener("click", function(){
-        const specName = document.getElementById("newSpecName").value.trim();
-        const specValue = document.getElementById("newSpecValue").value.trim();
-        if (!specName || !specValue) {
-           alert("請輸入規格名稱與內容");
-           return;
-        }
-        const formData = new FormData();
-        formData.append("specName", specName);
-        formData.append("specValue", specValue);
-        formData.append("product_id", "<?= $product_id ?>");
-        
-        fetch("upload_spec.php", {
-          method: "POST",
-          body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-          if(data.success) {
-             const specList = document.getElementById("specList");
-             const specDiv = document.createElement("div");
-             specDiv.className = "spec-item";
-             specDiv.setAttribute("data-spec-id", data.new_spec.id);
-             specDiv.innerHTML = `<span class="spec-name">${data.new_spec.specName}</span> : 
+        document.addEventListener("DOMContentLoaded", function() {
+            // 新增規格
+            document.getElementById("addSpecBtn").addEventListener("click", function() {
+                const specName = document.getElementById("newSpecName").value.trim();
+                const specValue = document.getElementById("newSpecValue").value.trim();
+                if (!specName || !specValue) {
+                    alert("請輸入規格名稱與內容");
+                    return;
+                }
+                const formData = new FormData();
+                formData.append("specName", specName);
+                formData.append("specValue", specValue);
+                formData.append("product_id", "<?= $product_id ?>");
+
+                fetch("upload_spec.php", {
+                        method: "POST",
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const specList = document.getElementById("specList");
+                            const specDiv = document.createElement("div");
+                            specDiv.className = "spec-item";
+                            specDiv.setAttribute("data-spec-id", data.new_spec.id);
+                            specDiv.innerHTML = `<span class="spec-name">${data.new_spec.specName}</span> : 
                <span class="spec-value">${data.new_spec.specValue}</span> (排序: ${data.new_spec.sortOrder}) 
                <button type="button" class="btn btn-danger btn-sm delete-spec-btn" data-spec-id="${data.new_spec.id}">刪除</button>`;
-             specList.appendChild(specDiv);
-             document.getElementById("newSpecValue").value = "";
-          } else {
-             alert("新增規格失敗: " + data.message);
-          }
-        })
-        .catch(error => {
-           console.error("Error:", error);
-           alert("新增規格時發生錯誤");
+                            specList.appendChild(specDiv);
+                            document.getElementById("newSpecValue").value = "";
+                        } else {
+                            alert("新增規格失敗: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("新增規格時發生錯誤");
+                    });
+            });
+
+            // 刪除規格 (事件代理)
+            document.getElementById("specList").addEventListener("click", function(e) {
+                if (e.target && e.target.matches(".delete-spec-btn")) {
+                    const specId = e.target.getAttribute("data-spec-id");
+                    if (!confirm("確定要刪除此規格嗎?")) return;
+                    fetch("delete_spec.php", {
+                            method: "POST",
+                            body: new URLSearchParams({
+                                id: specId
+                            }),
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const specItem = e.target.closest(".spec-item");
+                                if (specItem) specItem.remove();
+                            } else {
+                                alert("刪除規格失敗: " + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error:", error);
+                            alert("刪除規格時發生錯誤");
+                        });
+                }
+            });
         });
-      });
-      
-      // 刪除規格 (事件代理)
-      document.getElementById("specList").addEventListener("click", function(e){
-        if(e.target && e.target.matches(".delete-spec-btn")) {
-          const specId = e.target.getAttribute("data-spec-id");
-          if(!confirm("確定要刪除此規格嗎?")) return;
-          fetch("delete_spec.php", {
-            method: "POST",
-            body: new URLSearchParams({ id: specId }),
-            headers: { "Content-Type": "application/x-www-form-urlencoded" }
-          })
-          .then(response => response.json())
-          .then(data => {
-             if(data.success) {
-                const specItem = e.target.closest(".spec-item");
-                if(specItem) specItem.remove();
-             } else {
-                alert("刪除規格失敗: " + data.message);
-             }
-          })
-          .catch(error => {
-             console.error("Error:", error);
-             alert("刪除規格時發生錯誤");
-          });
-        }
-      });
-    });
     </script>
 
 
@@ -512,59 +526,64 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.topology.min.js"></script>
 
     <script>
-        //     VANTA.TOPOLOGY({
-        //   el: "body",
-        //   mouseControls: true,
-        //   touchControls: true,
-        //   gyroControls: false,
-        //   minHeight: 200.00,
-        //   minWidth: 200.00,
-        //   scale: 1.00,
-        //   scaleMobile: 1.00,
-        //   color: 0x56defa,
-        //   backgroundColor: 0xffffff
+        VANTA.BIRDS({
+            el: ".sidebar", // 指定作用的 HTML 元素 ID
+            mouseControls: true, // 啟用滑鼠控制，使動畫會跟隨滑鼠移動
+            touchControls: true, // 啟用觸控控制，使動畫可以隨觸控移動
+            gyroControls: false, // 禁用陀螺儀控制（手機旋轉時不影響動畫）
+            minHeight: 50.00, // 設定最小高度，確保畫面不會小於 200px
+            minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
+            scale: 1.00, // 設定一般裝置上的縮放比例
+            scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
+            separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+            color1: 0xffffff,
+            birdSize: 0.50,
+            // backgroundColor:0x4e73df
+        });
+
+        VANTA.BIRDS({
+            el: ".head", // 指定作用的 HTML 元素 ID
+            mouseControls: true, // 啟用滑鼠控制，使動畫會跟隨滑鼠移動
+            touchControls: true, // 啟用觸控控制，使動畫可以隨觸控移動
+            gyroControls: false, // 禁用陀螺儀控制（手機旋轉時不影響動畫）
+            minHeight: 50.00, // 設定最小高度，確保畫面不會小於 200px
+            minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
+            scale: 1.00, // 設定一般裝置上的縮放比例
+            scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
+            separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+            color1: 0xffffff,
+            birdSize: 0.50,
+            // backgroundColor:0x4e73df
+        });
+
+        // VANTA.WAVES({
+        //     el: ".myPage",
+        //     mouseControls: true,
+        //     touchControls: true,
+        //     gyroControls: false,
+        //     minHeight: 200.00,
+        //     minWidth: 200.00,
+        //     scale: 1.00,
+        //     scaleMobile: 1.00,
+        //     color: 0xb2e2ff
         // })
 
-        // VANTA.NET({
-        //   el: "body",
-        //   mouseControls: true,
-        //   touchControls: true,
-        //   gyroControls: false,
-        //   minHeight: 200.00,
-        //   minWidth: 200.00,
-        //   scale: 1.00,
-        //   scaleMobile: 1.00,
-        //   color: 0x3fddff,
-        //   backgroundColor: 0xffffff
-        // })
-
-        // VANTA.RINGS({
-        //   el: "body",
-        //   mouseControls: true,
-        //   touchControls: true,
-        //   gyroControls: false,
-        //   minHeight: 200.00,
-        //   minWidth: 200.00,
-        //   scale: 1.00,
-        //   scaleMobile: 1.00,
-        //   backgroundColor: 0xffffff,
-        //   backgroundAlpha: 1
-
-        // })
-
-        window.onload = function() {
-            VANTA.WAVES({
-                el: "body",
-                mouseControls: true,
-                touchControls: true,
-                gyroControls: false,
-                minHeight: 200.00,
-                minWidth: 200.00,
-                scale: 1.00,
-                scaleMobile: 1.00,
-                color: 0xb2e2ff
-            })
-        }
+        VANTA.BIRDS({
+            el: ".myPage", // 指定作用的 HTML 元素 ID
+            mouseControls: true, // 啟用滑鼠控制，使動畫會跟隨滑鼠移動
+            touchControls: true, // 啟用觸控控制，使動畫可以隨觸控移動
+            gyroControls: false, // 禁用陀螺儀控制（手機旋轉時不影響動畫）
+            minHeight: 50.00, // 設定最小高度，確保畫面不會小於 200px
+            minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
+            scale: 1.00, // 設定一般裝置上的縮放比例
+            scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
+            separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
+            // backgroundColor:0x4e73df
+            color1: 0xffffff,
+            birdSize: 0.10,
+            quantity: 5.00,
+        });
+  </script>
     </script>
 </body>
 

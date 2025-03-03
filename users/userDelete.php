@@ -1,5 +1,5 @@
 <?php
-require_once("../daiski/pdo_connect.php");
+require_once("../pdo_connect.php");
 $id=$_GET["id"];
 
 

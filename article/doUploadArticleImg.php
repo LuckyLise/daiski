@@ -1,5 +1,5 @@
-<?
-require_once("../db_connect.php");
+<?php
+require_once("./db_connect.php");
 
 if (!isset($_POST["name"])) {
     echo "請走正門";
@@ -15,7 +15,7 @@ if ($_FILES["image"]["error"] == 0) {
     $ext = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
     $filename = time() . "." . $ext;
     echo $ext;
-    if (move_uploaded_file($_FILES["image"]["tmp_name"], "../img/" . $filename)) {
+    if (move_uploaded_file($_FILES["image"]["tmp_name"], "./img/" . $filename)) {
         echo "上傳OK";
     } else {
         echo "upload file fail";

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2025-02-21 13:17:55
+-- 產生時間： 2025-02-27 19:36:15
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -39,10 +39,8 @@ CREATE TABLE `article_images` (
 --
 
 INSERT INTO `article_images` (`id`, `name`, `sort`, `article_id`) VALUES
-(1, 'img001001', 1, 1),
-(2, 'img001002', 2, 1),
-(3, 'img001003', 3, 1),
-(4, 'img001004', 4, 1);
+(1, 'img001001.jpg', 1, 1),
+(2, 'img001002.jpg', 2, 1);
 
 --
 -- 已傾印資料表的索引

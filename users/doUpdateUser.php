@@ -3,7 +3,7 @@ if(!isset($_POST["name"])){
     die("請循正常管道進入此頁");
 }
 
-require_once("../daiski/pdo_connect.php");
+require_once("../pdo_connect.php");
 
 $id=$_POST["id"];
 $name=$_POST["name"];

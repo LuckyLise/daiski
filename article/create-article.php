@@ -1,4 +1,4 @@
-<?
+<?php
 require_once("../pdo_connect.php");
 $sql = "SELECT category FROM article_categories GROUP BY category";
 $stmt = $db_host->prepare($sql);
@@ -31,91 +31,100 @@ try {
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <? include("../css.php") ?>
+    <?php include("./css.php") ?>
 </head>
 
 <body>
-    <div class="container">
-        <div class="py-2">
-            <a class="btn btn-primary" href="articles.php"><i class="fa-solid fa-list fa-fw"></i>文章列表</a>
+
+    <div class="d-flex flex-column">
+        <?php include("./new_head_mod.php"); ?>
+
+        <div class="d-flex flex-row w-100 ">
+            <?php include("./new_side_mod.php"); ?>
+
+
+            <div class="container myPage">
+                <div class="py-2">
+                    <a class="btn btn-primary" href="articles.php"><i class="fa-solid fa-list fa-fw"></i>文章列表</a>
+                </div>
+                <form action="doCreateArticle.php" method="post">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>類別</th>
+                            <!-- <input type="text" class="form-control" name="title"> -->
+                            <td>
+
+                                <div class="dropdown">
+                                    <button class="btn_category btn btn-light dropdown-toggle" href="#" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                        選擇分類
+
+                                    </button>
+
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <?php foreach ($categories as $category): ?>
+                                            <li><a class="btn_category_choose dropdown-item" href="#"><?= $category["category"] ?></a></li>
+                                        <?php endforeach; ?>
+
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <th>標題</th>
+                            <td>
+                                <input type="text" class="form-control" name="title">
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>內容</th>
+                            <td>
+                                <textarea type="text" class="form-control article_content" name="content"></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <!-- draggable 允許GUI拖拉上傳 -->
+                            <th>圖片</th>
+                            <td>
+                                <!-- multiple="multiple" draggable="true" -->
+                                <input type="file" class="form-control" name="images" accept=".jpg, .jpeg, .png">
+                            </td>
+
+                        </tr>
+                        <tr>
+                            <th>影片</th>
+
+                            <td>
+                                <input type="file" class="form-control" name="videos" accept=".mp4 .mkv .wmv">
+                            </td>
+
+                        </tr>
+                        <table class="table table-bordered">
+                            <th>發布/結束</th>
+                            <td>
+                                <label for="startDate">發布時間</label>
+                                <input type="datetime-local" class="form-control" name="startDate"
+                                    value="">
+
+                            </td>
+                            <td>
+                                <label for="endDate">結束時間</label>
+                                <input type="datetime-local" class="form-control" name="endDate"
+                                    value="">
+                            </td>
+                        </table>
+
+                    </table>
+                    <button class="btn btn-primary" type="submit">送出</button>
+                </form>
+
+            </div>
+
         </div>
-        <form action="doCreateArticle.php" method="post">
-            <table class="table table-bordered">
-                <tr>
-                    <th>類別</th>
-                    <!-- <input type="text" class="form-control" name="title"> -->
-                    <td>
-
-                        <div class="dropdown">
-                            <button class="btn_category btn btn-light dropdown-toggle" href="#" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                選擇分類
-
-                            </button>
-
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <? foreach ($categories as $category): ?>
-                                    <li><a class="btn_category_choose dropdown-item" href="#"><?= $category["category"] ?></a></li>
-                                <? endforeach; ?>
-
-                            </ul>
-                        </div>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th>標題</th>
-                    <td>
-                        <input type="text" class="form-control" name="title">
-                    </td>
-                </tr>
-                <tr>
-                    <th>內容</th>
-                    <td>
-                        <textarea type="text" class="form-control article_content" name="content"></textarea>
-                    </td>
-                </tr>
-                <tr>
-                    <!-- draggable 允許GUI拖拉上傳 -->
-                    <th>圖片</th>
-                    <td>
-                        <!-- multiple="multiple" draggable="true" -->
-                        <input type="file" class="form-control" name="images" accept=".jpg, .jpeg, .png">
-                    </td>
-
-                </tr>
-                <tr>
-                    <th>影片</th>
-
-                    <td>
-                        <input type="file" class="form-control" name="videos" accept=".mp4 .mkv .wmv">
-                    </td>
-
-                </tr>
-                <table class="table table-bordered">
-                    <th>發布/結束</th>
-                    <td>
-                        <label for="startDate">發布時間</label>
-                        <input type="datetime-local" class="form-control" name="startDate"
-                            value="">
-
-                    </td>
-                    <td>
-                        <label for="endDate">結束時間</label>
-                        <input type="datetime-local" class="form-control" name="endDate"
-                            value="">
-                    </td>
-                </table>
-
-            </table>
-            <button class="btn btn-primary" type="submit">送出</button>
-        </form>
-
     </div>
 
 
-
-
-    <? include("../js.php") ?>
+    <?php include("./js.php") ?>
     <script>
         const btn_category_choose = document.querySelectorAll(".btn_category_choose");
 

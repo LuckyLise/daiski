@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once("../daiski/pdo_connect.php");
+require_once("../pdo_connect.php");
 
 $name=$_POST["name"];
 $account=$_POST["account"];

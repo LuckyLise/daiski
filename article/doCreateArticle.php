@@ -1,7 +1,7 @@
-<?
+<?php
 // 將收到的表單資料新增至資料庫
 
-require_once("../pdo_connect.php");
+require_once("./pdo_connect.php");
 
 if (!isset($_POST["title"])) {
     die("請輸入標題");
@@ -45,7 +45,7 @@ if (isset($_FILES["images"]) && $_FILES["images"]["error"] == 0) {
     $ext = pathinfo($_FILES["images"]["name"], PATHINFO_EXTENSION);
     $filename = time() . "." . $ext;
     echo $ext;
-    if (move_uploaded_file($_FILES["images"]["tmp_name"], "../images/" . $filename)) {
+    if (move_uploaded_file($_FILES["images"]["tmp_name"], "./images/" . $filename)) {
         echo "上傳OK";
     } else {
         echo "upload file fail";

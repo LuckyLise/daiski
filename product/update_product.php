@@ -1,6 +1,6 @@
 <?php 
 session_start();
-require_once("./PDO_connect.php");
+require_once("../pdo_connect.php");
 
 if (!isset($_POST['id']) || !isset($_POST['action'])) {
     die("缺少必要參數");

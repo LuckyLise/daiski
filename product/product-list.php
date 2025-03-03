@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once("./PDO_connect.php");
+require_once("../pdo_connect.php");
 
 try {
 
@@ -325,7 +325,7 @@ try {
     $productCount = $countStmt->fetch(PDO::FETCH_ASSOC)['total']; //獲得未經篩選過的商品總數
 
     //商品分頁
-    $perPage = 4;
+    $perPage = 12;
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     if ($page < 1) $page = 1;
     $offset = ($page - 1) * $perPage;
@@ -388,12 +388,15 @@ try {
             product_images.url AS image_url
         FROM products
         JOIN categories ON products.category_id = categories.id
-        JOIN product_images 
+        LEFT JOIN product_images 
             ON product_images.product_id = products.id 
             AND product_images.sortOrder = 0
+            AND product_images.valid = 1
         $whereClause
         $orderByClause
         LIMIT " . (int)$perPage . " OFFSET " . (int)$offset;
+    //product_images用LEFT JOIN是為了讓商品完全沒有圖時 他不會整個card都不顯示(商品的其他資訊都不抓) 而是card有顯示但圖沒抓到是死圖
+
 
     $stmt = $db_host->prepare($sql);
     $stmt->execute($params);
@@ -452,351 +455,371 @@ try {
         </div>
     </div>
 
-    <div class="container">
-        <?php if (isset($_SESSION['message'])): ?>
-            <div class="alert alert-success fade show d-flex justify-content-center" id="success-message" role="alert">
-                <?= htmlspecialchars($_SESSION['message']); ?> <span class="d-inline-block ms-3" id="countdown">5秒後訊息自動關閉</span>
-            </div>
-        <?php unset($_SESSION['message']);
-        endif; ?>
-        <div class="py-2 d-flex">
 
-            <ul class="nav nav-underline">
-                <li class="nav-item">
-                    <a class="nav-link <?php if (!isset($_GET["category"])) echo "active"; ?>" aria-current="page" href="product-list.php">全部</a>
-                </li>
 
-                <?php
-                // 定義一個遞迴函數來處理子分類
-                function renderCategory($parentId, $rowsCate)
-                {
-                    foreach ($rowsCate as $category) {
-                        if ($category["parentId"] == $parentId) {
-                            // 判斷該分類是否被選中
-                            $isActive = (isset($_GET["category"]) && $_GET["category"] == $category["id"]) ? "active" : "";
 
-                            // 判斷是否選中該分類或其子分類
-                            $isExpanded = isset($_GET["category"]) && (isCategoryOrDescendantSelected($category["id"], $_GET["category"], $rowsCate)) ? 'block' : 'none';
-                ?>
-                            <li class="nav-item">
-                                <a class="nav-link d-flex justify-content-center <?= $isActive ?>" href="product-list.php?category=<?= $category["id"] ?>">
-                                    <?= $category["name"] ?>
+
+    <div class="d-flex flex-column">
+        <?php include("./new_head_mod.php"); ?>
+
+        <div class="d-flex flex-row w-100 ">
+            <?php include("./new_side_mod.php"); ?>
+
+            <div class="container-fluid d-flex flex-column p-5 myPage">
+
+
+                <?php if (isset($_SESSION['message'])): ?>
+                    <div class="alert alert-success fade show d-flex justify-content-center" id="success-message" role="alert">
+                        <?= htmlspecialchars($_SESSION['message']); ?> <span class="d-inline-block ms-3" id="countdown">5秒後訊息自動關閉</span>
+                    </div>
+                <?php unset($_SESSION['message']);
+                endif; ?>
+                <div class="py-2 d-flex">
+
+                    <ul class="nav nav-underline">
+                        <li class="nav-item">
+                            <a class="nav-link <?php if (!isset($_GET["category"])) echo "active"; ?>" aria-current="page" href="product-list.php">全部</a>
+                        </li>
+
+                        <?php
+                        // 定義一個遞迴函數來處理子分類
+                        function renderCategory($parentId, $rowsCate)
+                        {
+                            foreach ($rowsCate as $category) {
+                                if ($category["parentId"] == $parentId) {
+                                    // 判斷該分類是否被選中
+                                    $isActive = (isset($_GET["category"]) && $_GET["category"] == $category["id"]) ? "active" : "";
+
+                                    // 判斷是否選中該分類或其子分類
+                                    $isExpanded = isset($_GET["category"]) && (isCategoryOrDescendantSelected($category["id"], $_GET["category"], $rowsCate)) ? 'block' : 'none';
+                        ?>
+                                    <li class="nav-item">
+                                        <a class="nav-link d-flex justify-content-center <?= $isActive ?>" href="product-list.php?category=<?= $category["id"] ?>">
+                                            <?= $category["name"] ?>
+                                        </a>
+
+                                        <?php
+                                        // 當前分類是否被選中或其子分類被選中，若是則顯示它的子分類
+                                        if ($isExpanded === 'block') {
+                                        ?>
+                                            <ul class="list-unstyled" style="display: <?= $isExpanded ?>;">
+                                                <?php renderCategory($category["id"], $rowsCate); ?>
+                                            </ul>
+                                        <?php } ?>
+                                    </li>
+                        <?php
+                                }
+                            }
+                        }
+
+                        // 檢查是否選中某個分類或其子分類
+                        function isCategoryOrDescendantSelected($parentId, $selectedCategoryId, $rowsCate)
+                        {
+                            if ($parentId == $selectedCategoryId) {
+                                return true;  // 如果是選中的分類，直接返回 true
+                            }
+
+                            // 如果不是選中的分類，檢查是否有子分類被選中
+                            foreach ($rowsCate as $category) {
+                                if ($category["parentId"] == $parentId) {
+                                    if (isCategoryOrDescendantSelected($category["id"], $selectedCategoryId, $rowsCate)) {
+                                        return true;  // 如果有某個子分類被選中，則返回 true
+                                    }
+                                }
+                            }
+
+                            return false;
+                        }
+
+                        // 呼叫函數，從根分類開始渲染
+                        renderCategory(1, $rowsCate);
+                        ?>
+                    </ul>
+
+
+
+
+
+
+
+                </div>
+                <div class="py-2 d-flex justify-content-between">
+                    <form action="product-list.php" method="GET">
+                        <!-- 當有其他篩選條件時，保留它們 -->
+                        <?php if (isset($_GET["category"])): ?>
+                            <input type="hidden" name="category" value="<?= htmlspecialchars($_GET["category"]) ?>">
+                        <?php endif; ?>
+
+                        <div class="row g-3 align-items-center">
+                            <?php if (isset($_GET["min"])): ?>
+                                <div class="col-auto">
+                                    <a class="btn btn-primary" href="product-list.php">
+                                        <i class="fa-solid fa-arrow-left fa-fw"></i>取消所有篩選
+                                    </a>
+                                </div>
+                            <?php endif; ?>
+
+                            <div class="col-auto">
+                                <?php $min = $_GET["min"] ?? 0; ?>
+                                <input type="number" class="form-control text-end" name="min"
+                                    value="<?= htmlspecialchars($min) ?>" min="0">
+                            </div>
+
+                            <div class="col-auto">~</div>
+
+                            <div class="col-auto">
+                                <?php $max = $_GET["max"] ?? 0; ?>
+                                <input type="number" class="form-control text-end" name="max"
+                                    value="<?= htmlspecialchars($max) ?>" min="0">
+                            </div>
+
+                            <div class="col-auto">
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fa-solid fa-filter"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- 商品搜尋功能 -->
+                    <form action="product-list.php" method="GET">
+                        <!-- 保留其他篩選參數 -->
+                        <?php if (isset($_GET["category"])): ?>
+                            <input type="hidden" name="category" value="<?= htmlspecialchars($_GET["category"]) ?>">
+                        <?php endif; ?>
+                        <?php if (isset($_GET["min"])): ?>
+                            <input type="hidden" name="min" value="<?= htmlspecialchars($_GET["min"]) ?>">
+                        <?php endif; ?>
+                        <?php if (isset($_GET["max"])): ?>
+                            <input type="hidden" name="max" value="<?= htmlspecialchars($_GET["max"]) ?>">
+                        <?php endif; ?>
+
+                        <div class="row g-3 align-items-center">
+                            <div class="col-auto">
+                                <input type="text" class="form-control" name="search"
+                                    placeholder="搜尋商品名稱"
+                                    value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-primary" type="submit"><i class="fa-solid fa-search"></i> 搜尋</button>
+                            </div>
+                        </div>
+                    </form>
+
+
+
+
+
+
+                </div>
+                <div class="py-2 d-flex justify-content-between">
+                    <span style="color:white;">共 <?= $productCount ?> 項商品</span>
+
+
+                    <?php
+                    // 複製現有的 GET 參數
+                    $queryParams = $_GET;
+
+                    // 定義一個輔助函式來生成連結
+                    function sortLink($field, $currentSort, $currentOrder, $queryParams)
+                    {
+                        // 如果目前的排序欄位就是 $field，則切換 order
+                        if ($currentSort === $field) {
+                            $newOrder = ($currentOrder === 'asc') ? 'desc' : 'asc';
+                        } else {
+                            // 如果切換到另一個排序欄位，預設使用 asc
+                            $newOrder = 'asc';
+                        }
+                        $queryParams['sort'] = $field;
+                        $queryParams['order'] = $newOrder;
+                        return 'product-list.php?' . http_build_query($queryParams);
+                    }
+
+                    // 取消排序用
+                    function cancelSortLink($queryParams)
+                    {
+                        // 從現有參數中移除排序相關的鍵值
+                        unset($queryParams['sort'], $queryParams['order']);
+                        return 'product-list.php?' . http_build_query($queryParams);
+                    }
+                    ?>
+                    <div class="btn-group" role="group">
+                        <!-- 價格排序按鈕 -->
+                        <a href="<?= sortLink('price', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'price') ? 'active' : '' ?>">價格排序</a>
+                        <!-- 時間排序按鈕 -->
+                        <a href="<?= sortLink('time', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'time') ? 'active' : '' ?>">上架時間排序</a>
+                        <!-- 上架狀態排序按鈕 -->
+                        <a href="<?= sortLink('status', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'status') ? 'active' : '' ?>">上架狀態排序</a>
+                        <!-- 取消排序按鈕(回到預設排序) -->
+                        <a href="<?= cancelSortLink($queryParams) ?>" class="btn btn-outline-secondary">取消排序</a>
+                    </div>
+                </div>
+                <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3 product-list">
+                    <?php foreach ($rows as $product): ?>
+
+                        <?php
+                        // echo "<pre>";
+                        // print_r($product);
+                        // echo "</pre>";
+                        $productStatus = getProductStatus($product); //取得商品的未上架0 上架1 下架2 軟刪除3 狀態
+                        $now = new DateTime(); //取得目前時間
+
+
+                        $productStatusString = ""; //商品的"未上架" "上架中" "下架中" 字串型態
+                        $statusBG = ""; //放在顯示上下架狀態UI的class內 不同的狀態下 背景顏色不一樣 bootstrap 5
+
+                        switch ($productStatus) { //3軟刪除的時候網頁本來就不會顯示這筆資料
+                            case 0:
+                                $productStatusString = "未上架";
+                                $statusBG = "text-bg-secondary";
+                                break;
+                            case 1:
+                                $productStatusString = "上架中";
+                                $statusBG = "text-bg-success";
+                                break;
+                            case 2:
+                                $productStatusString = "下架中";
+                                $statusBG = "text-bg-danger";
+                                break;
+                            default:
+                                # code...
+                                break;
+                        }
+
+                        ?>
+
+                        <div class="col">
+                            <div class="card h-100 overflow-hidden" style="opacity:0.9;">
+                                <!-- card設定 h-100就能讓卡片都跟col一樣高 不會因為特定商品名稱比較長所以比較高 這是把其他文字不長所以不高的也強制拉到跟大家一樣高-->
+
+                                <span class="mb-3 badge rounded-pill <?= $statusBG; ?>"><?= $productStatusString ?></span>
+
+                                <!-- 原本是a連結 連到該商品的前台商品頁面 但我沒有做前台 所以暫時讓他連到編輯頁面 -->
+                                <a class="text-decoration-none link-dark d-block" href="edit-product.php?id=<?= $product['id']; ?>">
+                                    <div class="ratio ratio-4x3 overflow-hidden">
+                                        <img class="object-fit-contain" src="<?= $product["image_url"]; ?>" alt="">
+
+                                    </div>
                                 </a>
 
-                                <?php
-                                // 當前分類是否被選中或其子分類被選中，若是則顯示它的子分類
-                                if ($isExpanded === 'block') {
-                                ?>
-                                    <ul class="list-unstyled" style="display: <?= $isExpanded ?>;">
-                                        <?php renderCategory($category["id"], $rowsCate); ?>
-                                    </ul>
-                                <?php } ?>
-                            </li>
-                <?php
-                        }
-                    }
-                }
+                                <div class="card-body">
+                                    <div><a class="text-decoration-none" href="product-list.php?category=<?= $product["category_id"] ?>"><?= $product["category_name"] ?></a></div>
 
-                // 檢查是否選中某個分類或其子分類
-                function isCategoryOrDescendantSelected($parentId, $selectedCategoryId, $rowsCate)
-                {
-                    if ($parentId == $selectedCategoryId) {
-                        return true;  // 如果是選中的分類，直接返回 true
-                    }
-
-                    // 如果不是選中的分類，檢查是否有子分類被選中
-                    foreach ($rowsCate as $category) {
-                        if ($category["parentId"] == $parentId) {
-                            if (isCategoryOrDescendantSelected($category["id"], $selectedCategoryId, $rowsCate)) {
-                                return true;  // 如果有某個子分類被選中，則返回 true
-                            }
-                        }
-                    }
-
-                    return false;
-                }
-
-                // 呼叫函數，從根分類開始渲染
-                renderCategory(1, $rowsCate);
-                ?>
-            </ul>
+                                    <h3 class="h4"><a class="text-decoration-none link-dark" href="edit-product.php?id=<?= $product['id']; ?>?>"><?= $product["name"] ?></a></h3>
+                                    <div class="text-danger text-end fs-5 fw-bold">$<?php echo number_format($product["price"]) //加千分位 
+                                                                                    ?>
+                                    </div>
 
 
+                                    <div class="d-flex justify-content-center py-2">
+                                        <form method="POST" action="update_product.php">
+                                            <input type="hidden" name="id" value="<?= $product['id'] ?>">
+                                            <input type="hidden" name="action" value="publish">
+                                            <?php if ($productStatus != 1): ?>
+                                                <button type="submit" class="btn btn-primary mx-2">
+                                                    <i class="fa-solid fa-arrow-up-from-bracket"></i> 上架
+                                                </button>
+                                            <?php endif; ?>
+                                        </form>
 
+                                        <?php if ($productStatus != 1): ?>
+                                            <a href="edit-product.php?id=<?= $product['id']; ?>" class="btn btn-secondary mx-2">
+                                                <i class="fa-solid fa-pen-to-square"></i> 編輯
+                                            </a>
+                                        <?php endif; ?>
 
+                                        <form method="POST" action="update_product.php">
+                                            <input type="hidden" name="id" value="<?= $product['id'] ?>">
+                                            <input type="hidden" name="action" value="unpublish">
+                                            <?php if ($productStatus == 1): ?>
+                                                <button type="submit" class="btn btn-warning mx-2">
+                                                    <i class="fa-solid fa-arrow-down"></i> 下架
+                                                </button>
+                                            <?php endif; ?>
+                                        </form>
 
+                                        <form method="POST" action="update_product.php">
+                                            <input type="hidden" name="id" value="<?= $product['id'] ?>">
+                                            <input type="hidden" name="action" value="delete">
+                                            <?php if ($productStatus != 1): ?>
+                                                <button type="submit" class="btn btn-danger mx-2 <?php if ($productStatus == 1) {
+                                                                                                        echo "disabled";
+                                                                                                    } ?>">
+                                                    <i class="fa-solid fa-xmark"></i> 刪除
+                                                </button>
+                                            <?php endif; ?>
+                                        </form>
+                                    </div>
 
-
-        </div>
-        <div class="py-2 d-flex justify-content-between">
-            <form action="product-list.php" method="GET">
-                <!-- 當有其他篩選條件時，保留它們 -->
-                <?php if (isset($_GET["category"])): ?>
-                    <input type="hidden" name="category" value="<?= htmlspecialchars($_GET["category"]) ?>">
-                <?php endif; ?>
-
-                <div class="row g-3 align-items-center">
-                    <?php if (isset($_GET["min"])): ?>
-                        <div class="col-auto">
-                            <a class="btn btn-primary" href="product-list.php">
-                                <i class="fa-solid fa-arrow-left fa-fw"></i>取消所有篩選
-                            </a>
+                                </div>
+                            </div>
                         </div>
-                    <?php endif; ?>
-
-                    <div class="col-auto">
-                        <?php $min = $_GET["min"] ?? 0; ?>
-                        <input type="number" class="form-control text-end" name="min"
-                            value="<?= htmlspecialchars($min) ?>" min="0">
-                    </div>
-
-                    <div class="col-auto">~</div>
-
-                    <div class="col-auto">
-                        <?php $max = $_GET["max"] ?? 0; ?>
-                        <input type="number" class="form-control text-end" name="max"
-                            value="<?= htmlspecialchars($max) ?>" min="0">
-                    </div>
-
-                    <div class="col-auto">
-                        <button class="btn btn-primary" type="submit">
-                            <i class="fa-solid fa-filter"></i>
-                        </button>
-                    </div>
-                </div>
-            </form>
-
-            <!-- 商品搜尋功能 -->
-            <form action="product-list.php" method="GET">
-                <!-- 保留其他篩選參數 -->
-                <?php if (isset($_GET["category"])): ?>
-                    <input type="hidden" name="category" value="<?= htmlspecialchars($_GET["category"]) ?>">
-                <?php endif; ?>
-                <?php if (isset($_GET["min"])): ?>
-                    <input type="hidden" name="min" value="<?= htmlspecialchars($_GET["min"]) ?>">
-                <?php endif; ?>
-                <?php if (isset($_GET["max"])): ?>
-                    <input type="hidden" name="max" value="<?= htmlspecialchars($_GET["max"]) ?>">
-                <?php endif; ?>
-
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
-                        <input type="text" class="form-control" name="search"
-                            placeholder="搜尋商品名稱"
-                            value="<?= htmlspecialchars($_GET['search'] ?? '') ?>">
-                    </div>
-                    <div class="col-auto">
-                        <button class="btn btn-primary" type="submit"><i class="fa-solid fa-search"></i> 搜尋</button>
-                    </div>
-                </div>
-            </form>
-
-
-
-
-
-
-        </div>
-        <div class="py-2 d-flex justify-content-between">
-            共 <?= $productCount ?> 項商品
-
-
-            <?php
-            // 複製現有的 GET 參數
-            $queryParams = $_GET;
-
-            // 定義一個輔助函式來生成連結
-            function sortLink($field, $currentSort, $currentOrder, $queryParams)
-            {
-                // 如果目前的排序欄位就是 $field，則切換 order
-                if ($currentSort === $field) {
-                    $newOrder = ($currentOrder === 'asc') ? 'desc' : 'asc';
-                } else {
-                    // 如果切換到另一個排序欄位，預設使用 asc
-                    $newOrder = 'asc';
-                }
-                $queryParams['sort'] = $field;
-                $queryParams['order'] = $newOrder;
-                return 'product-list.php?' . http_build_query($queryParams);
-            }
-
-            // 取消排序用
-            function cancelSortLink($queryParams) {
-                // 從現有參數中移除排序相關的鍵值
-                unset($queryParams['sort'], $queryParams['order']);
-                return 'product-list.php?' . http_build_query($queryParams);
-            }
-            ?>
-            <div class="btn-group" role="group">
-                <!-- 價格排序按鈕 -->
-                <a href="<?= sortLink('price', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'price') ? 'active' : '' ?>">價格排序</a>
-                <!-- 時間排序按鈕 -->
-                <a href="<?= sortLink('time', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'time') ? 'active' : '' ?>">上架時間排序</a>
-                <!-- 上架狀態排序按鈕 -->
-                <a href="<?= sortLink('status', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'status') ? 'active' : '' ?>">上架狀態排序</a>
-                <!-- 取消排序按鈕(回到預設排序) -->
-                <a href="<?= cancelSortLink($queryParams) ?>" class="btn btn-outline-secondary">取消排序</a>
-            </div>
-        </div>
-        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3 product-list">
-            <?php foreach ($rows as $product): ?>
-
-                <?php
-                // echo "<pre>";
-                // print_r($product);
-                // echo "</pre>";
-                $productStatus = getProductStatus($product); //取得商品的未上架0 上架1 下架2 軟刪除3 狀態
-                $now = new DateTime(); //取得目前時間
-
-
-                $productStatusString = ""; //商品的"未上架" "上架中" "下架中" 字串型態
-                $statusBG = ""; //放在顯示上下架狀態UI的class內 不同的狀態下 背景顏色不一樣 bootstrap 5
-
-                switch ($productStatus) { //3軟刪除的時候網頁本來就不會顯示這筆資料
-                    case 0:
-                        $productStatusString = "未上架";
-                        $statusBG = "text-bg-secondary";
-                        break;
-                    case 1:
-                        $productStatusString = "上架中";
-                        $statusBG = "text-bg-success";
-                        break;
-                    case 2:
-                        $productStatusString = "下架中";
-                        $statusBG = "text-bg-danger";
-                        break;
-                    default:
-                        # code...
-                        break;
-                }
-
-                ?>
-
-                <div class="col">
-                    <div class="card h-100 overflow-hidden">
-                        <!-- card設定 h-100就能讓卡片都跟col一樣高 不會因為特定商品名稱比較長所以比較高 這是把其他文字不長所以不高的也強制拉到跟大家一樣高-->
-
-                        <span class="mb-3 badge rounded-pill <?= $statusBG; ?>"><?= $productStatusString ?></span>
-
-                        <!-- 原本是a連結 連到該商品的前台商品頁面 但我沒有做前台 所以暫時讓他連到product-list.php -->
-                        <a class="text-decoration-none link-dark d-block" href="product-list.php">
-                            <div class="ratio ratio-4x3 overflow-hidden">
-                                <img class="object-fit-contain" src="<?= $product["image_url"]; ?>" alt="">
-
-                            </div>
-                        </a>
-
-                        <div class="card-body">
-                            <div><a class="text-decoration-none" href="product-list.php?category=<?= $product["category_id"] ?>"><?= $product["category_name"] ?></a></div>
-
-                            <h3 class="h4"><a class="text-decoration-none link-dark" href="product.php?id=<?= $product["id"] ?>"><?= $product["name"] ?></a></h3>
-                            <div class="text-danger text-end fs-5 fw-bold">$<?php echo number_format($product["price"]) //加千分位 
-                                                                            ?>
-                            </div>
-
-
-                            <div class="d-flex justify-content-center py-2">
-                                <form method="POST" action="update_product.php">
-                                    <input type="hidden" name="id" value="<?= $product['id'] ?>">
-                                    <input type="hidden" name="action" value="publish">
-                                    <?php if ($productStatus != 1): ?>
-                                        <button type="submit" class="btn btn-primary mx-2">
-                                            <i class="fa-solid fa-arrow-up-from-bracket"></i> 上架
-                                        </button>
-                                    <?php endif; ?>
-                                </form>
-
-                                <?php if ($productStatus != 1): ?>
-                                    <a href="edit-product.php?id=<?= $product['id']; ?>" class="btn btn-secondary mx-2">
-                                        <i class="fa-solid fa-pen-to-square"></i> 編輯
-                                    </a>
-                                <?php endif; ?>
-
-                                <form method="POST" action="update_product.php">
-                                    <input type="hidden" name="id" value="<?= $product['id'] ?>">
-                                    <input type="hidden" name="action" value="unpublish">
-                                    <?php if ($productStatus == 1): ?>
-                                        <button type="submit" class="btn btn-warning mx-2">
-                                            <i class="fa-solid fa-arrow-down"></i> 下架
-                                        </button>
-                                    <?php endif; ?>
-                                </form>
-
-                                <form method="POST" action="update_product.php">
-                                    <input type="hidden" name="id" value="<?= $product['id'] ?>">
-                                    <input type="hidden" name="action" value="delete">
-                                    <?php if ($productStatus != 1): ?>
-                                        <button type="submit" class="btn btn-danger mx-2 <?php if ($productStatus == 1) {
-                                                                                                echo "disabled";
-                                                                                            } ?>">
-                                            <i class="fa-solid fa-xmark"></i> 刪除
-                                        </button>
-                                    <?php endif; ?>
-                                </form>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-
-
-        <nav>
-            <ul class="pagination py-3">
-                <?php
-                // 保留 category 參數
-                $queryString = http_build_query(array_merge($_GET, ["page" => $page - 1]));
-                ?>
-                <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="product-list.php?<?= $queryString ?>">上一頁</a>
-                </li>
-
-                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <?php
-                    $queryString = http_build_query(array_merge($_GET, ["page" => $i]));
-                    ?>
-                    <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                        <a class="page-link" href="product-list.php?<?= $queryString ?>"><?= $i ?></a>
-                    </li>
-                <?php endfor; ?>
-
-                <?php
-                $queryString = http_build_query(array_merge($_GET, ["page" => $page + 1]));
-                ?>
-                <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
-                    <a class="page-link" href="product-list.php?<?= $queryString ?>">下一頁</a>
-                </li>
-            </ul>
-        </nav>
-
-        <div class="py-3">
-            <!-- 尺寸篩選區 -->
-            <form action="product-list.php" method="GET">
-                <!-- 保留其他篩選條件 -->
-                <?php foreach ($_GET as $key => $value) {
-                    if ($key !== 'size') {
-                        if (is_array($value)) {
-                            foreach ($value as $v) {
-                                echo '<input type="hidden" name="' . htmlspecialchars($key) . '[]" value="' . htmlspecialchars($v) . '">';
-                            }
-                        } else {
-                            echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '">';
-                        }
-                    }
-                } ?>
-
-                <div class="btn-group d-flex flex-wrap" role="group">
-                    <?php foreach ($sizes as $size): ?>
-                        <?php $isChecked = isset($_GET['size']) && in_array($size, (array)$_GET['size']); ?>
-                        <input type="checkbox" class="btn-check" id="size-<?= $size ?>" name="size[]" value="<?= htmlspecialchars($size) ?>" <?= $isChecked ? 'checked' : '' ?>>
-                        <label class="btn btn-outline-primary m-2" for="size-<?= $size ?>"><?= htmlspecialchars($size) ?></label>
                     <?php endforeach; ?>
                 </div>
 
-                <button class="btn btn-primary" type="submit">篩選</button>
-            </form>
+
+                <nav>
+                    <ul class="pagination py-3">
+                        <?php
+                        // 保留 category 參數
+                        $queryString = http_build_query(array_merge($_GET, ["page" => $page - 1]));
+                        ?>
+                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="product-list.php?<?= $queryString ?>">上一頁</a>
+                        </li>
+
+                        <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                            <?php
+                            $queryString = http_build_query(array_merge($_GET, ["page" => $i]));
+                            ?>
+                            <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                                <a class="page-link" href="product-list.php?<?= $queryString ?>"><?= $i ?></a>
+                            </li>
+                        <?php endfor; ?>
+
+                        <?php
+                        $queryString = http_build_query(array_merge($_GET, ["page" => $page + 1]));
+                        ?>
+                        <li class="page-item <?= ($page >= $totalPages) ? 'disabled' : '' ?>">
+                            <a class="page-link" href="product-list.php?<?= $queryString ?>">下一頁</a>
+                        </li>
+                    </ul>
+                </nav>
+
+                <div class="py-3">
+                    <!-- 尺寸篩選區 -->
+                    <form action="product-list.php" method="GET">
+                        <!-- 保留其他篩選條件 -->
+                        <?php foreach ($_GET as $key => $value) {
+                            if ($key !== 'size') {
+                                if (is_array($value)) {
+                                    foreach ($value as $v) {
+                                        echo '<input type="hidden" name="' . htmlspecialchars($key) . '[]" value="' . htmlspecialchars($v) . '">';
+                                    }
+                                } else {
+                                    echo '<input type="hidden" name="' . htmlspecialchars($key) . '" value="' . htmlspecialchars($value) . '">';
+                                }
+                            }
+                        } ?>
+
+                        <div class="btn-group d-flex flex-wrap" role="group">
+                            <?php foreach ($sizes as $size): ?>
+                                <?php $isChecked = isset($_GET['size']) && in_array($size, (array)$_GET['size']); ?>
+                                <input type="checkbox" class="btn-check" id="size-<?= $size ?>" name="size[]" value="<?= htmlspecialchars($size) ?>" <?= $isChecked ? 'checked' : '' ?>>
+                                <label class="btn btn-outline-primary m-2" for="size-<?= $size ?>"><?= htmlspecialchars($size) ?></label>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <button class="btn btn-primary" type="submit">篩選</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <?php //include("./footer_mod.php")
+            ?>
         </div>
+
 
     </div>
 
@@ -820,82 +843,55 @@ try {
     </script>
 
 
+    <script>
+        VANTA.BIRDS({
+            el: ".sidebar", // 指定作用的 HTML 元素 ID
+            mouseControls: true, // 啟用滑鼠控制，使動畫會跟隨滑鼠移動
+            touchControls: true, // 啟用觸控控制，使動畫可以隨觸控移動
+            gyroControls: false, // 禁用陀螺儀控制（手機旋轉時不影響動畫）
+            minHeight: 50.00, // 設定最小高度，確保畫面不會小於 200px
+            minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
+            scale: 1.00, // 設定一般裝置上的縮放比例
+            scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
+            separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+            color1: 0xffffff,
+            birdSize: 0.50,
+            // backgroundColor:0x4e73df
+        });
 
-<!-- 引入最新版本的 Three.js（Vanta.js 依賴 Three.js） -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+        VANTA.BIRDS({
+            el: ".head", // 指定作用的 HTML 元素 ID
+            mouseControls: true, // 啟用滑鼠控制，使動畫會跟隨滑鼠移動
+            touchControls: true, // 啟用觸控控制，使動畫可以隨觸控移動
+            gyroControls: false, // 禁用陀螺儀控制（手機旋轉時不影響動畫）
+            minHeight: 50.00, // 設定最小高度，確保畫面不會小於 200px
+            minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
+            scale: 1.00, // 設定一般裝置上的縮放比例
+            scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
+            separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+            color1: 0xffffff,
+            birdSize: 0.50,
+            // backgroundColor:0x4e73df
+        });
 
-<!-- 引入 Vanta.js 中的 BIRDS 效果（鳥群動畫） -->
-<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.birds.min.js"></script>
+        VANTA.BIRDS({
+            el: ".myPage", // 指定作用的 HTML 元素 ID
+            mouseControls: true, // 啟用滑鼠控制，使動畫會跟隨滑鼠移動
+            touchControls: true, // 啟用觸控控制，使動畫可以隨觸控移動
+            gyroControls: false, // 禁用陀螺儀控制（手機旋轉時不影響動畫）
+            minHeight: 50.00, // 設定最小高度，確保畫面不會小於 200px
+            minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
+            scale: 1.00, // 設定一般裝置上的縮放比例
+            scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
+            separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
+            // backgroundColor:0x4e73df
+            color1: 0xffffff,
+            birdSize: 0.10,
+            quantity: 5.00,
+        });
+    </script>
 
-<!-- 引入 Vanta.js 中的 WAVES 效果（波浪動畫） -->
-<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.waves.min.js"></script>
 
-<!-- net -->
-<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
-
-<!--rings-->
-<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.rings.min.js"></script>
-
-<!-- topology要用的 -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.2/p5.min.js" integrity="sha512-1YMgn4j8cIL91s14ByDGmHtBU6+F8bWOMcF47S0cRO3QNm8SKPNexy4s3OCim9fABUtO++nJMtcpWbINWjMSzQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-<!--  topology-->
-<script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.topology.min.js"></script>
-
-<script>
-    
-//     VANTA.TOPOLOGY({
-//   el: "body",
-//   mouseControls: true,
-//   touchControls: true,
-//   gyroControls: false,
-//   minHeight: 200.00,
-//   minWidth: 200.00,
-//   scale: 1.00,
-//   scaleMobile: 1.00,
-//   color: 0x56defa,
-//   backgroundColor: 0xffffff
-// })
-
-// VANTA.NET({
-//   el: "body",
-//   mouseControls: true,
-//   touchControls: true,
-//   gyroControls: false,
-//   minHeight: 200.00,
-//   minWidth: 200.00,
-//   scale: 1.00,
-//   scaleMobile: 1.00,
-//   color: 0x3fddff,
-//   backgroundColor: 0xffffff
-// })
-
-// VANTA.RINGS({
-//   el: "body",
-//   mouseControls: true,
-//   touchControls: true,
-//   gyroControls: false,
-//   minHeight: 200.00,
-//   minWidth: 200.00,
-//   scale: 1.00,
-//   scaleMobile: 1.00,
-//   backgroundColor: 0xffffff,
-//   backgroundAlpha: 1
-
-// })
-
-VANTA.WAVES({
-  el: "body",
-  mouseControls: true,
-  touchControls: true,
-  gyroControls: false,
-  minHeight: 200.00,
-  minWidth: 200.00,
-  scale: 1.00,
-  scaleMobile: 1.00,
-  color:0xb2e2ff
-})
-</script>
 
 
 </body>

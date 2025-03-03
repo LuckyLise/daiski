@@ -1,4 +1,4 @@
-<?
+<?php
 // 系統注重防呆，要給使用者好的體驗
 if (!isset($_GET["id"])) {
     header("location: articles.php");
@@ -86,118 +86,110 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>article</title>
-    <? include("../css.php") ?>
+    <?php include("./css.php") ?>
 
 </head>
 
 <body>
 
+    <div class="d-flex flex-column">
+        <?php include("./new_head_mod.php"); ?>
 
-    <div class="container">
-        <div class="py-2 ">
-            <a class="btn btn-primary" href="articles.php"><i class="fa-solid fa-list fa-fw"></i>文章列表</a>
-        </div>
-        <div class="row g-3">
-            <div class="clo-lg-4 col-md-9">
-                <? if ($userCount > 0): ?>
-                    <table class="table table-bordered">
-                        <!-- (tr>th+td)*5 -->
-                        <tr>
-                            <th>ID</th>
-                            <td><?= $article["id"] ?></td>
-                        </tr>
-                        <tr>
-                            <th>類別</th>
-                            <? $category = ($article["category"]) ?  $article["category"] : "未分類" ?>
-                            <td><?= $category ?></td>
-                        </tr>
-                        <tr>
-                            <th>標題</th>
-                            <td><?= $article["title"] ?></td>
-                        </tr>
-                        <tr>
-                            <th>內容</th>
-                            <td><?= $article["content"] ?></td>
-                        </tr>
-                        <tr>
-                            <th>圖片</th>
-                            <td>
-                                <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3">
-                                    <? foreach ($article_imgs as $img): ?>
-                                        <div class="col">
-                                            <?
-                                            // 檢查路徑是否有檔案
-                                            $img_PATH = "article_imgs/" . $img["name"];
-                                            if (file_exists($img_PATH)):
-                                            ?>
-                                                <div class="ratio ratio-1x1">
-                                                    <img class="object-fit-cover" src="article_imgs/<?= $img["name"] ?>" alt="">
+        <div class="d-flex flex-row w-100 ">
+            <?php include("./new_side_mod.php"); ?>
+
+            <div class="container myPage">
+                <div class="py-2 ">
+                    <a class="btn btn-primary" href="articles.php"><i class="fa-solid fa-list fa-fw"></i>文章列表</a>
+                </div>
+                <div class="row g-3">
+                    <div class="clo-lg-4 col-md-9">
+                        <?php if ($userCount > 0): ?>
+                            <table class="table table-bordered">
+                                <!-- (tr>th+td)*5 -->
+                                <tr>
+                                    <th>ID</th>
+                                    <td><?= $article["id"] ?></td>
+                                </tr>
+                                <tr>
+                                    <th>類別</th>
+                                    <?php $category = ($article["category"]) ?  $article["category"] : "未分類" ?>
+                                    <td><?= $category ?></td>
+                                </tr>
+                                <tr>
+                                    <th>標題</th>
+                                    <td><?= $article["title"] ?></td>
+                                </tr>
+                                <tr>
+                                    <th>內容</th>
+                                    <td><?= $article["content"] ?></td>
+                                </tr>
+                                <tr>
+                                    <th>圖片</th>
+                                    <td>
+                                        <div class="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 row-cols-1 g-3">
+                                            <?php foreach ($article_imgs as $img): ?>
+                                                <div class="col">
+                                                    <?php
+                                                    // 檢查路徑是否有檔案
+                                                    $img_PATH = "article_imgs/" . $img["name"];
+                                                    if (file_exists($img_PATH)):
+                                                    ?>
+                                                        <div class="ratio ratio-1x1">
+                                                            <img class="object-fit-cover" src="article_imgs/<?= $img["name"] ?>" alt="">
+                                                        </div>
+                                                        <h3 class="h4"><?= $img["name"] ?></h3>
+                                                    <?php endif; ?>
                                                 </div>
-                                                <h3 class="h4"><?= $img["name"] ?></h3>
-                                            <? endif; ?>
+                                            <?php endforeach; ?>
                                         </div>
-                                    <? endforeach; ?>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>影片</th>
-                            <td>
-                                <? foreach ($article_videos as $video): ?>
-                                    <div class="col">
-                                        <?
-                                        // 檢查路徑是否有檔案
-                                        $video_PATH = "article_videos/" . $video["name"];
-                                        if (file_exists($video_PATH)):
-                                        ?>
-                                            <div class="ratio ratio-1x1">
-                                                <img class="object-fit-cover" src="article_videos/<?= $video["name"] ?>" alt="">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>影片</th>
+                                    <td>
+                                        <?php foreach ($article_videos as $video): ?>
+                                            <div class="col">
+                                                <?php
+                                                // 檢查路徑是否有檔案
+                                                $video_PATH = "article_videos/" . $video["name"];
+                                                if (file_exists($video_PATH)):
+                                                ?>
+                                                    <div class="ratio ratio-1x1">
+                                                        <img class="object-fit-cover" src="article_videos/<?= $video["name"] ?>" alt="">
+                                                    </div>
+                                                    <h3 class="h4"><?= $video["name"] ?></h3>
+                                                <?php endif; ?>
                                             </div>
-                                            <h3 class="h4"><?= $video["name"] ?></h3>
-                                        <? endif; ?>
-                                    </div>
-                                <? endforeach; ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>發布日期</th>
-                            <td><?= $article["startDate"] ?></td>
-                        </tr>
-                        <tr>
-                            <th>結束日期</th>
-                            <td><?= $article["endDate"] ?></td>
-                        </tr>
-                        <tr>
-                            <th>點閱率</th>
-                            <td><?= $article["ctr"] ?></td>
-                        </tr>
-                    </table>
-                    <div class="">
-                        <a class=" btn btn-primary" href="article-edit.php?id=<?= $article["id"] ?>"><i class="fa-regular fa-pen-to-square"></i>編輯</a>
+                                        <?php endforeach; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>發布日期</th>
+                                    <td><?= $article["startDate"] ?></td>
+                                </tr>
+                                <tr>
+                                    <th>結束日期</th>
+                                    <td><?= $article["endDate"] ?></td>
+                                </tr>
+                                <tr>
+                                    <th>點閱率</th>
+                                    <td><?= $article["ctr"] ?></td>
+                                </tr>
+                            </table>
+                            <div class="">
+                                <a class=" btn btn-primary" href="article-edit.php?id=<?= $article["id"] ?>"><i class="fa-regular fa-pen-to-square"></i>編輯</a>
+                            </div>
+
                     </div>
 
+
+                <?php endif; ?>
+                </div>
             </div>
-
-            <!-- <div class="col-lg-8 col-md-12">
-                <h2>收藏商品</h2>
-                <? if ($favoriteProductCount > 0): ?>
-                    <? foreach ($products as $product): ?>
-                        <li>
-                            <a href="/product/product.php?id=<?= $product["product_id"] ?>">
-                                <?= $product["product_name"] ?>
-                            </a>
-                        </li>
-                    <? endforeach; ?>
-                <? else: ?>
-                    尚未收藏商品
-                <? endif; ?>
-            </div> -->
         </div>
-    <? else: ?>
-        <h2>使用者不存在</h2>
-    <? endif; ?>
     </div>
-
+    <?php include("./js.php") ?>
 </body>
 
 </html>

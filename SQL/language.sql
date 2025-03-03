@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主機： 127.0.0.1
--- 產生時間： 2025-02-21 11:42:35
+-- 產生時間： 2025-02-27 17:55:46
 -- 伺服器版本： 10.4.32-MariaDB
 -- PHP 版本： 8.2.12
 
@@ -37,8 +37,12 @@ CREATE TABLE `language` (
 --
 
 INSERT INTO `language` (`id`, `name`) VALUES
-(1, 'English'),
-(2, 'Mandarin');
+(1, '英文'),
+(2, '中文'),
+(3, '日文'),
+(4, '韓文'),
+(5, '粵語'),
+(6, '台語');
 
 --
 -- 已傾印資料表的索引
@@ -58,7 +62,7 @@ ALTER TABLE `language`
 -- 使用資料表自動遞增(AUTO_INCREMENT) `language`
 --
 ALTER TABLE `language`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

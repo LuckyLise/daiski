@@ -1,9 +1,9 @@
-<?
+<?php
 if (!isset($_POST["id"])) {
     die("請走正門");
 }
 
-require_once("../pdo_connect.php");
+require_once("./pdo_connect.php");
 
 $id = $_POST["id"];
 $title = $_POST["title"];

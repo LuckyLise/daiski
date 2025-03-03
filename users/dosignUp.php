@@ -1,5 +1,5 @@
 <?php
-require_once("../daiski/pdo_connect.php");
+require_once("../pdo_connect.php");
 
 if(!isset($_POST["account"])){
     die("請循正常管道進入此頁");
@@ -58,3 +58,5 @@ try {
 $db_host = NULL;
 
 header("location: pdo-users.php");
+
+

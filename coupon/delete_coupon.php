@@ -8,18 +8,17 @@ require_once("../pdo_connect.php");
 $id = $_GET["id"];
 
 $sql = "DELETE FROM coupon WHERE id = :id";
-$stmt = $host_db->prepare($sql);
+$stmt = $db_host->prepare($sql);
 $stmt->execute([":id" => $id]);
-if(isset($_GET["header"])){
+if (isset($_GET["header"])) {
     header("Location: coupons.php");
 }
 
 
-if(!isset($_GET["header"])){
+if (!isset($_GET["header"])) {
     echo json_encode(["status" => "success", "message" => "優惠券已刪除"]);
 }
 
 
 
-$host_db = NULL;
-
+$db_host = NULL;

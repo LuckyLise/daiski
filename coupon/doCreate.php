@@ -1,7 +1,7 @@
 <?php
 require_once("../pdo_connect.php");
 
-if(!isset($_POST["name"])){
+if (!isset($_POST["name"])) {
     die("請循正常管道進入此頁");
 }
 
@@ -20,7 +20,7 @@ $createdAt = date("Y-m-d H:i:s");
 // 找尋coupon_type的資料表裡有沒有一樣的資料
 $sqlType = "SELECT * FROM coupon_type
 WHERE amount = :amount AND `type` = :type";
-$stmt = $host_db->prepare($sqlType);
+$stmt = $db_host->prepare($sqlType);
 $stmt->execute([
     ":amount" => $coupon_amount,
     ":type" => $coupon_type
@@ -32,12 +32,12 @@ if ($typeCount == 1) {
     $coupon_type_id = $row['id'];
 } else {
     $sqlInsert = "INSERT INTO coupon_type (type, amount) VALUES (:type, :amount)";
-    $stmtInsert = $host_db->prepare($sqlInsert);
+    $stmtInsert = $db_host->prepare($sqlInsert);
     $stmtInsert->execute([
         ':type'   => $coupon_type,
         ':amount' => $coupon_amount,
     ]);
-    $coupon_type_id = $host_db->lastInsertId();
+    $coupon_type_id = $db_host->lastInsertId();
 }
 
 
@@ -45,7 +45,7 @@ if ($typeCount == 1) {
 $sql = "INSERT INTO coupon (name, code, startAt, endAt, usageLimit, minPurchase, createdAt, coupon_target_id, type_id)
     VALUES (:name, :code, :startAt, :endAt, :usageLimit, :minPurchase, :createdAt, :coupon_target_id, :coupon_type_id)
 ";
-$stmt = $host_db->prepare($sql);
+$stmt = $db_host->prepare($sql);
 
 $couponTarget = [
     "課程" => 1,
@@ -66,19 +66,19 @@ $params = [
 ];
 try {
     $stmt->execute($params);
-    $coupon_id = $host_db->lastInsertId();
+    $coupon_id = $db_host->lastInsertId();
 
     echo "新資料新增成功";
     header("location: coupons.php?id=$id");
 } catch (PDOException $e) {
     echo "Error: " . $sql . $e->getMessage() . "<br>";
-    $host_db = NULL;
+    $db_host = NULL;
     exit;
 }
 
 //有不樣的資料的話寫入其id
 $sqlUpdate = "UPDATE coupon SET type_id = :coupon_type_id WHERE $coupon_id ";
-$stmtUpdate = $host_db->prepare($sqlUpdate);
+$stmtUpdate = $db_host->prepare($sqlUpdate);
 $stmtUpdate->execute($params);
 
-$host_db = NULL;
+$db_host = NULL;

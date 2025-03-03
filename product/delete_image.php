@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json'); // 確保回傳 JSON
-require_once("./PDO_connect.php");
+require_once("../pdo_connect.php");
 
 if (!isset($_POST['id'])) {
     echo json_encode(['success' => false, 'message' => '缺少圖片 ID']);

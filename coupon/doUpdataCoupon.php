@@ -1,5 +1,5 @@
 <?php
-if(!isset($_POST["name"])){
+if (!isset($_POST["name"])) {
     die("請循正常管道進入此頁");
 }
 require_once("../pdo_connect.php");
@@ -16,7 +16,7 @@ $minPurchase = $_POST["minPurchase"];
 
 $sqlType = "SELECT * FROM coupon_type
 WHERE amount = :amount AND `type` = :type";
-$stmt = $host_db->prepare($sqlType);
+$stmt = $db_host->prepare($sqlType);
 $stmt->execute([
     ":amount" => $coupon_amount,
     ":type" => $coupon_type
@@ -28,12 +28,12 @@ if ($typeCount == 1) {
     $coupon_type_id = $row['id'];
 } else {
     $sqlInsert = "INSERT INTO coupon_type (type, amount) VALUES (:type, :amount)";
-    $stmtInsert = $host_db->prepare($sqlInsert);
+    $stmtInsert = $db_host->prepare($sqlInsert);
     $stmtInsert->execute([
         ':type'   => $coupon_type,
         ':amount' => $coupon_amount,
     ]);
-    $coupon_type_id = $host_db->lastInsertId();
+    $coupon_type_id = $db_host->lastInsertId();
 }
 
 $sql = "UPDATE coupon AS c
@@ -49,12 +49,12 @@ c.minPurchase = :minPurchase,
 c.type_id = :coupon_type_id
 WHERE c.id = :id";
 // echo $sql;
-$stmt = $host_db->prepare($sql);
+$stmt = $db_host->prepare($sql);
 
 $couponTarget = [
-    "課程"=> 1,
-    "商品"=> 2,
-    "全站"=> 3,
+    "課程" => 1,
+    "商品" => 2,
+    "全站" => 3,
 ];
 // echo $couponTarget [$coupon_target];
 
@@ -63,7 +63,7 @@ $params = [
     ':name'         => $name,
     ':coupon_type'  => $coupon_type,
     ':coupon_amount' => $coupon_amount,
-    ':coupon_target' => $couponTarget [$coupon_target],
+    ':coupon_target' => $couponTarget[$coupon_target],
     ':startAt'      => $startAt,
     ':endAt'        => $endAt,
     ':usageLimit'   => $usageLimit,
@@ -79,7 +79,7 @@ if ($stmt->execute($params)) {
 }
 
 // $sqlUpdate = "UPDATE coupon SET type_id = :coupon_type_id WHERE $coupon_id ";
-// $stmtUpdate = $host_db->prepare($sqlUpdate);
+// $stmtUpdate = $db_host->prepare($sqlUpdate);
 // $stmtUpdate->execute($params);
 
-$host_db = NULL;
+$db_host = NULL;

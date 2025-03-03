@@ -3,19 +3,19 @@ require_once("../pdo_connect.php");
 
 // 總數
 $sqlAll = "SELECT COUNT(*) FROM coupon ";
-$stmtAll = $host_db->prepare($sqlAll);
+$stmtAll = $db_host->prepare($sqlAll);
 $stmtAll->execute();
 $couponCount = $stmtAll->fetchColumn();
 
 // 類型分類
 $sqlTarget = "SELECT * FROM coupon_target ";
-$stmtTarget = $host_db->prepare($sqlTarget);
+$stmtTarget = $db_host->prepare($sqlTarget);
 $stmtTarget->execute();
 $targets = $stmtTarget->fetchAll(PDO::FETCH_ASSOC);
 
 // 金錢分類
 $sqlType = "SELECT DISTINCT `type` FROM coupon_type ";
-$stmtType = $host_db->prepare($sqlType);
+$stmtType = $db_host->prepare($sqlType);
 $stmtType->execute();
 $types = $stmtType->fetchAll(PDO::FETCH_ASSOC);
 
@@ -108,7 +108,7 @@ LEFT JOIN coupon_target ON coupon.coupon_target_id = coupon_target.id";
 if (count($where) > 0) {
     $sqlCount .= " WHERE " . implode(" AND ", $where);
 }
-$stmtCount = $host_db->prepare($sqlCount);
+$stmtCount = $db_host->prepare($sqlCount);
 $stmtCount->execute($params);
 $couponCount = $stmtCount->fetchColumn();
 $totalPage = ceil($couponCount / $perPage);
@@ -136,12 +136,12 @@ if ($coupon_target !== '') {
 // order 參數也要保留，因為分頁連結中已有 order
 $queryParams['order'] = $order;
 
-$stmt = $host_db->prepare($sql);
+$stmt = $db_host->prepare($sql);
 $stmt->execute($params);
 
 $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$host_db = NULL;
+$db_host = NULL;
 
 ?>
 
@@ -157,39 +157,37 @@ $host_db = NULL;
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <?php include("../css.php") ?>
+    <?php include("./css.php") ?>
 
 </head>
 
 <body>
-    <div class="d-flex">
-
-
-        <?php include("side_mod.php") ?>
-
-        <div class="w-100">
-            <?php include("head_mod.php") ?>
-            <!-- 彈跳視窗 -->
-            <div class="modal fade" tabindex="-1" id="infoModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title">Modal title</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <p>確認刪除優惠卷?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" id="deleteButton" href="#">確認</button>
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                        </div>
-                    </div>
+    <!-- 彈跳視窗 -->
+    <div class="modal fade" tabindex="-1" id="infoModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>確認刪除優惠卷?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="deleteButton" href="#">確認</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <div class="d-flex flex-column">
+        <?php include("./new_head_mod.php"); ?>
 
-            <div class="container">
+        <div class="d-flex flex-row w-100 ">
+            <?php include("./new_side_mod.php"); ?>
+
+            <div class="container myPage">
                 <!-- 標題 -->
                 <div class="text-center py-3">
                     <h1>優惠卷清單</h1>
@@ -334,7 +332,7 @@ $host_db = NULL;
                 </table>
 
                 <!-- 分頁 -->
-                <?php if ($totalPage >1)  : ?>
+                <?php if ($totalPage > 1) : ?>
                     <div>
                         <nav aria-label=" ">
                             <ul class="pagination">
@@ -355,6 +353,7 @@ $host_db = NULL;
             </div>
         </div>
     </div>
+
 
     <?php include("./js.php"); ?>
     <script>

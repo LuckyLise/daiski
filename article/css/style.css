@@ -2,6 +2,72 @@
     --transition: .4s;
 }
 
+
+body {
+    color: white !important;
+    background-color: #07192F;
+
+    td {
+        color: white !important;
+    }
+
+    table {
+        color: white !important;
+    }
+
+    tr {
+        color: white !important;
+    }
+
+    th {
+        color: white !important;
+    }
+
+
+}
+
+/* 預設隱藏主要內容，僅顯示 loading 區塊 */
+#mainContent {
+    display: none;
+}
+
+/* Loading 畫面 */
+#loadingOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #07192F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+}
+
+/* 轉圈動畫 */
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+
 .product-list {
     .ratio {
         img {
@@ -43,6 +109,7 @@ body {
     .btn {
         color: white;
         border-color: white;
+
         &:hover {
             border-color: coral !important;
             color: coral !important;
@@ -53,7 +120,7 @@ body {
     .page-link {
         background-color: black !important;
         color: white;
-        
+
     }
 
     .pagination {
@@ -61,10 +128,10 @@ body {
             &.active {
                 .page-link {
                     border-color: coral !important;
-                    color: coral !important; 
+                    color: coral !important;
                 }
             }
-    
+
             .page-link {
                 &:hover {
                     border-color: coral !important;
@@ -75,6 +142,6 @@ body {
     }
 
 
-    
+
 
 }

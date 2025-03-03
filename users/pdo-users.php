@@ -21,18 +21,44 @@ if (isset($_GET["q"])) {
     //$p = $_GET["p"];
     $order = $_GET["order"];
 
+    if ($order % 2 == 1) {
+        $select = "up";
+    } else {
+        $select = "down";
+    }
+
     switch ($order) {
         case 1;
             $orderClause = "ORDER BY id ASC";
             break;
         case 2;
             $orderClause = "ORDER BY id DESC";
+
             break;
         case 3;
-            $orderClause = "ORDER BY account ASC";
+            $orderClause = "ORDER BY name ASC";
             break;
         case 4;
-            $orderClause = "ORDER BY account DESC";
+            $orderClause = "ORDER BY name DESC";
+            // $select="down";
+            break;
+        case 5;
+            $orderClause = "ORDER BY birthday ASC";
+            break;
+        case 6;
+            $orderClause = "ORDER BY birthday DESC";
+            break;
+        case 7;
+            $orderClause = "ORDER BY createdtime ASC";
+            break;
+        case 8;
+            $orderClause = "ORDER BY createdtime DESC";
+            break;
+        case 9;
+            $orderClause = "ORDER BY isCoach ASC";
+            break;
+        case 10;
+            $orderClause = "ORDER BY isCoach DESC";
             break;
     }
 
@@ -141,26 +167,29 @@ $db_host = NULL;
                         </form>
                     </div>
                 </div>
-                <div class="py-2 text-end">
-                    <div class="btn-group">
-                        <a class="btn btn-primary <?php if ($order == 1) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=1"><i class="fa-solid fa-arrow-down-1-9 fa-fw"></i></a>
-                        <a class="btn btn-primary <?php if ($order == 2) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=2"><i class="fa-solid fa-arrow-down-9-1 fa-fw"></i></a>
-                        <a class="btn btn-primary <?php if ($order == 3) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=3"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
-                        <a class="btn btn-primary <?php if ($order == 4) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=4"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
-                    </div>
-                </div>
                 <?php if ($userCount > 0): ?>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>id</th>
-                                <th>name</th>
+                                <th>id
+                                    <a class=" <?= ($order == 1) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 1) ? 2 : 1 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+                                </th>
+                                <th>name
+                                    <a class=" <?= ($order == 3) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 3) ? 4 : 3 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+
+                                </th>
                                 <th>account</th>
                                 <th>phone</th>
-                                <th>birthday</th>
+                                <th>birthday
+                                    <a class=" <?= ($order == 5) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 5) ? 6 : 5 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+                                </th>
                                 <th>email</th>
-                                <th>createdtime</th>
-                                <th>isCoach</th>
+                                <th>createdtime
+                                    <a class=" <?= ($order == 7) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 7) ? 8 : 7 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+                                </th>
+                                <th>isCoach
+                                    <a class=" <?= ($order == 9) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 9) ? 10 : 9 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -192,11 +221,11 @@ $db_host = NULL;
                                         $active = ($i == $_GET["p"]) ?
                                             "active" : "";
                                         ?>
-                                        <?php if(isset($_GET['q'])):?>
-                                        <li class="page-item <?= $active ?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?>&q=<?=$q?>"><?= $i ?></a></li>
-                                        <?php else:?>
-                                        <li class="page-item <?= $active ?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?>"><?= $i ?></a></li>
-                                        <?php endif;?>
+                                        <?php if (isset($_GET['q'])): ?>
+                                            <li class="page-item <?= $active ?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?>&q=<?= $q ?>"><?= $i ?></a></li>
+                                        <?php else: ?>
+                                            <li class="page-item <?= $active ?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?>"><?= $i ?></a></li>
+                                        <?php endif; ?>
                                     <?php endfor; ?>
                                 </ul>
                             </nav>

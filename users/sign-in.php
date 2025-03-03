@@ -1,5 +1,5 @@
 <?php
-require_once('../pdo_connect.php');
+require_once('../daiski/pdo_connect.php');
 session_start();
 session_destroy();
 
@@ -18,10 +18,10 @@ if(isset($_SESSION["user"])){
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <?php include("./css.php") ?>
+    <?php include("../css.php") ?>
     <style>
         body {
-            background: url("/images/bg.jpg") center center / cover;
+            background: url("./sign-in.jpg") center center / cover;
         }
 
         .logo {
@@ -64,7 +64,8 @@ if(isset($_SESSION["user"])){
 <body>
     <div class="vh-100 d-flex justify-content-center align-items-center">
         <div class="login-panel">
-            <img class="logo mb-2" src="/images/trip-logo.png" alt="">
+            <img class="logo mb-2" src="" alt="">
+            <h1><i class="fa-regular fa-snowflake fa-fw"></i>Daiski<i class="fa-regular fa-snowflake fa-fw"></i><i class="fa-solid fa-person-snowboarding"></i></h1>
             <h1 class="text-light">Please sign in</h1>
             <?php if(isset($_SESSION["error"]["times"]) && $_SESSION["error"]["times"]>5): ?>
                 <div
@@ -115,7 +116,7 @@ if(isset($_SESSION["user"])){
         </div>
     </div>
 
-    <?php include("./js.php") ?>
+    <?php include("../js.php") ?>
 </body>
 
 </html>

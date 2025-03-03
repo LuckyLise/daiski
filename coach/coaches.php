@@ -101,10 +101,10 @@ $db_host = NULL;
 
     <div class="d-flex flex-column">
         <?php include("./new_head_mod.php") ?>
-        <div class="d-flex flex-row w-100 ">
+        <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php") ?>
 
-            <div class="container myPage">
+            <div class="container ">
                 <div class="py-2">
                     <a href="create-coach.php" class="btn btn-primary"><i class="fa-solid fa-user-plus fa-fw"></i> Add Coach</a>
                 </div>

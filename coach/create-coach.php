@@ -15,102 +15,111 @@
         rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous" />
+    <?php include("./css.php") ?>
 </head>
 
 <body>
-    <div class="container">
-        <div class="py-2">
-            <a href="coaches.php" class="btn btn-primary"><i class="fa-solid fa-tent-arrow-turn-left"> 教練列表</i>
-            </a>
+
+    <div class="d-flex flex-column">
+        <?php include("./new_head_mod.php") ?>
+        <div class="d-flex flex-row w-100 myPage">
+            <?php include("./new_side_mod.php") ?>
+
+            <div class="container">
+                <div class="py-2">
+                    <a href="coaches.php" class="btn btn-primary"><i class="fa-solid fa-tent-arrow-turn-left"> 教練列表</i>
+                    </a>
+                </div>
+                <form action="doCreate.php" class="" method="post" enctype="multipart/form-data" id="myForm">
+                    <div class="mb-2">
+                        <label for="name" class="form-label">
+                            姓名
+                        </label><input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="email" class="form-label">
+                            email
+                        </label>
+                        <input type="text" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="mb-2">
+                        <label for="bio" class="form-label">
+                            自我介紹
+                        </label>
+                        <textarea type="text" class="form-control" id="bio" name="bio" required></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <label for="experience" class="form-label">
+                            經歷
+                        </label>
+                        <textarea type="text" class="form-control" id="experience" name="experience" required></textarea>
+                    </div>
+                    <div class="mb-2">
+                        <label for="language" class="form-label">
+                            教學語言
+                        </label>
+                        <div id="languageError" style="color: gray; display: block;">
+                            *請至少選擇一種語言
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input mustcheck" type="checkbox" id="flexCheckChecked" name="language[]" value="中文">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                中文
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input mustcheck" type="checkbox" id="flexCheckChecked" name="language[]" value="英文">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                英文
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="日文">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                日文
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="韓文">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                韓文
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="粵語">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                粵語
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="台語">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                台語
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="" class="form-label">證照</label>
+                        <div class="row g-3">
+                            <div class="col-4">
+                                <input type="" class="form-control" name="license[]" required>
+                            </div>
+                            <div class="col-4">
+                                <input type="" class="form-control" name="license[]">
+                            </div>
+                            <div class="col-4">
+                                <input type="" class="form-control" name="license[]">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <label for="image" class="form-label">選取檔案</label>
+                        <input type="file" class="form-control" name="image" accept=".jpg, .jpeg, .png" required>
+                    </div>
+                    <button class="btn btn-primary" type="submit">送出</button>
+                </form>
+            </div>
         </div>
-        <form action="doCreate.php" class="" method="post" enctype="multipart/form-data"  id="myForm">
-            <div class="mb-2">
-                <label for="name" class="form-label">
-                    姓名
-                </label><input type="text" class="form-control" id="name" name="name" required>
-            </div>
-            <div class="mb-2">
-                <label for="email" class="form-label">
-                    email
-                </label>
-                <input type="text" class="form-control" id="email" name="email" required>
-            </div>
-            <div class="mb-2">
-                <label for="bio" class="form-label">
-                    自我介紹
-                </label>
-                <textarea type="text" class="form-control" id="bio" name="bio" required></textarea>
-            </div>
-            <div class="mb-2">
-                <label for="experience" class="form-label">
-                    經歷
-                </label>
-                <textarea type="text" class="form-control" id="experience" name="experience" required></textarea>
-            </div>
-            <div class="mb-2">
-                <label for="language" class="form-label">
-                    教學語言
-                </label>
-                <div id="languageError" style="color: gray; display: block;">
-                    *請至少選擇一種語言
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input mustcheck" type="checkbox" id="flexCheckChecked" name="language[]" value="中文">
-                    <label class="form-check-label" for="flexCheckChecked">
-                        中文
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input mustcheck" type="checkbox" id="flexCheckChecked" name="language[]" value="英文">
-                    <label class="form-check-label" for="flexCheckChecked">
-                        英文
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="日文">
-                    <label class="form-check-label" for="flexCheckChecked">
-                        日文
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="韓文">
-                    <label class="form-check-label" for="flexCheckChecked">
-                        韓文
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="粵語">
-                    <label class="form-check-label" for="flexCheckChecked">
-                        粵語
-                    </label>
-                </div>
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="台語">
-                    <label class="form-check-label" for="flexCheckChecked">
-                        台語
-                    </label>
-                </div>
-            </div>
-            <div class="mb-3">
-                <label for="" class="form-label">證照</label>
-                <div class="row g-3">
-                    <div class="col-4">
-                        <input type="" class="form-control" name="license[]" required>
-                    </div>
-                    <div class="col-4">
-                        <input type="" class="form-control" name="license[]">
-                    </div>
-                    <div class="col-4">
-                        <input type="" class="form-control" name="license[]">
-                    </div>
-                </div>
-            </div>
-            <div class="mb-2">
-                <label for="image" class="form-label">選取檔案</label>
-                <input type="file" class="form-control" name="image" accept=".jpg, .jpeg, .png" required>
-            </div>
-            <button class="btn btn-primary" type="submit">送出</button>
-        </form>
     </div>
     <!-- Bootstrap JavaScript Libraries -->
     <script
@@ -138,7 +147,7 @@
             }
         });
     </script>
-    
+    <?php include("./js.php") ?>
 </body>
 
 </html>

@@ -4,7 +4,7 @@ if (isset($_GET["id"])) {
 
 $id = $_GET["id"];
 
-require_once("../pdo.connect.php");
+require_once("../pdo_connect.php");
 
 $sql = "SELECT coach .*
 FROM coach
@@ -81,9 +81,12 @@ $selectedLanguages = array_map(function ($lan) {
         crossorigin="anonymous" />
     <style>
     </style>
+    <?php include("./css.php") ?>
 </head>
 
 <body>
+
+
     <div class="modal fade" tabindex="-1" id="infoModal">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -101,124 +104,134 @@ $selectedLanguages = array_map(function ($lan) {
             </div>
         </div>
     </div>
-    <div class="container">
-        <div class="py-2">
-            <a href="coaches.php" class="btn btn-primary"><i class="fa-solid fa-tent-arrow-turn-left fa-fw"></i></a>
-        </div>
-        <div class="row">
-            <div class="col col-md-9">
-                <form action="doUpdateCoach.php" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="id" value="<?= $row["id"] ?>">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th>id</th>
-                            <td><?= $row["id"] ?></td>
-                        </tr>
-                        <tr>
-                            <th>name</th>
-                            <td>
-                                <input type="text" class="form-control" name="name"
-                                    value="<?= $row["name"] ?>">
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>email</th>
-                            <td><input type="tel" class="form-control" name="email"
-                                    value="<?= $row["email"] ?>">
-                        </tr>
-                        <tr>
-                            <th>bio</th>
-                            <td><textarea type="text" class="form-control " name="bio"
-                                    value=""><?= $row["bio"] ?></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>experience</th>
-                            <td>
-                                <textarea type="text" class="form-control" name="experience"
-                                    value=""><?= $row["experience"] ?></textarea>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>license</th>
-                            <td>
-                                <?php
-                                // 確保 $licenses 至少有 3 個元素
-                                $licenses = array_pad($licenses, 3, ["name" => ""]);
-                                foreach ($licenses as $license): ?>
-                                    <input type="text" class="form-control" name="license[]"
-                                        value="<?= htmlspecialchars($license["name"]) ?>"><br>
-                                <?php endforeach; ?>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>language</th>
-                            <td>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="中文" <?php echo in_array('中文', $selectedLanguages) ? 'checked' : ''; ?>>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        中文
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="英文" <?php echo in_array('英文', $selectedLanguages) ? 'checked' : ''; ?>>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        英文
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="日文" <?php echo in_array('日文', $selectedLanguages) ? 'checked' : ''; ?>>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        日文
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="韓文" <?php echo in_array('韓文', $selectedLanguages) ? 'checked' : ''; ?>>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        韓文
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="粵語" <?php echo in_array('粵語', $selectedLanguages) ? 'checked' : ''; ?>>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        粵語
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="台語" <?php echo in_array('台語', $selectedLanguages) ? 'checked' : ''; ?>>
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        台語
-                                    </label>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>profile photo</th>
-                            <td><div class="row row-cols-lg-4 rol-cols-mb-3 row-cols-sm-2 row-cols-lg-3">
-                            <div class="col">
-                                <div class="ratio ratio-1x1 mb-3">
-                                    <img src="../coach/images/<?= $row["profilephoto"] ?>" alt="<?= $row["name"] ?>" class="object-fit-cover">
-                                </div>
-                                </div>
+
+    <div class="d-flex flex-column">
+        <?php include("./new_head_mod.php") ?>
+        <div class="d-flex flex-row w-100 myPage">
+            <?php include("./new_side_mod.php") ?>
+
+
+            <div class="container">
+                <div class="py-2">
+                    <a href="coaches.php" class="btn btn-primary"><i class="fa-solid fa-tent-arrow-turn-left fa-fw"></i></a>
+                </div>
+                <div class="row">
+                    <div class="col col-md-9">
+                        <form action="doUpdateCoach.php" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="id" value="<?= $row["id"] ?>">
+                            <table class="table table-bordered">
+                                <tr>
+                                    <th>id</th>
+                                    <td><?= $row["id"] ?></td>
+                                </tr>
+                                <tr>
+                                    <th>name</th>
+                                    <td>
+                                        <input type="text" class="form-control" name="name"
+                                            value="<?= $row["name"] ?>">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>email</th>
+                                    <td><input type="tel" class="form-control" name="email"
+                                            value="<?= $row["email"] ?>">
+                                </tr>
+                                <tr>
+                                    <th>bio</th>
+                                    <td><textarea type="text" class="form-control " name="bio"
+                                            value=""><?= $row["bio"] ?></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>experience</th>
+                                    <td>
+                                        <textarea type="text" class="form-control" name="experience"
+                                            value=""><?= $row["experience"] ?></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>license</th>
+                                    <td>
+                                        <?php
+                                        // 確保 $licenses 至少有 3 個元素
+                                        $licenses = array_pad($licenses, 3, ["name" => ""]);
+                                        foreach ($licenses as $license): ?>
+                                            <input type="text" class="form-control" name="license[]"
+                                                value="<?= htmlspecialchars($license["name"]) ?>"><br>
+                                        <?php endforeach; ?>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>language</th>
+                                    <td>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="中文" <?php echo in_array('中文', $selectedLanguages) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="flexCheckChecked">
+                                                中文
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="英文" <?php echo in_array('英文', $selectedLanguages) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="flexCheckChecked">
+                                                英文
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="日文" <?php echo in_array('日文', $selectedLanguages) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="flexCheckChecked">
+                                                日文
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="韓文" <?php echo in_array('韓文', $selectedLanguages) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="flexCheckChecked">
+                                                韓文
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="粵語" <?php echo in_array('粵語', $selectedLanguages) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="flexCheckChecked">
+                                                粵語
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="flexCheckChecked" name="language[]" value="台語" <?php echo in_array('台語', $selectedLanguages) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="flexCheckChecked">
+                                                台語
+                                            </label>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>profile photo</th>
+                                    <td>
+                                        <div class="row row-cols-lg-4 rol-cols-mb-3 row-cols-sm-2 row-cols-lg-3">
+                                            <div class="col">
+                                                <div class="ratio ratio-1x1 mb-3">
+                                                    <img src="../coach/images/<?= $row["profilephoto"] ?>" alt="<?= $row["name"] ?>" class="object-fit-cover">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <!-- <label for="image" class="form-label">選取檔案</label> -->
+                                            <input type="file" class="form-control" name="image" accept=".jpg, .jpeg, .png">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>created at</th>
+                                    <td><?= $row["createdat"] ?></td>
+                                </tr>
+                            </table>
+                            <div class="d-flex">
+                                <button class="btn btn-primary" type="submit"><i class="fa-regular fa-floppy-disk fa-fw"></i>儲存</button>
+                                <a data-bs-toggle="modal" data-bs-target="#infoModal" class="btn btn-danger">刪除</a>
                             </div>
-                                <div class="mb-2">
-                                    <!-- <label for="image" class="form-label">選取檔案</label> -->
-                                    <input type="file" class="form-control" name="image" accept=".jpg, .jpeg, .png">
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th>created at</th>
-                            <td><?= $row["createdat"] ?></td>
-                        </tr>
-                    </table>
-                    <div class="d-flex">
-                        <button class="btn btn-primary" type="submit"><i class="fa-regular fa-floppy-disk fa-fw"></i>儲存</button>
-                        <a data-bs-toggle="modal" data-bs-target="#infoModal" class="btn btn-danger">刪除</a>
+
+                        </form>
+
                     </div>
-
-                </form>
-
+                </div>
             </div>
         </div>
     </div>
@@ -232,6 +245,7 @@ $selectedLanguages = array_map(function ($lan) {
         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
         integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
         crossorigin="anonymous"></script>
+    <?php include("./js.php") ?>
 </body>
 
 </html>

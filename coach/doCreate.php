@@ -1,5 +1,5 @@
 <?php
-require_once("../pdo.connect.php");
+require_once("../pdo_connect.php");
 if (!isset($_POST["name"])) {
     die("請循正常管道進入此頁");
 }
@@ -36,7 +36,7 @@ for ($i = 0; $i < count($language); $i++) {
     $language[$i] = ($languageNum[$language[$i]]);
 }
 try {
-    $sql = "INSERT INTO coach (name, email, bio, experience, profilephoto) VALUES ('$name', '$email', '$bio', '$experience', '$filename')";
+    $sql = "INSERT INTO coach (name, email, bio, experience, profilephoto, valid) VALUES ('$name', '$email', '$bio', '$experience', '$filename', 1 )";
     $stmt = $db_host->prepare($sql);
     $stmt->execute();
     $coachid=$db_host->lastInsertId();

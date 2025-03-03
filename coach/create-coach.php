@@ -16,6 +16,17 @@
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
         crossorigin="anonymous" />
     <?php include("./css.php") ?>
+    <style>
+        body{
+            color: white !important;
+            th{
+                color: white !important;
+            }
+            td{
+                color: white !important;
+            }
+        }
+    </style>
 </head>
 
 <body>

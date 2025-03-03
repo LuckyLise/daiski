@@ -100,13 +100,56 @@ try {
         input[name="main_image_id"] {
             display: none;
         }
+
+        /* 預設隱藏主要內容，僅顯示 loading 區塊 */
+    #mainContent {
+            display: none;
+        }
+
+        /* Loading 畫面 */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #07192F;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        /* 轉圈動畫 */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div class="d-flex flex-column">
-        <?php include("./new_head_mod.php"); ?>
+    <!-- Loading 畫面 -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
     </div>
+    <div class="d-flex flex-column" id="mainContent">
+        <?php include("./new_head_mod.php"); ?>
+    
     <div class="d-flex flex-row w-100 myPage">
         <?php include("./new_side_mod.php"); ?>
         <div class="container ">
@@ -222,7 +265,7 @@ try {
             </div>
         </div>
     </div>
-
+    </div>
 
     <?php include("./js.php"); ?>
 
@@ -500,31 +543,6 @@ try {
     </script>
 
 
-
-
-
-
-    <!-- 引入最新版本的 Three.js（Vanta.js 依賴 Three.js） -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-
-    <!-- 引入 Vanta.js 中的 BIRDS 效果（鳥群動畫） -->
-    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.birds.min.js"></script>
-
-    <!-- 引入 Vanta.js 中的 WAVES 效果（波浪動畫） -->
-    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.waves.min.js"></script>
-
-    <!-- net -->
-    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.net.min.js"></script>
-
-    <!--rings-->
-    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.rings.min.js"></script>
-
-    <!-- topology要用的 -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.2/p5.min.js" integrity="sha512-1YMgn4j8cIL91s14ByDGmHtBU6+F8bWOMcF47S0cRO3QNm8SKPNexy4s3OCim9fABUtO++nJMtcpWbINWjMSzQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
-    <!--  topology-->
-    <script src="https://cdn.jsdelivr.net/npm/vanta@0.5.24/dist/vanta.topology.min.js"></script>
-
     <script>
         VANTA.BIRDS({
             el: ".sidebar", // 指定作用的 HTML 元素 ID
@@ -584,7 +602,73 @@ try {
             quantity: 5.00,
         });
   </script>
-    </script>
+  <script>
+    
+        window.addEventListener('load', function() {
+            // 出場動畫：loading 畫面淡出
+            gsap.to("#loadingOverlay", {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: function() {
+                    document.getElementById("loadingOverlay").style.display = "none";
+                }
+            });
+
+            //以下是自己網頁的入場動畫
+
+            //       gsap.fromTo("#mainContent", 
+            //   { rotation: -10, opacity: 0 }, 
+            //   { rotation: 0, opacity: 1, duration: 0.8, ease: "back.out(1.5)" }
+            // );
+            //還不錯
+
+            // gsap.fromTo("#mainContent", 
+            //   { scale: 0.8, opacity: 0 }, 
+            //   { scale: 1, opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+            //普通
+
+            // gsap.fromTo("#mainContent", 
+            //   { filter: "blur(5px)", opacity: 0 }, 
+            //   { filter: "blur(0px)", opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+            // 傷害眼睛
+
+            // gsap.from("#mainContent", {
+            //   y: 100,
+            //   duration: 0.8,
+            //   ease: "elastic.out(1, 0.5)"
+            // });
+
+            // let elements = document.querySelectorAll("#mainContent div");
+            // elements.forEach(el => {
+            //     gsap.from(el, {
+            //         x: gsap.utils.random(-50, 50),
+            //         y: gsap.utils.random(-50, 50),
+            //         duration: 1,
+            //         ease: "back.out(1.5)"
+            //     });
+            // });
+            //不怎麼好看但很炫
+
+            gsap.from("#mainContent", {
+                rotateY: -90,
+                duration: 1,
+                ease: "back.out(1.7)"
+            });
+            //還不錯
+
+            // gsap.from("#mainContent", {
+            //     y: -100,
+            //     opacity: 0,
+            //     duration: 1,
+            //     ease: "bounce.out"
+            // });
+
+
+        });
+  </script>
+    
 </body>
 
 </html>

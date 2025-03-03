@@ -3,7 +3,7 @@ if (!isset($_POST["name"])) {
     die("錯!!!!!!");
 }
 
-require_once("../pdo.connect.php");
+require_once("../pdo_connect.php");
 
 $id = $_POST["id"];
 $name = $_POST["name"];

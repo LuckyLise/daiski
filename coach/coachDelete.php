@@ -1,10 +1,10 @@
 <?php
-require_once("../pdo.connect.php");
+require_once("../pdo_connect.php");
 
 $id=$_GET["id"];
 
 try{
-    $sql = "DELETE FROM coach WHERE id=$id";
+    $sql = "UPDATE coach SET valid= 0 WHERE id=$id";
     $stmt = $db_host->prepare($sql);
     $stmt->execute();
 }catch (PDOException $e) {

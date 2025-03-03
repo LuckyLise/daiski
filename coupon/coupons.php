@@ -91,10 +91,28 @@ switch ($order) {
         $orderClause = " ORDER BY id DESC";
         break;
     case 3:
-        $orderClause = " ORDER BY createdAt ASC";
+        $orderClause = " ORDER BY startAt ASC";
         break;
     case 4:
-        $orderClause = " ORDER BY createdAt DESC";
+        $orderClause = " ORDER BY startAt DESC";
+        break;
+    case 5:
+        $orderClause = " ORDER BY endAt ASC";
+        break;
+    case 6:
+        $orderClause = " ORDER BY endAt DESC";
+        break;
+    case 7:
+        $orderClause = " ORDER BY usageLimit ASC";
+        break;
+    case 8:
+        $orderClause = " ORDER BY usageLimit DESC";
+        break;
+    case 9:
+        $orderClause = " ORDER BY minPurchase ASC";
+        break;
+    case 10:
+        $orderClause = " ORDER BY minPurchase DESC";
         break;
 }
 
@@ -162,12 +180,17 @@ $db_host = NULL;
 </head>
 
 <body>
+    <!-- Loading 畫面 -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+
     <!-- 彈跳視窗 -->
     <div class="modal fade" tabindex="-1" id="infoModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Modal title</h5>
+                    <h5 class="modal-title">刪除優惠卷</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -181,55 +204,78 @@ $db_host = NULL;
         </div>
     </div>
 
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column myPage" id="mainContent">
         <?php include("./new_head_mod.php"); ?>
 
-        <div class="d-flex flex-row w-100 ">
+        <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php"); ?>
 
-            <div class="container myPage">
+            <div class="container ">
                 <!-- 標題 -->
                 <div class="text-center py-3">
                     <h1>優惠卷清單</h1>
                 </div>
 
-                <!-- 使用者總數 收尋 -->
+                <!-- 使用者總數-->
+
+                <div class="py-2">
+                    <div>共<?= $couponCount ?>組優惠卷</div>
+                </div>
+
+                <!-- 分類 收尋 -->
                 <div class="py-2 row g-3 align-items-center">
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="gap-2 align-items-center">
-                            <?php if (isset($_GET["q"])): ?>
-                                <a href="coupons.php" class="btn btn-primary"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
-                            <?php endif; ?>
-                            <div>共<?= $couponCount ?>組優惠卷</div>
+                            <ul class="nav nav-underline">
+                                <li class="nav-item">
+                                    <?php
+                                    $ifActive = "";
+                                    if (!isset($_GET["coupon_target"]) && !isset($_GET["coupon_type"])) {
+                                        $ifActive = "active";
+                                    }
+                                    ?>
+                                    <a href="coupons.php" class="btn btn-primary <?= $ifActive ?>">全部</a>
+                                </li>
+                                <?php foreach ($targets as $target) : ?>
+                                    <li class="nav-item">
+                                        <?php
+                                        $ifActive = "";
+                                        if (isset($_GET["coupon_target"]) && $_GET["coupon_target"] == $target["target"]) {
+                                            $ifActive = "active";
+                                        }
+                                        ?>
+                                        <a href="coupons.php?p=1&order=1&coupon_target=<?= $target["target"] ?>" class="btn btn-primary <?= $ifActive ?>"><?= $target["target"] ?></a>
+                                    </li>
+                                <?php endforeach; ?>
+                                <?php foreach ($types as $type) : ?>
+                                    <li class="nav-item">
+                                        <?php
+                                        $ifActive = "";
+                                        if (isset($_GET["coupon_type"]) && $_GET["coupon_type"] == $type["type"]) {
+                                            $ifActive = "active";
+                                        }
+                                        ?>
+                                        <a href="coupons.php?p=1&order=1&coupon_type=<?= $type["type"] ?>" class="btn btn-primary <?= $ifActive ?>"><?= $type["type"] ?></a>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
                         </div>
                     </div>
-                    <div class="col-md-6">
+
+                    <div class="col-md-4">
                         <form action="" method="get">
+                            <!-- 收尋完的返回 -->
+                            <div>
+                                <?php if (isset($_GET["q"])): ?>
+                                    <a href="coupons.php" class="btn btn-primary"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
+                                <?php endif; ?>
+                            </div>
                             <div class="input-group">
                                 <input type="search" class="form-control" name="q" <?php $q = $_GET["q"] ?? ""; ?> value="<?= $q ?>">
                                 <button class="btn btn-primary" type="submit"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
                             </div>
                         </form>
                     </div>
-                </div>
-
-                <!-- 分類 -->
-                <div class="py-2">
-                    <ul class="nav nav-underline">
-                        <li class="nav-item">
-                            <a href="coupons.php" class="btn btn-primary">全部</a>
-                        </li>
-                        <?php foreach ($targets as $target) : ?>
-                            <li class="nav-item">
-                                <a href="coupons.php?p=1&order=1&coupon_target=<?= $target["target"] ?>" class="btn btn-primary"><?= $target["target"] ?></a>
-                            </li>
-                        <?php endforeach; ?>
-                        <?php foreach ($types as $type) : ?>
-                            <li class="nav-item">
-                                <a href="coupons.php?p=1&order=1&coupon_type=<?= $type["type"] ?>" class="btn btn-primary"><?= $type["type"] ?></a>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
                 </div>
 
                 <!-- 時間篩選 -->
@@ -250,7 +296,7 @@ $db_host = NULL;
 
                             <div class="col-auto">
                                 <?php $startAt = $_GET["startAt"] ?? ""; ?>
-                                <input type="date" class="form-control" name="startAt" value="<?= $startAt ?>">
+                                <input type="date" class="form-control" name="startAt" value="<?= $startAt ?>" min="<?= date('Y-m-d') ?>" id="startAt">
 
                             </div>
 
@@ -260,7 +306,7 @@ $db_host = NULL;
 
                             <div class="col-auto">
                                 <?php $endAt = $_GET["endAt"] ?? ""; ?>
-                                <input type="date" class="form-control" name="endAt" value="<?= $endAt ?>">
+                                <input type="date" class="form-control" name="endAt" value="<?= $endAt ?>" id="endAt">
 
                             </div>
 
@@ -269,16 +315,6 @@ $db_host = NULL;
                             </div>
                         </div>
                     </form>
-                </div>
-
-                <!-- 排序 -->
-                <div class="py-2 text-end">
-                    <div class="btn-group">
-                        <a class="btn btn-primary <?php if ($order == 1) echo "active" ?>" href="coupons.php?p=<?= $p ?>&order=1"><i class="fa-solid fa-arrow-down-1-9 fa-fw"></i></a>
-                        <a class="btn btn-primary <?php if ($order == 2) echo "active" ?>" href="coupons.php?p=<?= $p ?>&order=2"><i class="fa-solid fa-arrow-down-9-1 fa-fw"></i></a>
-                        <a class="btn btn-primary <?php if ($order == 3) echo "active" ?>" href="coupons.php?p=<?= $p ?>&order=3"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
-                        <a class="btn btn-primary <?php if ($order == 4) echo "active" ?>" href="coupons.php?p=<?= $p ?>&order=4"><i class="fa-solid fa-arrow-down-z-a fa-fw"></i></a>
-                    </div>
                 </div>
 
                 <!-- 新增使用者 -->
@@ -290,16 +326,16 @@ $db_host = NULL;
                 <table class="table table-bordered py-2">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>ID <a href="#" class="sort-icon <?= (isset($_GET['order']) && ($_GET['order'] == 1 || $_GET['order'] == 2)) ? 'activeI' : '' ?>" data-field="id"><i class="fa-solid fa-sort"></i></a></th>
                             <th>優惠卷名稱</th>
                             <th>代碼</th>
                             <th>種類</th>
                             <th>折扣數</th>
                             <th>折扣對象</th>
-                            <th>開始日期</th>
-                            <th>結束日期</th>
-                            <th>可領取次數</th>
-                            <th>最低消費額</th>
+                            <th>開始日期 <a href="#" class="sort-icon" data-field="startAt"><i class="fa-solid fa-sort <?= (isset($_GET['order']) && ($_GET['order'] == 3 || $_GET['order'] == 4)) ? 'activeI' : '' ?>"></i></a></th>
+                            <th>結束日期 <a href="#" class="sort-icon" data-field="endAt"><i class="fa-solid fa-sort <?= (isset($_GET['order']) && ($_GET['order'] == 5 || $_GET['order'] == 6)) ? 'activeI' : '' ?>"></i></a></th>
+                            <th>可領取次數 <a href="#" class="sort-icon" data-field="usageLimit"><i class="fa-solid fa-sort <?= (isset($_GET['order']) && ($_GET['order'] == 7 || $_GET['order'] == 8)) ? 'activeI' : '' ?>"></i></a></th>
+                            <th>最低消費額 <a href="#" class="sort-icon" data-field="minPurchase"><i class="fa-solid fa-sort <?= (isset($_GET['order']) && ($_GET['order'] == 9 || $_GET['order'] == 10)) ? 'activeI' : '' ?>"></i></a></th>
                             <th>新增時間</th>
                             <!-- <th>優惠卷狀態</th> -->
                             <th>詳細資訊</th>
@@ -357,7 +393,7 @@ $db_host = NULL;
 
     <?php include("./js.php"); ?>
     <script>
-        // const deleteModal = document.querySelector("#deleteButton")
+        // 刪除
         const deleteButtons = document.querySelectorAll(".deleteButton")
 
         let deleteId = null;
@@ -394,6 +430,55 @@ $db_host = NULL;
                 });
             }
         });
+
+        //排序
+        const sortIcons = document.querySelectorAll(".sort-icon");
+        const sortMapping = {
+            id: {
+                asc: "1",
+                desc: "2"
+            },
+            startAt: {
+                asc: "3",
+                desc: "4"
+            },
+            endAt: {
+                asc: "5",
+                desc: "6"
+            },
+            usageLimit: {
+                asc: "7",
+                desc: "8"
+            },
+            minPurchase: {
+                asc: "9",
+                desc: "10"
+            },
+        };
+        sortIcons.forEach(a => {
+            a.addEventListener("click", function(e) {
+                const field = this.dataset.field;
+                const urlParams = new URLSearchParams(window.location.search);
+                let currentOrder = urlParams.get("order");
+                let nextOrder;
+                if (currentOrder === sortMapping[field].asc) {
+                    nextOrder = sortMapping[field].desc;
+                } else {
+                    nextOrder = sortMapping[field].asc;
+                }
+                urlParams.set("order", nextOrder);
+                window.location.href = window.location.pathname + "?" + urlParams.toString();
+
+            })
+        })
+
+        // 時間限制
+        const startAtInput = document.getElementById('startAt');
+        startAtInput.addEventListener('change', function(){
+            let selectedAt = this.value;
+            let endAtInput = document.getElementById('endAt');
+            endAtInput.setAttribute('min', selectedAt);
+        })
     </script>
 </body>
 

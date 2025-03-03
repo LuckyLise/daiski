@@ -17,7 +17,7 @@
         document.querySelectorAll(".delete-btn").forEach(button => {
             button.addEventListener("click", function() {
                 let courseId = this.getAttribute("data-course-id");
-                if (confirm("確定要刪除這個課程嗎？此操作無法復原！")) {
+                if (confirm("確定要暫時下架這個課程嗎？")) {
                     window.location.href = "delete_course.php?id=" + courseId;
                 }
             });
@@ -93,7 +93,7 @@
         scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
         separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
         color1: 0xffffff,
-        birdSize: 0.50,
+        birdSize: 0.10,
         // backgroundColor:0x4e73df
     });
 
@@ -108,7 +108,7 @@
         scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
         separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
         color1: 0xffffff,
-        birdSize: 0.50,
+        birdSize: 0.10,
         // backgroundColor:0x4e73df
     });
     
@@ -122,9 +122,12 @@
         minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
         scale: 1.00, // 設定一般裝置上的縮放比例
         scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
-        separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+        separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
         color1: 0xffffff,
-        birdSize: 0.50,
+        birdSize: 0.10,
+        quantity: 5.00,
         // backgroundColor:0x4e73df
     });
 </script>
+<!-- GSAP -->
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>

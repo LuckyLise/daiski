@@ -1,5 +1,5 @@
 <?php
-require_once('../pdo_connect.php');
+require_once('../daiski/pdo_connect.php');
 
 $sqlALL = "SELECT * FROM users WHERE valid=1";
 $stmtALL = $db_host->prepare($sqlALL);
@@ -8,25 +8,25 @@ $userCount = $stmtALL->rowCount();
 $orderClause = "ORDER BY id ASC";
 $sqlSelect = "";
 
-if (isset($_GET["q"])) {
-    $q = $_GET["q"];
-    $order = $_GET["order"];
-    $sqlSelect = "AND name LIKE '%$q%'";
+$order = $_GET["order"];
+if ($order % 2 == 1) {
+    $select = "fa-chevron-up";
+} else {
+    $select = "fa-chevron-down";
+}
 
-    $sqlALL = "SELECT * FROM users WHERE valid=1 $sqlSelect";
-    $stmtALL = $db_host->prepare($sqlALL);
-    $stmtALL->execute();
-    $userCount = $stmtALL->rowCount();
-} else if (isset($_GET["p"]) && isset($_GET["order"])) {
-    //$p = $_GET["p"];
-    $order = $_GET["order"];
 
-    if ($order % 2 == 1) {
-        $select = "up";
-    } else {
-        $select = "down";
+if (isset($_GET["p"]) && isset($_GET["order"])) {
+    if (isset($_GET["q"])) {
+        $q = $_GET["q"];
+        $order = $_GET["order"];
+        $sqlSelect = "AND name LIKE '%$q%'";
+
+        $sqlALL = "SELECT * FROM users WHERE valid=1 $sqlSelect";
+        $stmtALL = $db_host->prepare($sqlALL);
+        $stmtALL->execute();
+        $userCount = $stmtALL->rowCount();
     }
-
     switch ($order) {
         case 1;
             $orderClause = "ORDER BY id ASC";
@@ -61,6 +61,57 @@ if (isset($_GET["q"])) {
             $orderClause = "ORDER BY isCoach DESC";
             break;
     }
+} else {
+    header("location:pdo-users.php?p=1&order=1");
+}
+
+// if (isset($_GET["q"])) {
+//     $q = $_GET["q"];
+//     $order = $_GET["order"];
+//     $sqlSelect = "AND name LIKE '%$q%'";
+
+//     $sqlALL = "SELECT * FROM users WHERE valid=1 $sqlSelect";
+//     $stmtALL = $db_host->prepare($sqlALL);
+//     $stmtALL->execute();
+//     $userCount = $stmtALL->rowCount();
+// } else if (isset($_GET["p"]) && isset($_GET["order"])) {
+//     //$p = $_GET["p"];
+
+
+//     switch ($order) {
+//         case 1;
+//             $orderClause = "ORDER BY id ASC";
+//             break;
+//         case 2;
+//             $orderClause = "ORDER BY id DESC";
+
+//             break;
+//         case 3;
+//             $orderClause = "ORDER BY name ASC";
+//             break;
+//         case 4;
+//             $orderClause = "ORDER BY name DESC";
+//             // $select="down";
+//             break;
+//         case 5;
+//             $orderClause = "ORDER BY birthday ASC";
+//             break;
+//         case 6;
+//             $orderClause = "ORDER BY birthday DESC";
+//             break;
+//         case 7;
+//             $orderClause = "ORDER BY createdtime ASC";
+//             break;
+//         case 8;
+//             $orderClause = "ORDER BY createdtime DESC";
+//             break;
+//         case 9;
+//             $orderClause = "ORDER BY isCoach ASC";
+//             break;
+//         case 10;
+//             $orderClause = "ORDER BY isCoach DESC";
+//             break;
+//     }
 
     // $perPage = 25;
     // $startItem = ($p - 1) * $perPage;
@@ -68,10 +119,10 @@ if (isset($_GET["q"])) {
     // $sql = "SELECT * FROM users WHERE valid=1
     // $orderClause
     // LIMIT $startItem,$perPage";
-} else {
-    header("location:pdo-users.php?p=1&order=1");
-    // $sql = "SELECT * FROM users WHERE valid=1";
-}
+// } else {
+//     header("location:pdo-users.php?p=1&order=1");
+//     // $sql = "SELECT * FROM users WHERE valid=1";
+// }
 $p = $_GET["p"];
 $perPage = 25;
 $startItem = ($p - 1) * $perPage;
@@ -167,28 +218,36 @@ $db_host = NULL;
                         </form>
                     </div>
                 </div>
+                <!-- <div class="py-2 text-end">
+                    <div class="btn-group">
+                        <a class="btn btn-primary <?php if ($order == 1) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=1"><i class="fa-solid fa-arrow-down-1-9 fa-fw"></i></a>
+                        <a class="btn btn-primary <?php if ($order == 2) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=2"><i class="fa-solid fa-arrow-down-9-1 fa-fw"></i></a>
+                        <a class="btn btn-primary <?php if ($order == 3) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=3"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
+                        <a class="btn btn-primary <?php if ($order == 4) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=4"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
+                    </div>
+                </div> -->
                 <?php if ($userCount > 0): ?>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>id
-                                    <a class=" <?= ($order == 1) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 1) ? 2 : 1 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+                                    <a class=" <?= ($order == 1) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 1) ? 2 : 1 ?>"><i class="fa-solid <?=($order ==1 || $order ==2)? $select:"fa-arrows-up-down" ?>  "></i></a>
                                 </th>
                                 <th>name
-                                    <a class=" <?= ($order == 3) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 3) ? 4 : 3 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+                                    <a class=" <?= ($order == 3) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 3) ? 4 : 3 ?>"><i class="fa-solid <?=($order ==3 || $order ==4)? $select:"fa-arrows-up-down" ?> "></i></a>
 
                                 </th>
                                 <th>account</th>
                                 <th>phone</th>
                                 <th>birthday
-                                    <a class=" <?= ($order == 5) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 5) ? 6 : 5 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+                                    <a class=" <?= ($order == 5) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 5) ? 6 : 5 ?>"><i class="fa-solid <?=($order ==5 || $order ==6)? $select:"fa-arrows-up-down" ?> "></i></a>
                                 </th>
                                 <th>email</th>
                                 <th>createdtime
-                                    <a class=" <?= ($order == 7) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 7) ? 8 : 7 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+                                    <a class=" <?= ($order == 7) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 7) ? 8 : 7 ?>"><i class="fa-solid <?=($order ==7 || $order ==8)? $select:"fa-arrows-up-down" ?>"></i></a>
                                 </th>
                                 <th>isCoach
-                                    <a class=" <?= ($order == 9) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 9) ? 10 : 9 ?>"><i class="fa-solid fa-chevron-<?= $select ?> "></i></a>
+                                    <a class=" <?= ($order == 9) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 9) ? 10 : 9 ?>"><i class="fa-solid <?=($order ==9 || $order ==10)? $select:"fa-arrows-up-down" ?>"></i></a>
                                 </th>
                                 <th></th>
                             </tr>
@@ -234,7 +293,7 @@ $db_host = NULL;
                 <?php endif; ?>
             </div>
         </div>
-        <?php include("./js.php") ?>
+        <?php include("../daiski/js.php") ?>
 
         <script>
             let users = <?= json_encode($rows) ?>;

@@ -5,15 +5,22 @@ $sqlALL = "SELECT * FROM users WHERE valid=1";
 $stmtALL = $db_host->prepare($sqlALL);
 $stmtALL->execute();
 $userCount = $stmtALL->rowCount();
-
+$orderClause = "ORDER BY id ASC";
+$sqlSelect = "";
 
 if (isset($_GET["q"])) {
     $q = $_GET["q"];
-    $sql = "SELECT * FROM users WHERE name LIKE '%$q%'";
-} else if (isset($_GET["p"]) && isset($_GET["order"])) {
-    $p = $_GET["p"];
     $order = $_GET["order"];
-    $orderClause = "";
+    $sqlSelect = "AND name LIKE '%$q%'";
+
+    $sqlALL = "SELECT * FROM users WHERE valid=1 $sqlSelect";
+    $stmtALL = $db_host->prepare($sqlALL);
+    $stmtALL->execute();
+    $userCount = $stmtALL->rowCount();
+} else if (isset($_GET["p"]) && isset($_GET["order"])) {
+    //$p = $_GET["p"];
+    $order = $_GET["order"];
+
     switch ($order) {
         case 1;
             $orderClause = "ORDER BY id ASC";
@@ -29,16 +36,23 @@ if (isset($_GET["q"])) {
             break;
     }
 
-    $perPage = 25;
-    $startItem = ($p - 1) * $perPage;
-    $totalPage = ceil($userCount / $perPage);
-    $sql = "SELECT * FROM users WHERE valid=1
-     $orderClause
-     LIMIT $startItem,$perPage";
+    // $perPage = 25;
+    // $startItem = ($p - 1) * $perPage;
+    // $totalPage = ceil($userCount / $perPage);
+    // $sql = "SELECT * FROM users WHERE valid=1
+    // $orderClause
+    // LIMIT $startItem,$perPage";
 } else {
     header("location:pdo-users.php?p=1&order=1");
     // $sql = "SELECT * FROM users WHERE valid=1";
 }
+$p = $_GET["p"];
+$perPage = 25;
+$startItem = ($p - 1) * $perPage;
+$totalPage = ceil($userCount / $perPage);
+$sql = "SELECT * FROM users WHERE valid=1  $sqlSelect
+$orderClause
+LIMIT $startItem,$perPage";
 
 
 
@@ -47,9 +61,6 @@ $stmt = $db_host->prepare($sql);
 try {
     $stmt->execute();
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    if (isset($_GET["q"])) {
-        $userCount = $stmt->rowCount();
-    }
     // echo "<pre>"; 會將結果展開，自動換行
     // print_r($rows);會將結果用陣列的方式顯現出來
     // echo "</pre>";
@@ -59,6 +70,9 @@ try {
     $db_host = NULL;
     exit;
 }
+
+//1.php尾端再計算userCount`,可顯示正確頁數
+//2.底下頁數的按鈕超連結 要增加q的欄位
 
 $db_host = NULL;
 ?>
@@ -87,11 +101,7 @@ $db_host = NULL;
 </head>
 
 <body>
-    <!-- Loading 畫面 -->
- <div id="loadingOverlay">
-    <div class="spinner"></div>
-  </div>
-    <div class="d-flex flex-column " id="mainContent">
+    <div class="d-flex flex-column ">
         <?php include("./new_head_mod.php"); ?>
         <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php"); ?>
@@ -111,6 +121,8 @@ $db_host = NULL;
                     </div>
                     <div class="col-md-6">
                         <form action="" method="get">
+                            <input type="hidden" name="p" value="<?= $_GET['p'] ?>">
+                            <input type="hidden" name="order" value="1">
                             <div class="input-group">
                                 <input type="search" class="form-control" name="q"
                                     <?php
@@ -149,6 +161,7 @@ $db_host = NULL;
                                 <th>email</th>
                                 <th>createdtime</th>
                                 <th>isCoach</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -179,7 +192,11 @@ $db_host = NULL;
                                         $active = ($i == $_GET["p"]) ?
                                             "active" : "";
                                         ?>
+                                        <?php if(isset($_GET['q'])):?>
+                                        <li class="page-item <?= $active ?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?>&q=<?=$q?>"><?= $i ?></a></li>
+                                        <?php else:?>
                                         <li class="page-item <?= $active ?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?>"><?= $i ?></a></li>
+                                        <?php endif;?>
                                     <?php endfor; ?>
                                 </ul>
                             </nav>
@@ -194,7 +211,62 @@ $db_host = NULL;
             let users = <?= json_encode($rows) ?>;
             console.log(users);
         </script>
+        <script>
+            VANTA.BIRDS({
+                el: ".sidebar", // 指定作用的 HTML 元素 ID
+                mouseControls: true, // 啟用滑鼠控制，使動畫會跟隨滑鼠移動
+                touchControls: true, // 啟用觸控控制，使動畫可以隨觸控移動
+                gyroControls: false, // 禁用陀螺儀控制（手機旋轉時不影響動畫）
+                minHeight: 50.00, // 設定最小高度，確保畫面不會小於 200px
+                minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
+                scale: 1.00, // 設定一般裝置上的縮放比例
+                scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
+                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                color1: 0xffffff,
+                birdSize: 0.50,
+                // backgroundColor:0x4e73df
+            });
+            VANTA.BIRDS({
+                el: ".myPage", // 指定作用的 HTML 元素 ID
+                mouseControls: true, // 啟用滑鼠控制，使動畫會跟隨滑鼠移動
+                touchControls: true, // 啟用觸控控制，使動畫可以隨觸控移動
+                gyroControls: false, // 禁用陀螺儀控制（手機旋轉時不影響動畫）
+                minHeight: 50.00, // 設定最小高度，確保畫面不會小於 200px
+                minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
+                scale: 1.00, // 設定一般裝置上的縮放比例
+                scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
+                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                color1: 0xffffff,
+                birdSize: 0.50,
+                // backgroundColor:0x4e73df
+            });
+            VANTA.BIRDS({
+                el: ".head", // 指定作用的 HTML 元素 ID
+                mouseControls: true, // 啟用滑鼠控制，使動畫會跟隨滑鼠移動
+                touchControls: true, // 啟用觸控控制，使動畫可以隨觸控移動
+                gyroControls: false, // 禁用陀螺儀控制（手機旋轉時不影響動畫）
+                minHeight: 50.00, // 設定最小高度，確保畫面不會小於 200px
+                minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
+                scale: 1.00, // 設定一般裝置上的縮放比例
+                scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
+                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                color1: 0xffffff,
+                birdSize: 0.50,
+                // backgroundColor:0x4e73df
+            });
 
+            //VANTA.WAVES({ //目前註解掉
+            //  el: "body", //綁在body上會使該網頁的modal跳出來時有問題 最好綁在你需要的class上
+            //  mouseControls: true,
+            //  touchControls: true,
+            //  gyroControls: false,
+            //  minHeight: 200.00,
+            //  minWidth: 200.00,
+            //  scale: 1.00,
+            //  scaleMobile: 1.00,
+            //  color:0xb2e2ff
+            // })
+        </script>
     </div>
 </body>
 

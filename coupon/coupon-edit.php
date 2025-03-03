@@ -39,6 +39,10 @@ $db_host = NULL;
 </head>
 
 <body>
+    <!-- Loading 畫面 -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
     <div class="modal fade" tabindex="-1" id="infoModal" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -58,7 +62,7 @@ $db_host = NULL;
     </div>
 
 
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column" id="mainContent">
         <?php include("./new_head_mod.php"); ?>
 
         <div class="d-flex flex-row w-100 ">

@@ -37,7 +37,11 @@ $db_host = NULL;
 </head>
 
 <body>
-    <div class="d-flex flex-column">
+        <!-- Loading 畫面 -->
+        <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+    <div class="d-flex flex-column" id="mainContent">
         <?php include("./new_head_mod.php") ?>
         <div class="d-flex flex-row w-100 ">
             <?php include("./new_side_mod.php") ?>

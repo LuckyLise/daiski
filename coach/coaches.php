@@ -158,7 +158,13 @@ $db_host = NULL;
                                 <td><?= $row["id"] ?></td>
                                 <td><?= $row["name"] ?></td>
                                 <td><?= $row["email"] ?></td>
-                                <td><?= $row["profilephoto"] ?></td>
+                                <td><div class="row row-cols-lg-4 rol-cols-mb-3 row-cols-sm-2 row-cols-lg-3">
+                                        <div class="col">
+                                            <div class="ratio ratio-1x1">
+                                                <img src="../coach/images/<?= $row["profilephoto"] ?>" alt="<?= $row["name"] ?>" class="object-fit-cover">
+                                            </div>
+                                        </div>
+                                    </div></td>
                                 <td><a href="coach.php?id=<?= $row["id"] ?>" class="btn btn-primary"><i class="fa-solid fa-eye"></i></a>
                                     <a href="coach-edit.php?id=<?= $row["id"] ?>" class="btn btn-primary"><i class="fa-regular fa-pen-to-square"></i></a>
                                 </td>

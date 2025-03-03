@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_course'])) {
     $price = $_POST['price'];
     $location_id = $_POST['location_id'];
     $coach_id = !empty($_POST['coach_id']) ? $_POST['coach_id'] : NULL; // 允許 coach_id 為 NULL
-
+    $max_participants = isset($_POST['max_participants']) ? (int)$_POST['max_participants'] : 1;
     // **處理圖片上傳**
     $uploadedImages = []; // 用來存放已上傳的圖片路徑
     if (!empty($_FILES['image']['name'][0])) { // 確保有選擇圖片
@@ -45,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_course'])) {
     // ** 新增課程變體到 `coursevariants`**
     $stmt = $db_host->prepare("INSERT INTO coursevariants 
         (course_id, type, difficulty, duration, price, location_id, coach_id) 
-        VALUES (:course_id, :type, :difficulty, :duration, :price, :location_id, :coach_id)");
+        VALUES (:course_id, :type, :difficulty, :duration, :price, :location_id, :coach_id, :max_participants)");
     $stmt->execute([
         'course_id'   => $course_id,
         'type'        => $type,
@@ -54,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_course'])) {
         'price'       => $price,
         'location_id' => $location_id,
         'coach_id'    => $coach_id,
+        'max_participants' => $max_participants,
     ]);
 
     header("Location: courses.php");
@@ -139,6 +140,7 @@ $sql = "
            cv.difficulty, 
            cv.duration, 
            cv.price, 
+           cv.max_participants,
            l.name AS location_name, 
            co.name AS coach_name
     FROM coursevariants AS cv
@@ -146,19 +148,20 @@ $sql = "
     LEFT JOIN courseimages AS ci ON ci.course_id = c.id
     JOIN locations AS l ON cv.location_id = l.id
     LEFT JOIN coach AS co ON cv.coach_id = co.id
-    WHERE 1=1 $filter
-    GROUP BY c.id
+    WHERE cv.valid = 1 $filter
+    GROUP BY cv.id
     $orderBy
     LIMIT :limit OFFSET :offset
 ";
 $stmt = $db_host->prepare($sql);
 foreach ($bindParams as $key => $value) {
-    $stmt->bindParam($key, $value);
+    $stmt->bindValue($key, $value, PDO::PARAM_STR);
 }
 $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 $stmt->execute();
 $courses = $stmt->fetchAll();
+
 ?>
 <!DOCTYPE html>
 <html lang="zh-TW">
@@ -171,7 +174,10 @@ $courses = $stmt->fetchAll();
 </head>
 
 <body>
-    <div class="d-flex flex-column">
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
+    <div class="d-flex flex-column" id="mainContent" >
         <?php include("./new_head_mod.php") ?>
         <div class="d-flex flex-row w-100 ">
 
@@ -301,6 +307,11 @@ $courses = $stmt->fetchAll();
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
+                                            <div class="mb-3">
+                                                <label>最大參與人數</label>
+                                                <input type="number" name="max_participants" class="form-control" min="1" value="1" required>
+                                            </div>
+
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
                                                 <button type="submit" class="btn btn-primary">提交</button>
@@ -322,7 +333,9 @@ $courses = $stmt->fetchAll();
                                     <th>價格</th>
                                     <th>教練</th>
                                     <th>地點</th>
+                                    <th>最大人數</th>
                                     <th>編輯</th>
+
                                 </tr>
                             </thead>
                             <tbody>
@@ -362,6 +375,7 @@ $courses = $stmt->fetchAll();
                                         <td>$<?= htmlspecialchars(number_format($course['price'])) ?></td>
                                         <td><?= !empty($course['coach_name']) ? htmlspecialchars($course['coach_name']) : "未指定" ?></td>
                                         <td><?= htmlspecialchars($course['location_name']) ?></td>
+                                        <td><?= isset($course['max_participants']) ? htmlspecialchars($course['max_participants']) : '未設定' ?></td>
                                         <td>
                                             <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#detailsModal-<?= htmlspecialchars($course['id']) ?>">
                                                 <i class="fa-solid fa-eye"></i>
@@ -392,6 +406,8 @@ $courses = $stmt->fetchAll();
                                                 </div>
                                             </div>
                                         </td>
+
+
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -445,16 +461,16 @@ $courses = $stmt->fetchAll();
                                                 <div class="mb-3">
                                                     <label>類型</label>
                                                     <select name="type" class="form-control" required>
-                                                        <option value="雙板" <?= ($course['type'] == "ski") ? 'selected' : '' ?>>雙板</option>
+                                                        <option value="雙板" <?= ($course['type'] == "雙板") ? 'selected' : '' ?>>雙板</option>
                                                         <option value="單板" <?= ($course['type'] == "snowboard") ? 'selected' : '' ?>>單板</option>
                                                     </select>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label>難易度</label>
                                                     <select name="difficulty" class="form-control" required>
-                                                        <option value="初級" <?= ($course['difficulty'] == "beginner") ? 'selected' : '' ?>>初級</option>
-                                                        <option value="中級" <?= ($course['difficulty'] == "intermediate") ? 'selected' : '' ?>>中級</option>
-                                                        <option value="高級" <?= ($course['difficulty'] == "advanced") ? 'selected' : '' ?>>高級</option>
+                                                        <option value="初級" <?= ($course['difficulty'] == "初級") ? 'selected' : '' ?>>初級</option>
+                                                        <option value="中級" <?= ($course['difficulty'] == "中級") ? 'selected' : '' ?>>中級</option>
+                                                        <option value="高級" <?= ($course['difficulty'] == "高級") ? 'selected' : '' ?>>高級</option>
                                                     </select>
                                                 </div>
                                                 <div class="mb-3">
@@ -476,6 +492,12 @@ $courses = $stmt->fetchAll();
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
+                                                <div class="mb-3">
+                                                    <label>最大參與人數</label>
+                                                    <input type="number" name="max_participants" class="form-control" min="1"
+                                                        value="<?= isset($course['max_participants']) ? htmlspecialchars($course['max_participants']) : 1 ?>" required>
+                                                </div>
+
                                                 <div class="modal-footer">
                                                     <button type="submit" class="btn btn-primary">儲存修改</button>
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
@@ -509,9 +531,9 @@ $courses = $stmt->fetchAll();
                         <div class="d-flex justify-content-center mt-4">
                             <nav>
                                 <ul class="pagination">
-                                    <li class="page-item <?= $prevDisabled ? 'disabled' : '' ?>">
+                                    <li class="page-item <?= $prevDisabled ? 'disabled' : '' ?> ">
                                         <a class="page-link" href="<?= $prevLink ?>" aria-label="Previous">
-                                            <span aria-hidden="true">&laquo; 上一頁</span>
+                                            <span aria-hidden="true" class="text-black">&laquo; 上一頁</span>
                                         </a>
                                     </li>
                                     <?php for ($i = 1; $i <= $total_pages; $i++): ?>
@@ -520,12 +542,12 @@ $courses = $stmt->fetchAll();
                                         $pageLink = "?" . http_build_query($queryParams);
                                         ?>
                                         <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                                            <a class="page-link" href="<?= $pageLink ?>"><?= $i ?></a>
+                                            <a class="page-link text-black" href="<?= $pageLink ?>"><?= $i ?></a>
                                         </li>
                                     <?php endfor; ?>
                                     <li class="page-item <?= $nextDisabled ? 'disabled' : '' ?>">
                                         <a class="page-link" href="<?= $nextLink ?>" aria-label="Next">
-                                            <span aria-hidden="true">下一頁 &raquo;</span>
+                                            <span aria-hidden="true" class="text-black">下一頁 &raquo;</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -541,10 +563,67 @@ $courses = $stmt->fetchAll();
 
     <?php include("./js.php") ?>
     <script>
-        $(document).on("show.bs.modal", ".modal", function () {
-  $("body").append($(this));
-});
+        $(document).on("show.bs.modal", ".modal", function() {
+            $("body").append($(this));
+        });
     </script>
+    <script>
+        window.addEventListener('load', function() {
+            // 出場動畫：loading 畫面淡出
+            gsap.to("#loadingOverlay", {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: function() {
+                    document.getElementById("loadingOverlay").style.display = "none";
+                }
+            });
+
+            //以下是自己網頁的入場動畫
+
+                  gsap.fromTo("#mainContent", 
+              { rotation: -10, opacity: 0 }, 
+              { rotation: 0, opacity: 1, duration: 0.8, ease: "back.out(1.5)" }
+            );
+            //還不錯
+
+            // gsap.fromTo("#mainContent", 
+            //   { scale: 0.8, opacity: 0 }, 
+            //   { scale: 1, opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+            //普通
+
+            // gsap.fromTo("#mainContent", 
+            //   { filter: "blur(5px)", opacity: 0 }, 
+            //   { filter: "blur(0px)", opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+
+
+            // gsap.from("#mainContent", {
+            //   y: 100,
+            //   duration: 0.8,
+            //   ease: "elastic.out(1, 0.5)"
+            // });
+
+            // let elements = document.querySelectorAll("#mainContent div");
+            // elements.forEach(el => {
+            //     gsap.from(el, {
+            //         x: gsap.utils.random(-50, 50),
+            //         y: gsap.utils.random(-50, 50),
+            //         duration: 1,
+            //         ease: "back.out(1.5)"
+            //     });
+            // });
+            //不怎麼好看但很炫
+
+            // gsap.from("#mainContent", {
+            //     rotateY: -90,
+            //     duration: 1,
+            //     ease: "back.out(1.7)"
+            // });
+            //還不錯
+
+        });
+    </script> 
 </body>
 
 </html>

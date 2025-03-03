@@ -325,7 +325,7 @@ try {
     $productCount = $countStmt->fetch(PDO::FETCH_ASSOC)['total']; //獲得未經篩選過的商品總數
 
     //商品分頁
-    $perPage = 12;
+    $perPage = 8;
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
     if ($page < 1) $page = 1;
     $offset = ($page - 1) * $perPage;
@@ -433,33 +433,57 @@ try {
         .subCategory_a {
             font-size: 0.625rem;
         }
+
+        /* 預設隱藏主要內容，僅顯示 loading 區塊 */
+        #mainContent {
+            display: none;
+        }
+
+        /* Loading 畫面 */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #07192F;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        /* 轉圈動畫 */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 
 </head>
 
 <body>
-    <div class="modal fade" tabindex="-1" id="infoModal">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">提示訊息</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="message"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
-                </div>
-            </div>
-        </div>
+    <!-- Loading 畫面 -->
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
     </div>
 
 
-
-
-
-    <div class="d-flex flex-column">
+    <div class="d-flex flex-column" id="mainContent">
         <?php include("./new_head_mod.php"); ?>
 
         <div class="d-flex flex-row w-100 ">
@@ -645,11 +669,29 @@ try {
                     ?>
                     <div class="btn-group" role="group">
                         <!-- 價格排序按鈕 -->
-                        <a href="<?= sortLink('price', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'price') ? 'active' : '' ?>">價格排序</a>
+                        <a href="<?= sortLink('price', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'price') ? 'active' : '' ?>">價格排序
+                            <?php if ($sort === 'price'): ?>
+                                <?= ($order === 'asc')
+                                    ? "<i class='fa-solid fa-arrow-up fa-fw'></i>"
+                                    : "<i class='fa-solid fa-arrow-down fa-fw'></i>" ?>
+                            <?php endif; ?>
+                        </a>
                         <!-- 時間排序按鈕 -->
-                        <a href="<?= sortLink('time', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'time') ? 'active' : '' ?>">上架時間排序</a>
+                        <a href="<?= sortLink('time', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'time') ? 'active' : '' ?>">上架時間排序
+                            <?php if ($sort === 'time'): ?>
+                                <?= ($order === 'asc')
+                                    ? "<i class='fa-solid fa-arrow-up fa-fw'></i>"
+                                    : "<i class='fa-solid fa-arrow-down fa-fw'></i>" ?>
+                            <?php endif; ?>
+                        </a>
                         <!-- 上架狀態排序按鈕 -->
-                        <a href="<?= sortLink('status', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'status') ? 'active' : '' ?>">上架狀態排序</a>
+                        <a href="<?= sortLink('status', $sort, $order, $queryParams) ?>" class="btn btn-outline-primary <?= ($sort === 'status') ? 'active' : '' ?>">上架狀態排序
+                            <?php if ($sort === 'status'): ?>
+                                <?= ($order === 'asc')
+                                    ? "<i class='fa-solid fa-arrow-up fa-fw'></i>"
+                                    : "<i class='fa-solid fa-arrow-down fa-fw'></i>" ?>
+                            <?php endif; ?>
+                        </a>
                         <!-- 取消排序按鈕(回到預設排序) -->
                         <a href="<?= cancelSortLink($queryParams) ?>" class="btn btn-outline-secondary">取消排序</a>
                     </div>
@@ -891,6 +933,71 @@ try {
         });
     </script>
 
+    <script>
+        window.addEventListener('load', function() {
+            // 出場動畫：loading 畫面淡出
+            gsap.to("#loadingOverlay", {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: function() {
+                    document.getElementById("loadingOverlay").style.display = "none";
+                }
+            });
+
+            //以下是自己網頁的入場動畫
+
+            //       gsap.fromTo("#mainContent", 
+            //   { rotation: -10, opacity: 0 }, 
+            //   { rotation: 0, opacity: 1, duration: 0.8, ease: "back.out(1.5)" }
+            // );
+            //還不錯
+
+            // gsap.fromTo("#mainContent", 
+            //   { scale: 0.8, opacity: 0 }, 
+            //   { scale: 1, opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+            //普通
+
+            // gsap.fromTo("#mainContent", 
+            //   { filter: "blur(5px)", opacity: 0 }, 
+            //   { filter: "blur(0px)", opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+            // 傷害眼睛
+
+            // gsap.from("#mainContent", {
+            //   y: 100,
+            //   duration: 0.8,
+            //   ease: "elastic.out(1, 0.5)"
+            // });
+
+            // let elements = document.querySelectorAll("#mainContent div");
+            // elements.forEach(el => {
+            //     gsap.from(el, {
+            //         x: gsap.utils.random(-50, 50),
+            //         y: gsap.utils.random(-50, 50),
+            //         duration: 1,
+            //         ease: "back.out(1.5)"
+            //     });
+            // });
+            //不怎麼好看但很炫
+
+            gsap.from("#mainContent", {
+                rotateY: -90,
+                duration: 1,
+                ease: "back.out(1.7)"
+            });
+            //還不錯
+
+            // gsap.from("#mainContent", {
+            //     y: -100,
+            //     opacity: 0,
+            //     duration: 1,
+            //     ease: "bounce.out"
+            // });
+
+
+        });
+    </script>
 
 
 

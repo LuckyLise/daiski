@@ -22,10 +22,10 @@
     <div class="d-flex flex-column" id="mainContent">
         <?php include("./new_head_mod.php"); ?>
 
-        <div class="d-flex flex-row w-100 ">
+        <div class="d-flex flex-row w-100  myPage ">
             <?php include("./new_side_mod.php"); ?>
 
-            <div class="container-fluid myPage">
+            <div class="container">
                 <div class="py-2">
                     <a href="coupons.php" class="btn btn-primary">優惠卷清單</a>
                 </div>
@@ -61,7 +61,7 @@
                     <div class="mb-2 row w-50">
                         <div class="col-6">
                             <label for="startAt" class="form-lable">開始日期</label>
-                            <input type="date" class="form-control" name="startAt" id="startAt"  required>
+                            <input type="date" class="form-control" name="startAt" id="startAt" required>
                         </div>
                         <div class="col-6">
                             <label for="endAt" class="form-lable">結束日期</label>
@@ -108,14 +108,33 @@
 
         // 時間限制
         const startAtInput = document.getElementById('startAt');
-        startAtInput.addEventListener('change', function(){
+        startAtInput.addEventListener('change', function() {
             let selectedAt = this.value;
             let endAtInput = document.getElementById('endAt');
             endAtInput.setAttribute('min', selectedAt);
         })
 
         //百分比輸入限制
-        
+        const couponTypeSelect = document.getElementById("coupon_type");
+        const couponAmountInput = document.getElementById("coupon_amount");
+        couponTypeSelect.addEventListener("change", function() {
+            if (this.value === "百分比折扣") {
+                couponAmountInput.setAttribute("max", "99");
+                couponAmountInput.setAttribute("type", "number");
+            } else {
+                couponAmountInput.removeAttribute("max");
+                couponAmountInput.setAttribute("type", "text");
+            }
+        });
+        document.querySelector("form").addEventListener("submit", function(e) {
+            if (couponTypeSelect.value === "百分比折扣") {
+                const value = parseFloat(couponAmountInput.value);
+                if (value > 99) {
+                    alert("百分比折扣不能超過 99");
+                    e.preventDefault();
+                }
+            }
+        });
     </script>
 </body>
 

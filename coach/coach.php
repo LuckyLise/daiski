@@ -8,7 +8,8 @@ require_once("../pdo_connect.php");
 
 $sql = "SELECT coach .*
 FROM coach
-WHERE coach.id = $id";
+WHERE coach.id = $id
+AND valid=1";
 
 try {
     $stmt = $db_host->prepare($sql);
@@ -76,6 +77,17 @@ try {
         crossorigin="anonymous" />
 
     <?php include("./css.php") ?>
+    <style>
+        body{
+            color: white !important;
+            th{
+                color: white !important;
+            }
+            td{
+                color: white !important;
+            }
+        }
+    </style>
 </head>
 
 <body>

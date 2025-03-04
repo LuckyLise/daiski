@@ -27,6 +27,16 @@ if (isset($_GET["p"]) && isset($_GET["order"])) {
         $stmtALL->execute();
         $userCount = $stmtALL->rowCount();
     }
+    if (isset($_GET["ident"])) {
+        $ident = $_GET["ident"];
+        $order = $_GET["order"];
+        $sqlSelect = "AND isCoach ='$ident'";
+
+        $sqlALL = "SELECT * FROM users WHERE valid=1 $sqlSelect";
+        $stmtALL = $db_host->prepare($sqlALL);
+        $stmtALL->execute();
+        $userCount = $stmtALL->rowCount();
+    }
     switch ($order) {
         case 1;
             $orderClause = "ORDER BY id ASC";
@@ -65,64 +75,6 @@ if (isset($_GET["p"]) && isset($_GET["order"])) {
     header("location:pdo-users.php?p=1&order=1");
 }
 
-// if (isset($_GET["q"])) {
-//     $q = $_GET["q"];
-//     $order = $_GET["order"];
-//     $sqlSelect = "AND name LIKE '%$q%'";
-
-//     $sqlALL = "SELECT * FROM users WHERE valid=1 $sqlSelect";
-//     $stmtALL = $db_host->prepare($sqlALL);
-//     $stmtALL->execute();
-//     $userCount = $stmtALL->rowCount();
-// } else if (isset($_GET["p"]) && isset($_GET["order"])) {
-//     //$p = $_GET["p"];
-
-
-//     switch ($order) {
-//         case 1;
-//             $orderClause = "ORDER BY id ASC";
-//             break;
-//         case 2;
-//             $orderClause = "ORDER BY id DESC";
-
-//             break;
-//         case 3;
-//             $orderClause = "ORDER BY name ASC";
-//             break;
-//         case 4;
-//             $orderClause = "ORDER BY name DESC";
-//             // $select="down";
-//             break;
-//         case 5;
-//             $orderClause = "ORDER BY birthday ASC";
-//             break;
-//         case 6;
-//             $orderClause = "ORDER BY birthday DESC";
-//             break;
-//         case 7;
-//             $orderClause = "ORDER BY createdtime ASC";
-//             break;
-//         case 8;
-//             $orderClause = "ORDER BY createdtime DESC";
-//             break;
-//         case 9;
-//             $orderClause = "ORDER BY isCoach ASC";
-//             break;
-//         case 10;
-//             $orderClause = "ORDER BY isCoach DESC";
-//             break;
-//     }
-
-// $perPage = 25;
-// $startItem = ($p - 1) * $perPage;
-// $totalPage = ceil($userCount / $perPage);
-// $sql = "SELECT * FROM users WHERE valid=1
-// $orderClause
-// LIMIT $startItem,$perPage";
-// } else {
-//     header("location:pdo-users.php?p=1&order=1");
-//     // $sql = "SELECT * FROM users WHERE valid=1";
-// }
 $p = $_GET["p"];
 $perPage = 25;
 $startItem = ($p - 1) * $perPage;
@@ -179,9 +131,9 @@ $db_host = NULL;
 
 <body>
     <!-- Loading 畫面 -->
-	<div id="loadingOverlay">
-    <div class="spinner"></div>
-  </div>
+    <div id="loadingOverlay">
+        <div class="spinner"></div>
+    </div>
     <div class="d-flex flex-column ">
         <?php include("./new_head_mod.php"); ?>
         <div class="d-flex flex-row w-100 myPage">
@@ -250,8 +202,19 @@ $db_host = NULL;
                                 <th>創建時間
                                     <a class=" <?= ($order == 7) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 7) ? 8 : 7 ?>"><i class="fa-solid <?= ($order == 7 || $order == 8) ? $select : "fa-arrows-up-down" ?>"></i></a>
                                 </th>
-                                <th>身分別
-                                    <a class=" <?= ($order == 9) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 9) ? 10 : 9 ?>"><i class="fa-solid <?= ($order == 9 || $order == 10) ? $select : "fa-arrows-up-down" ?>"></i></a>
+                                <th>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                            身分別
+                                        </button>
+                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                            <li><a class="dropdown-item" href="pdo-users.php?&order=1&p=1">全部</a></li>
+                                            <li><a class="dropdown-item" href="pdo-users.php?ident=0&order=1&p=1">會員</a></li>
+                                            <li><a class="dropdown-item" href="pdo-users.php?ident=1&order=1&p=1">教練</a></li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- <a class=" <?= ($order == 9) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 9) ? 10 : 9 ?>"><i class="fa-solid <?= ($order == 9 || $order == 10) ? $select : "fa-arrows-up-down" ?>"></i></a> -->
                                 </th>
                                 <th></th>
                             </tr>
@@ -267,7 +230,7 @@ $db_host = NULL;
                                     <td><?= $row["email"] ?></td>
                                     <td><?= $row["createdtime"] ?></td>
                                     <td>
-                                        <?=($row["isCoach"]==1)?  "教練":"會員" ?>
+                                        <?= ($row["isCoach"] == 1) ?  "教練" : "會員" ?>
                                     </td>
                                     <td>
                                         <a class="btn btn-info" href="pdo-user.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-eye fa-fw"></i></a>
@@ -286,11 +249,13 @@ $db_host = NULL;
                                         $active = ($i == $_GET["p"]) ?
                                             "active" : "";
                                         ?>
-                                        <?php if (isset($_GET['q'])): ?>
-                                            <li class="page-item <?= $active ?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?>&q=<?= $q ?>"><?= $i ?></a></li>
-                                        <?php else: ?>
-                                            <li class="page-item <?= $active ?>"><a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?>"><?= $i ?></a></li>
-                                        <?php endif; ?>
+                                        <?php $search = (isset($_GET['q'])) ? "&q=$q" : "" ;
+                                         $filter = (isset($_GET['ident'])) ? "&ident=$ident" : "" ;?>
+                                        <li class="page-item <?= $active ?>">
+                                            <a class="page-link" href="pdo-users.php?p=<?= $i ?>&order=<?= $order ?><?= $search ?><?=$filter?>"> <?= $i ?> </a>
+                                        </li>
+                                        <?php   ?>
+                                        
                                     <?php endfor; ?>
                                 </ul>
                             </nav>

@@ -186,7 +186,7 @@ $selectedLanguages = array_map(function ($lan) {
                                 </tr>
                                 <tr>
                                     <th>email</th>
-                                    <td><input type="tel" class="form-control" name="email"
+                                    <td><input type="email" class="form-control" name="email"
                                             value="<?= $row["email"] ?>">
                                 </tr>
                                 <tr>

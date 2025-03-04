@@ -97,3 +97,4 @@
         quantity: 5.00,
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.7/dist/gsap.min.js"></script>

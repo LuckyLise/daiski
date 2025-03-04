@@ -87,11 +87,52 @@ try {
                 color: white !important;
             }
         }
+        /* 預設隱藏主要內容，僅顯示 loading 區塊 */
+        #mainContent {
+            display: none;
+        }
+
+        /* Loading 畫面 */
+        #loadingOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #07192F;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        /* 轉圈動畫 */
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 
 <body>
-    <div class="d-flex flex-column">
+<div id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
+    <div class="d-flex flex-column" id="mainContent">
         <?php include("./new_head_mod.php") ?>
         <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php") ?>
@@ -176,6 +217,63 @@ try {
         crossorigin="anonymous"></script>
 
     <?php include("./js.php") ?>
+    <script>
+        window.addEventListener('load', function() {
+            // 出場動畫：loading 畫面淡出
+            gsap.to("#loadingOverlay", {
+                opacity: 0,
+                duration: 0.5,
+                onComplete: function() {
+                    document.getElementById("loadingOverlay").style.display = "none";
+                }
+            });
+
+            //以下是自己網頁的入場動畫
+
+            //       gsap.fromTo("#mainContent", 
+            //   { rotation: -10, opacity: 0 }, 
+            //   { rotation: 0, opacity: 1, duration: 0.8, ease: "back.out(1.5)" }
+            // );
+            //還不錯
+
+            // gsap.fromTo("#mainContent", 
+            //   { scale: 0.8, opacity: 0 }, 
+            //   { scale: 1, opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+            //普通
+
+            // gsap.fromTo("#mainContent", 
+            //   { filter: "blur(5px)", opacity: 0 }, 
+            //   { filter: "blur(0px)", opacity: 1, duration: 0.8, ease: "power2.out" }
+            // );
+
+
+            // gsap.from("#mainContent", {
+            //   y: 100,
+            //   duration: 0.8,
+            //   ease: "elastic.out(1, 0.5)"
+            // });
+
+            // let elements = document.querySelectorAll("#mainContent div");
+            // elements.forEach(el => {
+            //     gsap.from(el, {
+            //         x: gsap.utils.random(-50, 50),
+            //         y: gsap.utils.random(-50, 50),
+            //         duration: 1,
+            //         ease: "back.out(1.5)"
+            //     });
+            // });
+            //不怎麼好看但很炫
+
+            gsap.from("#mainContent", {
+                rotateY: -90,
+                duration: 1,
+                ease: "back.out(1.7)"
+            });
+            //還不錯
+
+        });
+    </script> 
 </body>
 
 </html>

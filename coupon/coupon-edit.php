@@ -121,7 +121,7 @@ $db_host = NULL;
                                 <tr>
                                     <th>開始日期</th>
                                     <td>
-                                        <input type="date" class="form-control" name="startAt" value="<?= $coupon["startAt"] ?>" id="startAt">
+                                        <input type="date" class="form-control" name="startAt" value="<?= $coupon["startAt"] ?>" id="startAt" >
                                     </td>
                                 </tr>
                                 <tr>

@@ -61,7 +61,7 @@
                     <div class="mb-2 row w-50">
                         <div class="col-6">
                             <label for="startAt" class="form-lable">開始日期</label>
-                            <input type="date" class="form-control" name="startAt" id="startAt" required>
+                            <input type="date" class="form-control" name="startAt" id="startAt" min="<?php echo date('Y-m-d'); ?>" required>
                         </div>
                         <div class="col-6">
                             <label for="endAt" class="form-lable">結束日期</label>

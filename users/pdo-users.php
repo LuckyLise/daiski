@@ -178,6 +178,10 @@ $db_host = NULL;
 </head>
 
 <body>
+    <!-- Loading 畫面 -->
+	<div id="loadingOverlay">
+    <div class="spinner"></div>
+  </div>
     <div class="d-flex flex-column ">
         <?php include("./new_head_mod.php"); ?>
         <div class="d-flex flex-row w-100 myPage">
@@ -198,7 +202,7 @@ $db_host = NULL;
                     </div>
                     <div class="col-md-6">
                         <form action="" method="get">
-                            <input type="hidden" name="p" value="<?= $_GET['p'] ?>">
+                            <input type="hidden" name="p" value="1">
                             <input type="hidden" name="order" value="1">
                             <div class="input-group">
                                 <input type="search" class="form-control" name="q"
@@ -210,7 +214,7 @@ $db_host = NULL;
                                     // $_GET["q"] : "";
                                     $q = $_GET["q"] ?? "";
                                     ?>
-                                    value="<?= $q ?>">
+                                    value="<?= $q ?>" placeholder="搜尋名稱">
                                 <button class="btn btn-primary">
                                     <i class="fa-solid fa-magnifying-glass fa-fw" type="submit"></i>
                                 </button>
@@ -233,20 +237,20 @@ $db_host = NULL;
                                 <th>id
                                     <a class=" <?= ($order == 1) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 1) ? 2 : 1 ?>"><i class="fa-solid <?= ($order == 1 || $order == 2) ? $select : "fa-arrows-up-down" ?>  "></i></a>
                                 </th>
-                                <th>name
+                                <th>姓名
                                     <a class=" <?= ($order == 3) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 3) ? 4 : 3 ?>"><i class="fa-solid <?= ($order == 3 || $order == 4) ? $select : "fa-arrows-up-down" ?> "></i></a>
 
                                 </th>
-                                <th>account</th>
-                                <th>phone</th>
-                                <th>birthday
+                                <th>帳號</th>
+                                <th>電話</th>
+                                <th>生日
                                     <a class=" <?= ($order == 5) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 5) ? 6 : 5 ?>"><i class="fa-solid <?= ($order == 5 || $order == 6) ? $select : "fa-arrows-up-down" ?> "></i></a>
                                 </th>
                                 <th>email</th>
-                                <th>createdtime
+                                <th>創建時間
                                     <a class=" <?= ($order == 7) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 7) ? 8 : 7 ?>"><i class="fa-solid <?= ($order == 7 || $order == 8) ? $select : "fa-arrows-up-down" ?>"></i></a>
                                 </th>
-                                <th>isCoach
+                                <th>身分別
                                     <a class=" <?= ($order == 9) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 9) ? 10 : 9 ?>"><i class="fa-solid <?= ($order == 9 || $order == 10) ? $select : "fa-arrows-up-down" ?>"></i></a>
                                 </th>
                                 <th></th>
@@ -262,7 +266,9 @@ $db_host = NULL;
                                     <td><?= $row["birthday"] ?></td>
                                     <td><?= $row["email"] ?></td>
                                     <td><?= $row["createdtime"] ?></td>
-                                    <td><?= $row["isCoach"] ?></td>
+                                    <td>
+                                        <?=($row["isCoach"]==1)?  "教練":"會員" ?>
+                                    </td>
                                     <td>
                                         <a class="btn btn-primary" href="pdo-user.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-eye fa-fw"></i></a>
                                         <a class="btn btn-primary" href="user-edit.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
@@ -309,9 +315,9 @@ $db_host = NULL;
                 minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
                 scale: 1.00, // 設定一般裝置上的縮放比例
                 scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
-                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
                 color1: 0xffffff,
-                birdSize: 0.50,
+                birdSize: 0.1,
                 // backgroundColor:0x4e73df
             });
             VANTA.BIRDS({
@@ -337,9 +343,9 @@ $db_host = NULL;
                 minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
                 scale: 1.00, // 設定一般裝置上的縮放比例
                 scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
-                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
                 color1: 0xffffff,
-                birdSize: 0.50,
+                birdSize: 0.10,
                 // backgroundColor:0x4e73df
             });
 

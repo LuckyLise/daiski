@@ -1,5 +1,5 @@
 <?php
-require_once('../daiski/pdo_connect.php');
+require_once('../pdo_connect.php');
 
 $sqlALL = "SELECT * FROM users WHERE valid=1";
 $stmtALL = $db_host->prepare($sqlALL);
@@ -113,12 +113,12 @@ if (isset($_GET["p"]) && isset($_GET["order"])) {
 //             break;
 //     }
 
-    // $perPage = 25;
-    // $startItem = ($p - 1) * $perPage;
-    // $totalPage = ceil($userCount / $perPage);
-    // $sql = "SELECT * FROM users WHERE valid=1
-    // $orderClause
-    // LIMIT $startItem,$perPage";
+// $perPage = 25;
+// $startItem = ($p - 1) * $perPage;
+// $totalPage = ceil($userCount / $perPage);
+// $sql = "SELECT * FROM users WHERE valid=1
+// $orderClause
+// LIMIT $startItem,$perPage";
 // } else {
 //     header("location:pdo-users.php?p=1&order=1");
 //     // $sql = "SELECT * FROM users WHERE valid=1";
@@ -231,23 +231,23 @@ $db_host = NULL;
                         <thead>
                             <tr>
                                 <th>id
-                                    <a class=" <?= ($order == 1) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 1) ? 2 : 1 ?>"><i class="fa-solid <?=($order ==1 || $order ==2)? $select:"fa-arrows-up-down" ?>  "></i></a>
+                                    <a class=" <?= ($order == 1) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 1) ? 2 : 1 ?>"><i class="fa-solid <?= ($order == 1 || $order == 2) ? $select : "fa-arrows-up-down" ?>  "></i></a>
                                 </th>
                                 <th>name
-                                    <a class=" <?= ($order == 3) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 3) ? 4 : 3 ?>"><i class="fa-solid <?=($order ==3 || $order ==4)? $select:"fa-arrows-up-down" ?> "></i></a>
+                                    <a class=" <?= ($order == 3) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 3) ? 4 : 3 ?>"><i class="fa-solid <?= ($order == 3 || $order == 4) ? $select : "fa-arrows-up-down" ?> "></i></a>
 
                                 </th>
                                 <th>account</th>
                                 <th>phone</th>
                                 <th>birthday
-                                    <a class=" <?= ($order == 5) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 5) ? 6 : 5 ?>"><i class="fa-solid <?=($order ==5 || $order ==6)? $select:"fa-arrows-up-down" ?> "></i></a>
+                                    <a class=" <?= ($order == 5) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 5) ? 6 : 5 ?>"><i class="fa-solid <?= ($order == 5 || $order == 6) ? $select : "fa-arrows-up-down" ?> "></i></a>
                                 </th>
                                 <th>email</th>
                                 <th>createdtime
-                                    <a class=" <?= ($order == 7) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 7) ? 8 : 7 ?>"><i class="fa-solid <?=($order ==7 || $order ==8)? $select:"fa-arrows-up-down" ?>"></i></a>
+                                    <a class=" <?= ($order == 7) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 7) ? 8 : 7 ?>"><i class="fa-solid <?= ($order == 7 || $order == 8) ? $select : "fa-arrows-up-down" ?>"></i></a>
                                 </th>
                                 <th>isCoach
-                                    <a class=" <?= ($order == 9) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 9) ? 10 : 9 ?>"><i class="fa-solid <?=($order ==9 || $order ==10)? $select:"fa-arrows-up-down" ?>"></i></a>
+                                    <a class=" <?= ($order == 9) ? "active" : "" ?>" href="pdo-users.php?p=<?= $p ?>&order=<?= ($order == 9) ? 10 : 9 ?>"><i class="fa-solid <?= ($order == 9 || $order == 10) ? $select : "fa-arrows-up-down" ?>"></i></a>
                                 </th>
                                 <th></th>
                             </tr>

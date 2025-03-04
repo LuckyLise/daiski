@@ -33,15 +33,15 @@ if (strlen($password) < 4 || strlen($password) > 10) {
 
 // $sql="SELECT * FROM users WHERE account='$account' AND password='$password'";
 // $stmt = $db_host->prepare($sql);
-if($account == "admin" && $password == "12345"){
+if ($account == "admin" && $password == "12345") {
     header("location: pdo-users.php");
-}else{
-    if(!isset($_SESSION["error"]["times"])){
-        $_SESSION["error"]["times"]=1;
-    }else{
+} else {
+    if (!isset($_SESSION["error"]["times"])) {
+        $_SESSION["error"]["times"] = 1;
+    } else {
         $_SESSION["error"]["times"]++;
     }
-    
+
     $error = "帳號或密碼錯誤";
     $_SESSION["error"]["message"] = $error;
     header("location: sign-in.php");
@@ -63,7 +63,7 @@ if($account == "admin" && $password == "12345"){
 // }
 
 
-if($userCount==0){
+if ($userCount == 0) {
     // if(!isset($_SESSION["error"]["times"])){
     //     $_SESSION["error"]["times"]=1;
     // }else{

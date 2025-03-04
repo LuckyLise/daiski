@@ -196,7 +196,7 @@ try {
                             <!-- php可以寫在div內 -->
                             <div class="input-group">
                                 <!-- value 按下按鈕後欄位要顯示什麼，name代表網址後面加上q=表單內容 -->
-                                <input type="search" class="form-control" name="q"
+                                <input type="search" class="form-control" name="q" placeholder="請輸入文章標題"
                                     <?php $q = $_GET["q"] ?? ""; ?>
                                     value="<?= $q ?>">
 

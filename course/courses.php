@@ -177,7 +177,7 @@ $courses = $stmt->fetchAll();
     <div id="loadingOverlay">
         <div class="spinner"></div>
     </div>
-    <div class="d-flex flex-column" id="mainContent" >
+    <div class="d-flex flex-column" id="mainContent">
         <?php include("./new_head_mod.php") ?>
         <div class="d-flex flex-row w-100 ">
 
@@ -580,10 +580,15 @@ $courses = $stmt->fetchAll();
 
             //以下是自己網頁的入場動畫
 
-                  gsap.fromTo("#mainContent", 
-              { rotation: -10, opacity: 0 }, 
-              { rotation: 0, opacity: 1, duration: 0.8, ease: "back.out(1.5)" }
-            );
+            gsap.fromTo("#mainContent", {
+                rotation: -10,
+                opacity: 0
+            }, {
+                rotation: 0,
+                opacity: 1,
+                duration: 0.8,
+                ease: "back.out(1.5)"
+            });
             //還不錯
 
             // gsap.fromTo("#mainContent", 
@@ -623,7 +628,7 @@ $courses = $stmt->fetchAll();
             //還不錯
 
         });
-    </script> 
+    </script>
 </body>
 
 </html>

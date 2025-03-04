@@ -1,5 +1,5 @@
 <?php
-require_once('../daiski/pdo_connect.php');
+require_once('../pdo_connect.php');
 
 $sqlALL = "SELECT * FROM users WHERE valid=1";
 $stmtALL = $db_host->prepare($sqlALL);
@@ -293,7 +293,7 @@ $db_host = NULL;
                 <?php endif; ?>
             </div>
         </div>
-        <?php include("../daiski/js.php") ?>
+        <?php include("./js.php") ?>
 
         <script>
             let users = <?= json_encode($rows) ?>;

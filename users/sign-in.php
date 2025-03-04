@@ -1,5 +1,5 @@
 <?php
-require_once('../daiski/pdo_connect.php');
+require_once('../pdo_connect.php');
 session_start();
 session_destroy();
 
@@ -18,7 +18,7 @@ if(isset($_SESSION["user"])){
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-    <?php include("../css.php") ?>
+    <?php include("./css.php") ?>
     <style>
         body {
             background: url("./sign-in.jpg") center center / cover;
@@ -109,14 +109,14 @@ if(isset($_SESSION["user"])){
                 </div>
             </form>
             <?php endif; ?>
-            <div class="mt-4 text-light">
-                © 2017–2024
+            <div class="mt-4 text-light ">
+                © 2017–2025
             </div>
 
         </div>
     </div>
 
-    <?php include("../js.php") ?>
+    <?php include("./js.php") ?>
 </body>
 
 </html>

@@ -104,7 +104,7 @@ $count_sql = "
     LEFT JOIN courseimages AS ci ON ci.course_id = c.id
     JOIN locations AS l ON cv.location_id = l.id
     LEFT JOIN coach AS co ON cv.coach_id = co.id
-    WHERE 1=1 $filter
+    WHERE cv.valid = 1 $filter
 ";
 $count_stmt = $db_host->prepare($count_sql);
 foreach ($bindParams as $key => $value) {
@@ -620,7 +620,7 @@ $courses = $stmt->fetchAll();
             //     duration: 1,
             //     ease: "back.out(1.7)"
             // });
-            //還不錯
+            // 還不錯
 
         });
     </script> 

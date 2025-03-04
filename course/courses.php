@@ -140,6 +140,7 @@ $sql = "
            cv.difficulty, 
            cv.duration, 
            cv.price, 
+           cv.location_id,
            cv.max_participants,
            l.name AS location_name, 
            co.name AS coach_name
@@ -298,7 +299,6 @@ $courses = $stmt->fetchAll();
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
-
                                             <div class="mb-3">
                                                 <label>地點</label>
                                                 <select name="location_id" class="form-control" required>
@@ -492,6 +492,14 @@ $courses = $stmt->fetchAll();
                                                         <?php endforeach; ?>
                                                     </select>
                                                 </div>
+                                                <div class="mb-3">
+                                                <label>地點</label>
+                                                <select name="location_id" class="form-control" required>
+                                                    <?php foreach ($locations as $location): ?>
+                                                        <option value="<?= $location['id'] ?>"><?= htmlspecialchars($location['name']) ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
                                                 <div class="mb-3">
                                                     <label>最大參與人數</label>
                                                     <input type="number" name="max_participants" class="form-control" min="1"

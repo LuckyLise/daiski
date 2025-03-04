@@ -19,6 +19,7 @@ $stmtType = $db_host->prepare($sqlType);
 $stmtType->execute();
 $types = $stmtType->fetchAll(PDO::FETCH_ASSOC);
 
+// 讓網址可以分開選擇
 $q          = $_GET["q"] ?? '';
 $startAt    = $_GET["startAt"] ?? '';
 $endAt      = $_GET["endAt"] ?? '';
@@ -135,6 +136,16 @@ $sql .= $orderClause;
 $sql .= " LIMIT $startItem, $perPage";
 // echo $sql;
 
+
+$stmt = $db_host->prepare($sql);
+$stmt->execute($params);
+$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+
+
+// 把get到值都存在這 在一起輸出
 $queryParams = [];
 if ($q !== '') {
     $queryParams['q'] = $q;
@@ -154,10 +165,7 @@ if ($coupon_target !== '') {
 // order 參數也要保留，因為分頁連結中已有 order
 $queryParams['order'] = $order;
 
-$stmt = $db_host->prepare($sql);
-$stmt->execute($params);
 
-$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $db_host = NULL;
 
@@ -217,14 +225,14 @@ $db_host = NULL;
                 </div>
 
                 <!-- 使用者總數-->
-
                 <div class="py-2">
                     <div>共<?= $couponCount ?>組優惠卷</div>
                 </div>
 
-                <!-- 分類 收尋 -->
+
                 <div class="py-2 row g-3 align-items-center">
                     <div class="col-md-8">
+                        <!-- 分類 -->
                         <div class="gap-2 align-items-center">
                             <ul class="nav nav-underline">
                                 <li class="nav-item">
@@ -244,24 +252,41 @@ $db_host = NULL;
                                             $ifActive = "active";
                                         }
                                         ?>
-                                        <a href="coupons.php?p=1&order=1&coupon_target=<?= $target["target"] ?>" class="btn btn-primary <?= $ifActive ?>"><?= $target["target"] ?></a>
+                                        <?php
+                                        $tempParams = $queryParams;
+                                        $tempParams['coupon_target'] = $target["target"];
+                                        // unset($tempParams['coupon_type']);
+                                        $targetUrl = "coupons.php?" . http_build_query($tempParams);
+                                        ?>
+                                        <a href="<?= $targetUrl ?>" class="btn btn-primary <?= $ifActive ?>"><?= $target["target"] ?></a>
                                     </li>
                                 <?php endforeach; ?>
                                 <?php foreach ($types as $type) : ?>
                                     <li class="nav-item">
+                                        <!-- <select class="form-select" id="coupon_type" name="coupon_type">
+                                            <option value="現金">現金折扣</option>
+                                            <option value="百分比折扣">百分比折扣</option>
+                                        </select> -->
                                         <?php
                                         $ifActive = "";
                                         if (isset($_GET["coupon_type"]) && $_GET["coupon_type"] == $type["type"]) {
                                             $ifActive = "active";
                                         }
                                         ?>
-                                        <a href="coupons.php?p=1&order=1&coupon_type=<?= $type["type"] ?>" class="btn btn-primary <?= $ifActive ?>"><?= $type["type"] ?></a>
+                                        <?php
+                                        $typeParams = $queryParams;
+                                        $typeParams['coupon_type'] = $type["type"];
+                                        // unset($tempParams['coupon_type']);
+                                        $typeUrl = "coupons.php?" . http_build_query($typeParams);
+                                        ?>
+                                        <a href="<?= $typeUrl ?>" class="btn btn-primary <?= $ifActive ?>"><?= $type["type"] ?></a>
                                     </li>
                                 <?php endforeach; ?>
                             </ul>
                         </div>
                     </div>
 
+                    <!-- 搜尋 -->
                     <div class="col-md-4">
                         <form action="" method="get">
                             <!-- 收尋完的返回 -->
@@ -271,7 +296,7 @@ $db_host = NULL;
                                 <?php endif; ?>
                             </div>
                             <div class="input-group">
-                                <input type="search" class="form-control" name="q" <?php $q = $_GET["q"] ?? ""; ?> value="<?= $q ?>">
+                                <input type="search" class="form-control" name="q" <?php $q = $_GET["q"] ?? ""; ?> value="<?= $q ?>" placeholder="請輸入優惠卷名稱">
                                 <button class="btn btn-primary" type="submit"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
                             </div>
                         </form>
@@ -296,7 +321,7 @@ $db_host = NULL;
 
                             <div class="col-auto">
                                 <?php $startAt = $_GET["startAt"] ?? ""; ?>
-                                <input type="date" class="form-control" name="startAt" value="<?= $startAt ?>" min="<?= date('Y-m-d') ?>" id="startAt">
+                                <input type="date" class="form-control" name="startAt" value="<?= $startAt ?>" id="startAt">
 
                             </div>
 
@@ -474,7 +499,7 @@ $db_host = NULL;
 
         // 時間限制
         const startAtInput = document.getElementById('startAt');
-        startAtInput.addEventListener('change', function(){
+        startAtInput.addEventListener('change', function() {
             let selectedAt = this.value;
             let endAtInput = document.getElementById('endAt');
             endAtInput.setAttribute('min', selectedAt);

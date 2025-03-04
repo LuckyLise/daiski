@@ -353,7 +353,7 @@ try {
         $orderByClause = "ORDER BY products.price $order, products.id ASC";
     } elseif ($sort === 'time') {
         // 假設 products.createdAt 存放上架時間/新增時間
-        $orderByClause = "ORDER BY products.createdAt $order, products.id ASC";
+        $orderByClause = "ORDER BY products.publishAt $order, products.id ASC";
     } elseif ($sort === 'status') {
         if ($sort === 'status') {
             // 用 CASE 計算商品狀態
@@ -843,6 +843,9 @@ try {
                                 }
                             }
                         } ?>
+
+                        <!-- 因為篩選條件不小心保留到page了 會導致篩選完後不會回到第一頁 這邊先強制設定 page 為 1 -->
+                    <input type="hidden" name="page" value="1">
 
                         <div class="btn-group d-flex flex-wrap" role="group">
                             <?php foreach ($sizes as $size): ?>

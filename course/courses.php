@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_course'])) {
 
     // ** 新增課程變體到 `coursevariants`**
     $stmt = $db_host->prepare("INSERT INTO coursevariants 
-        (course_id, type, difficulty, duration, price, location_id, coach_id) 
+        (course_id, type, difficulty, duration, price, location_id, coach_id, max_participants) 
         VALUES (:course_id, :type, :difficulty, :duration, :price, :location_id, :coach_id, :max_participants)");
     $stmt->execute([
         'course_id'   => $course_id,

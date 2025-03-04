@@ -293,7 +293,7 @@ $db_host = NULL;
                 <?php endif; ?>
             </div>
         </div>
-        <?php include("../daiski/js.php") ?>
+        <?php include("./js.php") ?>
 
         <script>
             let users = <?= json_encode($rows) ?>;

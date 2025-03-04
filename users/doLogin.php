@@ -33,8 +33,8 @@ if (strlen($password) < 4 || strlen($password) > 10) {
 
 // $sql="SELECT * FROM users WHERE account='$account' AND password='$password'";
 // $stmt = $db_host->prepare($sql);
-if ($account == "admin" && $password == "12345") {
-    header("location: pdo-users.php");
+if ($account == "admin" || $account == "Lise" && $password == "12345") {
+    header("location: ../homepage/homePage.php");
 } else {
     if (!isset($_SESSION["error"]["times"])) {
         $_SESSION["error"]["times"] = 1;

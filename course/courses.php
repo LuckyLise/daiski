@@ -44,7 +44,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST['add_course'])) {
 
     // ** 新增課程變體到 `coursevariants`**
     $stmt = $db_host->prepare("INSERT INTO coursevariants 
-        (course_id, type, difficulty, duration, price, location_id, coach_id) 
+        (course_id, type, difficulty, duration, price, location_id, coach_id, max_participants) 
         VALUES (:course_id, :type, :difficulty, :duration, :price, :location_id, :coach_id, :max_participants)");
     $stmt->execute([
         'course_id'   => $course_id,
@@ -104,7 +104,7 @@ $count_sql = "
     LEFT JOIN courseimages AS ci ON ci.course_id = c.id
     JOIN locations AS l ON cv.location_id = l.id
     LEFT JOIN coach AS co ON cv.coach_id = co.id
-    WHERE 1=1 $filter
+    WHERE cv.valid = 1 $filter
 ";
 $count_stmt = $db_host->prepare($count_sql);
 foreach ($bindParams as $key => $value) {
@@ -140,6 +140,7 @@ $sql = "
            cv.difficulty, 
            cv.duration, 
            cv.price, 
+           cv.location_id,
            cv.max_participants,
            l.name AS location_name, 
            co.name AS coach_name
@@ -298,7 +299,6 @@ $courses = $stmt->fetchAll();
                                                     <?php endforeach; ?>
                                                 </select>
                                             </div>
-
                                             <div class="mb-3">
                                                 <label>地點</label>
                                                 <select name="location_id" class="form-control" required>
@@ -493,6 +493,14 @@ $courses = $stmt->fetchAll();
                                                     </select>
                                                 </div>
                                                 <div class="mb-3">
+                                                <label>地點</label>
+                                                <select name="location_id" class="form-control" required>
+                                                    <?php foreach ($locations as $location): ?>
+                                                        <option value="<?= $location['id'] ?>"><?= htmlspecialchars($location['name']) ?></option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </div>
+                                                <div class="mb-3">
                                                     <label>最大參與人數</label>
                                                     <input type="number" name="max_participants" class="form-control" min="1"
                                                         value="<?= isset($course['max_participants']) ? htmlspecialchars($course['max_participants']) : 1 ?>" required>
@@ -625,7 +633,7 @@ $courses = $stmt->fetchAll();
             //     duration: 1,
             //     ease: "back.out(1.7)"
             // });
-            //還不錯
+            // 還不錯
 
         });
     </script>

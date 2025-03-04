@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $duration    = $_POST['duration'];
     $coach_id    = !empty($_POST['coach_id']) ? $_POST['coach_id'] : NULL;
     $max_participants = $_POST['max_participants'];
-
+    $location_id = isset($_POST['location_id']) ? $_POST['location_id'] : NULL;
     // **更新課程名稱與描述**
     $stmt = $db_host->prepare("UPDATE course SET name = :name, description = :description WHERE id = :course_id");
     $stmt->execute([
@@ -24,15 +24,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // **更新課程變體（類型、難度、時長、價格、教練、最大人數）**
     $stmt = $db_host->prepare("UPDATE coursevariants 
                                SET type = :type, difficulty = :difficulty, duration = :duration, 
-                                   price = :price, coach_id = :coach_id, max_participants = :max_participants
-                               WHERE course_id = :course_id");  // 🔥 移除多餘的逗號
+                                   price = :price, coach_id = :coach_id, max_participants = :max_participants,
+                                   location_id = :location_id
+                               WHERE course_id = :course_id");
     $stmt->execute([
         'type'       => $type,
         'difficulty' => $difficulty,
         'duration'   => $duration,
         'price'      => $price,
         'coach_id'   => $coach_id,
-        'max_participants' => $max_participants,  // 🔥 確保這裡有正確的逗號
+        'max_participants' => $max_participants,
+        'location_id' => $location_id,
         'course_id'  => $course_id
     ]);
 

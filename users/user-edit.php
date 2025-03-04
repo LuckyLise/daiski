@@ -59,7 +59,7 @@ try {
             <?php include("./new_side_mod.php"); ?>
             <div class="container">
                 <div class="py-2">
-                    <a class="btn btn-primary" href="pdo-user.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
+                    <a class="btn btn-info" href="pdo-user.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
                 </div>
                 <div class="row">
                     <div class="col-lg-4 col-md-9">
@@ -90,7 +90,7 @@ try {
                                         <th>密碼</th>
                                         <td>
                                             <input type="password" class="form-control" name="password"
-                                                value="<?= $row["password"] ?>" maxlength="10" minlength="4">
+                                                value="<?= $row["password"] ?>" maxlength="10" minlength="4" required>
                                         </td>
                                     </tr>
                                     <tr>
@@ -132,7 +132,7 @@ try {
                                     </tr>
                                 </table>
                                 <div class="d-flex justify-content-between">
-                                    <button class="btn btn-primary" type="submit"><i class="fa-solid fa-floppy-disk">儲存</i></button>
+                                    <button class="btn btn-info" type="submit"><i class="fa-solid fa-floppy-disk">儲存</i></button>
                                     <a class="btn btn-danger" href="userDelete.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-trash-can">刪除</i></a>
                                 </div>
                             </form>

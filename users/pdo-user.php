@@ -60,7 +60,7 @@ try {
 			<?php include("./new_side_mod.php"); ?>
 			<div class="container">
 				<div class="py-2">
-					<a class="btn btn-primary" href="pdo-users.php"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
+					<a class="btn btn-info" href="pdo-users.php"><i class="fa-solid fa-arrow-left fa-fw"></i></a>
 				</div>
 				<?php if (isset($_GET["id"])): ?>
 					<div class="row">
@@ -106,7 +106,7 @@ try {
 								</tr>
 							</table>
 							<div class="">
-								<a class="btn btn-primary" href="user-edit.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
+								<a class="btn btn-info" href="user-edit.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
 							</div>
 						</div>
 					</div>

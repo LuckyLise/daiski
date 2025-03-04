@@ -44,24 +44,24 @@ date_default_timezone_set("Asia/Taipei");
                 } ?>
 
                 <div class="py-2">
-                    <a class="btn btn-primary" href="pdo-users.php"><i class="fa-solid fa-arrow-left fa-fw"></i>使用者列表</a>
+                    <a class="btn btn-info" href="pdo-users.php"><i class="fa-solid fa-arrow-left fa-fw"></i>使用者列表</a>
                 </div>
                 <form class="w-25" action="pdo-insert-user.php" method="post" >
                     <div class="mb-2">
                         <label for="name" class="form-label">姓名</label>
-                        <input type="text" class="form-control" name="name" id="name">
+                        <input type="text" class="form-control" name="name" id="name" >
                     </div>
                     <div class="mb-2">
-                        <label for="account" class="form-label">帳號</label>
-                        <input type="account" class="form-control" name="account" id="account" minlength="4" maxlength="10">
+                        <label for="account" class="form-label">帳號 <span style="color:red">*</span></label>
+                        <input type="account" class="form-control" name="account" id="account" minlength="4" maxlength="10" required>
                     </div>
                     <div class="mb-2">
-                        <label for="password" class="form-label">密碼</label>
-                        <input type="password" class="form-control" name="password" id="password" minlength="4" maxlength="10">
+                        <label for="password" class="form-label">密碼<span style="color:red">*</span></label>
+                        <input type="password" class="form-control" name="password" id="password" minlength="4" maxlength="10" required>
                     </div>
                     <div class="mb-2">
-                        <label for="repassword" class="form-label">重複密碼</label>
-                        <input type="password" class="form-control" name="repassword" id="repassword" minlength="4" maxlength="10">
+                        <label for="repassword" class="form-label">重複密碼<span style="color:red">*</span></label>
+                        <input type="password" class="form-control" name="repassword" id="repassword" minlength="4" maxlength="10" required>
                     </div>
                     <div class="mb-2">
                         <div class="mb-2">
@@ -84,7 +84,7 @@ date_default_timezone_set("Asia/Taipei");
                             <input type="radio" name="isCoach" id="" value="0">否
                         </div>
                         <div class="d-flex justify-content-center">
-                            <button class="btn btn-primary"
+                            <button class="btn btn-info"
                                 type="submit">送出</button>
                         </div>
                 </form>

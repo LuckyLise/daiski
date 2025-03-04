@@ -60,16 +60,16 @@ if (isset($_FILES["images"]) &&  $_FILES["images"]["error"] == 0) {
 
 
 
-// $sql = "UPDATE article SET title='$title', content='$content',  startDate='$startDate', endDate='$endDate' WHERE id=$id";
-// $stmt = $db_host->prepare($sql);
+$sql = "UPDATE article SET title='$title', content='$content',  startDate='$startDate', endDate='$endDate' WHERE id=$id";
+$stmt = $db_host->prepare($sql);
 
-// try {
-//     $stmt->execute();
-//     header("location:article.php?id=$id");
-// } catch (PDOException $e) {
+try {
+    $stmt->execute();
+    header("location:article.php?id=$id");
+} catch (PDOException $e) {
 
-//     echo "預處理陳述式執行失敗！<br/>";
-//     echo "Error: " . $e->getMessage() . "<br/>";
-//     $db_host = NULL;
-//     exit;
-// }
+    echo "預處理陳述式執行失敗！<br/>";
+    echo "Error: " . $e->getMessage() . "<br/>";
+    $db_host = NULL;
+    exit;
+}

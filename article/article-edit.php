@@ -84,7 +84,7 @@ try {
     <!-- modal -->
     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="" aria-hidden="true">
         <div class="modal-dialog modal-sm">
-            <div class="modal-content">
+            <div class="modal-content text-dark">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">系統資訊</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -157,11 +157,11 @@ try {
                                                     </div>
                                                 <?php endforeach; ?>
                                             </div>
-                                            <input type="file" multiple class="form-control" name="images" accept=".jpg, .jpeg, .png">
+                                            <input type="file" class="form-control" name="images" accept=".jpg, .jpeg, .png">
                                         </td>
 
                                     </tr>
-                                    <tr>
+                                    <!-- <tr>
                                         <th>影片</th>
 
                                         <td>
@@ -176,19 +176,18 @@ try {
                                                             <div class="ratio ratio-1x1">
                                                                 <img class="object-fit-cover" src="article_videos/<?= $video["name"] ?>" alt="">
                                                             </div>
-                                                            <h3 class="h4"><?= $video["name"] ?></h3>
                                                         <?php endif; ?>
                                                     </div>
                                                 <?php endforeach; ?>
                                             </div>
                                             <input type="file" class="form-control" name="videos" accept=".mp4 .mkv .wmv">
-                                        </td>
+                                        </td> -->
 
                                     </tr>
                                     <tr>
                                         <th>發布日期</th>
                                         <td>
-                                            <input type="text" class="form-control" name="startDate"
+                                            <input type="datetime-local" class="form-control" name="startDate"
                                                 value="<?= $row["startDate"] ?>">
                                         </td>
 
@@ -196,7 +195,7 @@ try {
                                     <tr>
                                         <th>結束日期</th>
                                         <td>
-                                            <input type="text" class="form-control" name="endDate"
+                                            <input type="datetime-local" class="form-control" name="endDate"
                                                 value="<?= $row["endDate"] ?>">
                                         </td>
                                     </tr>

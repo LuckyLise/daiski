@@ -52,7 +52,7 @@ try {
                 <div class="py-2">
                     <a class="btn btn-primary" href="articles.php"><i class="fa-solid fa-list fa-fw"></i>文章列表</a>
                 </div>
-                <form action="doCreateArticle.php" method="post">
+                <form action="doCreateArticle.php" method="post" enctype="multipart/form-data">
                     <table class="table table-bordered">
                         <tr>
                             <th>類別</th>
@@ -96,14 +96,14 @@ try {
                             </td>
 
                         </tr>
-                        <tr>
+                        <!-- <tr>
                             <th>影片</th>
 
                             <td>
                                 <input type="file" class="form-control" name="videos" accept=".mp4 .mkv .wmv">
                             </td>
 
-                        </tr>
+                        </tr> -->
                         <table class="table table-bordered">
                             <th>發布/結束</th>
                             <td>

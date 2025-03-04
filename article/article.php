@@ -148,7 +148,7 @@ try {
                                         </div>
                                     </td>
                                 </tr>
-                                <tr>
+                                <!-- <tr>
                                     <th>影片</th>
                                     <td>
                                         <?php foreach ($article_videos as $video): ?>
@@ -166,7 +166,7 @@ try {
                                             </div>
                                         <?php endforeach; ?>
                                     </td>
-                                </tr>
+                                </tr> -->
                                 <tr>
                                     <th>發布日期</th>
                                     <td><?= $article["startDate"] ?></td>

@@ -201,7 +201,7 @@ try {
                                     value="<?= $q ?>">
 
                                 <input type="hidden" class="form-control" name="p"
-                                    <?php $order = $_GET["p"] ?? "1"; ?>
+                                    <?php $p = "1"; ?>
                                     value="<?= $p ?>">
 
                                 <input type="hidden" class="form-control" name="order"
@@ -284,7 +284,7 @@ try {
 
 
                                         if ($nowTime < $startTime || $row["startDate"] == "0000-00-00 00:00:00") {
-                                            echo '<span class="text-dark">未發布</span>';
+                                            echo '<span class="text-light">未發布</span>';
                                         } else if ($nowTime > $startTime && ($endTime == FALSE || $endTime > $nowTime)) {
                                             echo '<span class="text-success">發布中</span>';
                                         } else if ($nowTime > $endTime) {
@@ -341,7 +341,8 @@ try {
 
                                     <?php $active = ($i == $_GET["p"]) ? "active" : ""; ?>
                                     <?php $category = (isset($_GET["category"])) ? "&category=" . $_GET["category"] : ""; ?>
-                                    <li class="page-item <?= $active ?>"><a class="page-link" href="articles.php?p=<?= $i ?>&order=<?= $order ?><?= $category ?>"><?= $i ?></a></li>
+                                    <?php $q = (isset($_GET["q"]) && $category == "") ? "&q=" . $_GET["q"] : ""; ?>
+                                    <li class="page-item <?= $active ?>"><a class="page-link" href="articles.php?p=<?= $i ?>&order=<?= $order ?><?= $category ?><?= $q ?>"><?= $i ?></a></li>
                                 <?php endfor; ?>
 
                                 <!-- 下一頁 -->

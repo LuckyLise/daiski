@@ -3,7 +3,7 @@ require_once('../pdo_connect.php');
 session_start();
 session_destroy();
 
-if(isset($_SESSION["user"])){
+if (isset($_SESSION["user"])) {
     header("location: dashboard.php");
     exit;
 }
@@ -67,47 +67,45 @@ if(isset($_SESSION["user"])){
             <img class="logo mb-2" src="" alt="">
             <h1><i class="fa-regular fa-snowflake fa-fw"></i>Daiski<i class="fa-regular fa-snowflake fa-fw"></i><i class="fa-solid fa-person-snowboarding"></i></h1>
             <h1 class="text-light">Please sign in</h1>
-            <?php if(isset($_SESSION["error"]["times"]) && $_SESSION["error"]["times"]>5): ?>
+            <?php if (isset($_SESSION["error"]["times"]) && $_SESSION["error"]["times"] > 5): ?>
                 <div
                     class="alert alert-danger"
-                    role="alert"
-                >
+                    role="alert">
                     錯誤次數太多, 請稍後再嘗試
                 </div>
             <?php else: ?>
-            <form action="doLogin.php" method="post">
-                <div class="input-area">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="floatingInput" placeholder=""
-                            name="account">
-                        <label for="floatingInput">Account</label>
+                <form action="doLogin.php" method="post">
+                    <div class="input-area">
+                        <div class="form-floating">
+                            <input type="text" class="form-control" id="floatingInput" placeholder=""
+                                name="account">
+                            <label for="floatingInput">Account</label>
+                        </div>
+                        <div class="form-floating">
+                            <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
+                                name="password">
+                            <label for="floatingPassword">Password</label>
+                        </div>
                     </div>
-                    <div class="form-floating">
-                        <input type="password" class="form-control" id="floatingPassword" placeholder="Password"
-                            name="password">
-                        <label for="floatingPassword">Password</label>
+                    <?php if (isset($_SESSION["error"]["message"])): ?>
+                        <div
+                            class="alert alert-danger"
+                            role="alert"><?= $_SESSION["error"]["message"] ?>
+                        </div>
+                    <?php
+                        unset($_SESSION["error"]["message"]);
+                    endif; ?>
+                    <div class="form-check my-3">
+                        <input class="form-check-input" type="checkbox" value="" id="remember">
+                        <label class="form-check-label text-light" for="remember">
+                            Remember Me
+                        </label>
                     </div>
-                </div>
-                <?php if(isset($_SESSION["error"]["message"])): ?>
-                <div
-                    class="alert alert-danger"
-                    role="alert"
-                ><?=$_SESSION["error"]["message"]?>
-                </div>
-                <?php
-                unset($_SESSION["error"]["message"]);
-                endif; ?>
-                <div class="form-check my-3">
-                    <input class="form-check-input" type="checkbox" value="" id="remember">
-                    <label class="form-check-label text-light" for="remember">
-                        Remember Me
-                    </label>
-                </div>
-                
-                <div class="d-grid">
-                    <button class="btn btn-primary" type="submit">Sign in</button>
-                </div>
-            </form>
+
+                    <div class="d-grid">
+                        <button class="btn btn-primary" type="submit">Sign in</button>
+                    </div>
+                </form>
             <?php endif; ?>
             <div class="mt-4 text-light ">
                 © 2017–2025

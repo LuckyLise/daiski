@@ -21,7 +21,7 @@ if (isset($_GET["p"]) && isset($_GET["order"])) {
     if (isset($_GET["q"])) {
         $q = $_GET["q"];
     } else if (isset($_GET["category"])) {
-        $q = $_GET["category"];
+        $category = $_GET["category"];
     }
 
     $order = $_GET["order"];
@@ -31,13 +31,28 @@ if (isset($_GET["p"]) && isset($_GET["order"])) {
     header("location:articles.php?p=1&order=1");
 }
 
-$where = (isset($_GET["q"]) || isset($_GET["category"])) ? "WHERE article.title LIKE '%$q%' OR article_categories.category LIKE '%$q%'" : "";
+$where = "";
+if (isset($_GET["q"])) {
+    $q = $_GET["q"];
+}
+$where_search = (isset($_GET["q"])) ? "article.title LIKE '%$q%' " : "";
+if (isset($_GET["category"])) {
+    $category = $_GET["category"];
+}
+$where_category = (isset($_GET["category"])) ? "article_categories.category LIKE '%$category%' " : "";
+
+$where_and = (isset($_GET["category"]) && (isset($_GET["q"]))) ? " AND " : "";
+
+if (isset($_GET["q"]) || isset($_GET["category"])) {
+    $where = "WHERE " . $where_search . $where_and . $where_category;
+}
 
 // 篩選後重新計算文章數
 $sql = "SELECT article.*, article_categories.category
 FROM article 
 LEFT JOIN article_categories ON article_categories.article_id = article.id
-$where";
+$where
+";
 
 $stmt = $db_host->prepare($sql);
 
@@ -240,7 +255,7 @@ try {
 
                     <div class="dropdown">
                         <button class="btn_category btn btn-primary dropdown-toggle" href="#" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                            選擇分類
+                            <?= isset($_GET["category"]) ? $_GET["category"] : "選擇分類" ?>
 
                         </button>
 

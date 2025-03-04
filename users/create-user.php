@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+date_default_timezone_set("Asia/Taipei");
 ?>
 <!doctype html>
 <html lang="en">
@@ -34,7 +34,7 @@ session_start();
         <?php include("./new_head_mod.php"); ?>
         <div class="d-flex flex-row w-100 myPage">
             <?php include("./new_side_mod.php"); ?>
-            <div class="container">
+            <div class="container  d-flex flex-column align-items-start">
                 <?php
                 if (isset($_SESSION["error"])) {
                     // 顯示錯誤訊息，並以紅色字體標示
@@ -46,34 +46,39 @@ session_start();
                 <div class="py-2">
                     <a class="btn btn-primary" href="pdo-users.php"><i class="fa-solid fa-arrow-left fa-fw"></i>使用者列表</a>
                 </div>
-                <form action="pdo-insert-user.php" method="post">
+                <form class="w-25" action="pdo-insert-user.php" method="post" >
                     <div class="mb-2">
                         <label for="name" class="form-label">姓名</label>
                         <input type="text" class="form-control" name="name" id="name">
                     </div>
                     <div class="mb-2">
                         <label for="account" class="form-label">帳號</label>
-                        <input type="account" class="form-control" name="account" id="account">
+                        <input type="account" class="form-control" name="account" id="account" minlength="4" maxlength="10">
                     </div>
                     <div class="mb-2">
                         <label for="password" class="form-label">密碼</label>
-                        <input type="password" class="form-control" name="password" id="password">
+                        <input type="password" class="form-control" name="password" id="password" minlength="4" maxlength="10">
                     </div>
                     <div class="mb-2">
                         <label for="repassword" class="form-label">重複密碼</label>
-                        <input type="password" class="form-control" name="repassword" id="repassword">
+                        <input type="password" class="form-control" name="repassword" id="repassword" minlength="4" maxlength="10">
                     </div>
                     <div class="mb-2">
                         <div class="mb-2">
                             <label for="phone" class="form-label">電話</label>
-                            <input type="tel" class="form-control" name="phone" id="phone">
+                            <input type="tel" class="form-control" name="phone" id="phone" minlength="6" maxlength="10" >
+                        </div>
+                        <div class="mb-2">
+                            <label for="birthday" class="form-label">生日</label>
+                            <input type="date" class="form-control" name="birthday" id="birthday" max=<?=date("Y-m-d")?>>
                         </div>
                         <div class="mb-2">
                             <label for="email" class="form-label">email</label>
                             <input type="email" class="form-control" name="email" id="email">
                         </div>
+
                         <div class="mb-2">
-                            <label for="email" class="form-label">Coach</label>
+                            <label for="email" class="form-label">教練</label>
                             <br>
                             <input type="radio" name="isCoach" id="" value="1">是
                             <input type="radio" name="isCoach" id="" value="0">否
@@ -97,9 +102,9 @@ session_start();
                 minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
                 scale: 1.00, // 設定一般裝置上的縮放比例
                 scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
-                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
                 color1: 0xffffff,
-                birdSize: 0.50,
+                birdSize: 0.10,
                 // backgroundColor:0x4e73df
             });
             VANTA.BIRDS({
@@ -111,9 +116,9 @@ session_start();
                 minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
                 scale: 1.00, // 設定一般裝置上的縮放比例
                 scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
-                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
                 color1: 0xffffff,
-                birdSize: 0.50,
+                birdSize: 0.10,
                 // backgroundColor:0x4e73df
             });
             VANTA.BIRDS({
@@ -125,9 +130,9 @@ session_start();
                 minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
                 scale: 1.00, // 設定一般裝置上的縮放比例
                 scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
-                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
                 color1: 0xffffff,
-                birdSize: 0.50,
+                birdSize: 0.10,
                 // backgroundColor:0x4e73df
             });
         </script>

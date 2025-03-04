@@ -1,5 +1,6 @@
 <?php
 session_start();
+date_default_timezone_set("Asia/Taipei");
 
 require_once('../pdo_connect.php');
 
@@ -8,6 +9,7 @@ $account=$_POST["account"];
 $password=$_POST["password"];
 $repassword=$_POST["repassword"];
 $phone=$_POST["phone"];
+$birthday=$_POST["birthday"];
 $email=$_POST["email"];
 $createdtime=date("Y-m-d H:i:s");
 $isCoach=$_POST["isCoach"];
@@ -32,6 +34,17 @@ try {
         // die("該帳號已經存在");
         // header("location:create-user.php");
     }
+    if(strlen($password)<4 || strlen($password)>10){
+        $_SESSION["error"] = "請輸入4-10位密碼";
+        header("Location: create-user.php");
+        exit();
+    }
+    if($password!=$repassword){
+        $_SESSION["error"] ="密碼不一致";
+        header("Location: create-user.php");
+        exit();
+    }
+    
 } catch (PDOException $e) {
     echo "預處理陳述式執行失敗！ <br/>";
     echo "Error: " . $e->getMessage() . "<br/>";
@@ -39,7 +52,7 @@ try {
     exit;
 }
 
-$sqlInsert = "INSERT INTO users ( name, account, password, phone, email, createdtime,isCoach ) VALUES ( :name, :account, :password, :phone, :email, :createdtime, :isCoach )";
+$sqlInsert = "INSERT INTO users ( name, account, password, phone,birthday, email, createdtime,isCoach ) VALUES ( :name, :account, :password, :phone,:birthday, :email, :createdtime, :isCoach )";
 $stmt = $db_host->prepare($sqlInsert);
 
 try {
@@ -48,6 +61,7 @@ try {
         ":account" => $account,
         ":password" => $password,
         ":phone" => $phone,
+        ":birthday" => $birthday,
         ":email" => $email,
         ":createdtime"=>$createdtime,
         ":isCoach" => $isCoach

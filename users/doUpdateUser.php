@@ -7,14 +7,14 @@ require_once('../pdo_connect.php');
 
 $id=$_POST["id"];
 $name=$_POST["name"];
-$account=$_POST["account"];
+// $account=$_POST["account"];
 $password=$_POST["password"];
 $phone=$_POST["phone"];
 $birthday=$_POST["birthday"];
 $email=$_POST["email"];
 $isCoach=$_POST["isCoach"];
 
-$sql="UPDATE users SET name='$name',account='$account',password='$password', phone='$phone',birthday='$birthday', email='$email',isCoach='$isCoach' WHERE id='$id'";
+$sql="UPDATE users SET name='$name',password='$password', phone='$phone',birthday='$birthday', email='$email',isCoach='$isCoach' WHERE id='$id'";
 // echo $sql;
 
 $stmt = $db_host->prepare($sql);

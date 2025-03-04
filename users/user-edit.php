@@ -74,37 +74,36 @@ try {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>name</th>
+                                        <th>姓名</th>
                                         <td>
                                             <input type="text" class="form-control" name="name"
                                                 value="<?= $row["name"] ?>">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>account</th>
+                                        <th>帳號</th>
                                         <td>
-                                            <input type="account" class="form-control" name="account"
-                                                value="<?= $row["account"] ?>">
+                                            <?= $row["account"] ?>  
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>password</th>
+                                        <th>密碼</th>
                                         <td>
                                             <input type="password" class="form-control" name="password"
-                                                value="<?= $row["password"] ?>">
+                                                value="<?= $row["password"] ?>" maxlength="10" minlength="4">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>phone</th>
+                                        <th>電話</th>
                                         <td>
                                             <input type="tel" class="form-control" name="phone"
-                                                value="<?= $row["phone"] ?>">
+                                                value="<?= $row["phone"] ?>" maxlength="10" minlength="6">
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>birthday</th>
+                                        <th>生日</th>
                                         <td>
-                                            <input type="datetime" class="form-control" name="birthday"
+                                            <input type="date" class="form-control" name="birthday" max=<?=date("Y-m-d")?>
                                                 value="<?= $row["birthday"] ?>">
                                         </td>
                                     </tr>
@@ -116,11 +115,11 @@ try {
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th>createdtime</th>
+                                        <th>創建時間</th>
                                         <td><?= $row["createdtime"] ?></td>
                                     </tr>
                                     <tr>
-                                        <th>isCoach</th>
+                                        <th>具有教練身份</th>
                                         <td>
                                             <?php if ($row["isCoach"] == 0): ?>
                                                 <input type="radio" name="isCoach" id="" value="1">是
@@ -156,9 +155,9 @@ try {
 			minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
 			scale: 1.00, // 設定一般裝置上的縮放比例
 			scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
-			separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+			separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
 			color1: 0xffffff,
-			birdSize: 0.50,
+			birdSize: 0.10,
 			// backgroundColor:0x4e73df
 		});
 
@@ -171,9 +170,9 @@ try {
                 minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
                 scale: 1.00, // 設定一般裝置上的縮放比例
                 scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
-                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
                 color1: 0xffffff,
-                birdSize: 0.50,
+                birdSize: 0.10,
                 // backgroundColor:0x4e73df
             });
             VANTA.BIRDS({
@@ -185,9 +184,9 @@ try {
                 minWidth: 50.00, // 設定最小寬度，確保畫面不會小於 200px
                 scale: 1.00, // 設定一般裝置上的縮放比例
                 scaleMobile: 2.0, // 在手機上放大 2 倍，以提升可視度
-                separation: 500.00, // 調整鳥群之間的間隔，數值越大，距離越大
+                separation: 50.00, // 調整鳥群之間的間隔，數值越大，距離越大
                 color1: 0xffffff,
-                birdSize: 0.50,
+                birdSize: 0.10,
                 // backgroundColor:0x4e73df
             });
 

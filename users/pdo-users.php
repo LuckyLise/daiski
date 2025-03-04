@@ -188,13 +188,13 @@ $db_host = NULL;
             <?php include("./new_side_mod.php"); ?>
             <div class="container ">
                 <div class="py-2">
-                    <a class="btn btn-primary" href="create-user.php"><i class="fa-solid fa-user-plus fa-fw"></i> Add User</a>
+                    <a class="btn btn-info" href="create-user.php"><i class="fa-solid fa-user-plus fa-fw"></i> Add User</a>
                 </div>
                 <div class="py-2 row g-3 align-items-center">
                     <div class="col-md-6">
                         <div class="hstack gap-2 align-items-center">
                             <?php if (isset($_GET["q"])): ?>
-                                <a href="pdo-users.php" class="btn btn-primary"><i class="fa-solid fa-left-long fa-fw"></i></a>
+                                <a href="pdo-users.php" class="btn btn-info"><i class="fa-solid fa-left-long fa-fw"></i></a>
                             <?php endif; ?>
                             <div>共 <?= $userCount ?> 位使用者
                             </div>
@@ -215,7 +215,7 @@ $db_host = NULL;
                                     $q = $_GET["q"] ?? "";
                                     ?>
                                     value="<?= $q ?>" placeholder="搜尋名稱">
-                                <button class="btn btn-primary">
+                                <button class="btn btn-info">
                                     <i class="fa-solid fa-magnifying-glass fa-fw" type="submit"></i>
                                 </button>
                             </div>
@@ -224,10 +224,10 @@ $db_host = NULL;
                 </div>
                 <!-- <div class="py-2 text-end">
                     <div class="btn-group">
-                        <a class="btn btn-primary <?php if ($order == 1) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=1"><i class="fa-solid fa-arrow-down-1-9 fa-fw"></i></a>
-                        <a class="btn btn-primary <?php if ($order == 2) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=2"><i class="fa-solid fa-arrow-down-9-1 fa-fw"></i></a>
-                        <a class="btn btn-primary <?php if ($order == 3) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=3"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
-                        <a class="btn btn-primary <?php if ($order == 4) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=4"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
+                        <a class="btn btn-info <?php if ($order == 1) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=1"><i class="fa-solid fa-arrow-down-1-9 fa-fw"></i></a>
+                        <a class="btn btn-info <?php if ($order == 2) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=2"><i class="fa-solid fa-arrow-down-9-1 fa-fw"></i></a>
+                        <a class="btn btn-info <?php if ($order == 3) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=3"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
+                        <a class="btn btn-info <?php if ($order == 4) echo "active" ?>" href="pdo-users.php?p=<?= $p ?>&order=4"><i class="fa-solid fa-arrow-down-a-z fa-fw"></i></a>
                     </div>
                 </div> -->
                 <?php if ($userCount > 0): ?>
@@ -270,8 +270,8 @@ $db_host = NULL;
                                         <?=($row["isCoach"]==1)?  "教練":"會員" ?>
                                     </td>
                                     <td>
-                                        <a class="btn btn-primary" href="pdo-user.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-eye fa-fw"></i></a>
-                                        <a class="btn btn-primary" href="user-edit.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
+                                        <a class="btn btn-info" href="pdo-user.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-eye fa-fw"></i></a>
+                                        <a class="btn btn-info" href="user-edit.php?id=<?= $row["id"] ?>"><i class="fa-solid fa-pen-to-square fa-fw"></i></a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

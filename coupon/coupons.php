@@ -296,6 +296,12 @@ $db_host = NULL;
                                 <?php endif; ?>
                             </div>
                             <div class="input-group">
+
+                                <!-- 為了儲存之前的get -->
+                                <?php foreach ($queryParams as $queryParam => $value): ?>
+                                    <input type="hidden" name="<?= $queryParam ?>" value="<?= $value ?>">
+                                <?php endforeach; ?>
+                                
                                 <input type="search" class="form-control" name="q" <?php $q = $_GET["q"] ?? ""; ?> value="<?= $q ?>" placeholder="請輸入優惠卷名稱">
                                 <button class="btn btn-primary" type="submit"><i class="fa-solid fa-magnifying-glass fa-fw"></i></button>
                             </div>
@@ -315,9 +321,10 @@ $db_host = NULL;
                                 </div>
                             <?php endif; ?>
 
-                            <input type="hidden" name="order" value="1">
-                            <input type="hidden" name="p" value="1">
-
+                            <!-- 為了儲存之前的get -->
+                            <?php foreach ($queryParams as $queryParam => $value): ?>
+                                <input type="hidden" name="<?= $queryParam ?>" value="<?= $value ?>">
+                            <?php endforeach; ?>
 
                             <div class="col-auto">
                                 <?php $startAt = $_GET["startAt"] ?? ""; ?>

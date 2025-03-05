@@ -218,7 +218,10 @@ try {
                                 <input type="hidden" class="form-control" name="p"
                                     <?php $p = "1"; ?>
                                     value="<?= $p ?>">
-
+                                <?php if (isset($_GET["category"])): ?>
+                                    <input type="hidden" class="form-control" name="category"
+                                        value="<?= $_GET["category"] ?>">
+                                <?php endif;  ?>
                                 <input type="hidden" class="form-control" name="order"
                                     <?php $order = $_GET["order"] ?? "1"; ?>
                                     value="<?= $order ?>">
@@ -255,7 +258,15 @@ try {
 
                     <div class="dropdown">
                         <button class="btn_category btn btn-primary dropdown-toggle" href="#" type="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                            <?= isset($_GET["category"]) ? $_GET["category"] : "選擇分類" ?>
+                            <?php
+                            if (isset($_GET["category"]) && $_GET["category"] == "") {
+                                echo "全部";
+                            } else if (isset($_GET["category"])) {
+                                echo $_GET["category"];
+                            } else {
+                                echo "選擇分類";
+                            }
+                            ?>
 
                         </button>
 
@@ -263,6 +274,8 @@ try {
                             <?php if (isset($_GET["q"])) {
                                 $q = "q=" . $_GET["q"] . "&";
                             } ?>
+                            <li><a class="btn_category_choose dropdown-item" href="articles.php?p=1&order=<?= $order ?>&<?= $q ?>category=">全部</a></li>
+
                             <?php foreach ($categories as $category): ?>
                                 <li><a class="btn_category_choose dropdown-item" href="articles.php?p=1&order=<?= $order ?>&<?= $q ?>category=<?= $category["category"] ?>"><?= $category["category"] ?></a></li>
                             <?php endforeach; ?>
@@ -356,7 +369,7 @@ try {
 
                                     <?php $active = ($i == $_GET["p"]) ? "active" : ""; ?>
                                     <?php $category = (isset($_GET["category"])) ? "&category=" . $_GET["category"] : ""; ?>
-                                    <?php $q = (isset($_GET["q"]) && $category == "") ? "&q=" . $_GET["q"] : ""; ?>
+                                    <?php $q = (isset($_GET["q"])) ? "&q=" . $_GET["q"] : ""; ?>
                                     <li class="page-item <?= $active ?>"><a class="page-link" href="articles.php?p=<?= $i ?>&order=<?= $order ?><?= $category ?><?= $q ?>"><?= $i ?></a></li>
                                 <?php endfor; ?>
 
